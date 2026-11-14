@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { RequireAuth } from '../../components/RequireAuth';
 import { useSession } from '../../lib/session';
 import {
@@ -14,6 +14,9 @@ import {
   IconBook,
   IconUser,
   IconSettings,
+  IconSliders,
+  IconBell,
+  IconChevronDown,
 } from '../../components/Icons';
 
 const NAV = [
@@ -32,18 +35,45 @@ const NAV = [
   { href: '/settings', label: 'Settings', fullLabel: 'Settings', icon: IconSettings },
 ];
 
+const LEFT_DOCK = [
+  { href: '/dashboard', label: 'Overview', icon: IconHome },
+  { href: '/plan', label: 'Study Plan', icon: IconCalendar },
+  { href: '/practice', label: 'Practice Drills', icon: IconTarget },
+  { href: '/reassessment', label: 'Readiness', icon: IconActivity },
+];
+
 function StudentNav() {
   const pathname = usePathname();
   const { user, signOut } = useSession();
+  const [glassMenuOpen, setGlassMenuOpen] = useState(false);
+  const [glassMode, setGlassMode] = useState<'warm' | 'frost' | 'crisp'>('warm');
 
   const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : 'A';
 
+  const applyGlassPreset = (preset: 'warm' | 'frost' | 'crisp') => {
+    setGlassMode(preset);
+    setGlassMenuOpen(false);
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      if (preset === 'frost') {
+        root.style.setProperty('--glass-blur', '36px');
+        root.style.setProperty('--surface-glass', 'rgba(255, 255, 255, 0.65)');
+      } else if (preset === 'crisp') {
+        root.style.setProperty('--glass-blur', '14px');
+        root.style.setProperty('--surface-glass', 'rgba(255, 255, 255, 0.42)');
+      } else {
+        root.style.setProperty('--glass-blur', '28px');
+        root.style.setProperty('--surface-glass', 'rgba(255, 255, 255, 0.55)');
+      }
+    }
+  };
+
   return (
     <>
-      {/* Top Floating Glass Header Bar */}
+      {/* Top Floating Glass Header Bar (Matching Reference Screenshot) */}
       <header className="sticky top-4 z-40 mx-auto max-w-7xl px-4 sm:px-6">
         <div className="glass-header flex items-center justify-between px-5 py-3">
-          {/* Brand Logo & Context */}
+          {/* Brand Logo, Workspace Context & Assessment Selector */}
           <div className="flex items-center gap-3">
             <Link href="/dashboard" className="flex items-center gap-2.5 group">
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-sm transition-transform group-hover:scale-105">
@@ -72,6 +102,19 @@ function StudentNav() {
                 </span>
               </div>
             </Link>
+
+            <span className="hidden text-xs text-stone-300 md:inline">|</span>
+
+            {/* Assessment Selector Pill */}
+            <Link
+              href="/setup/requirements"
+              className="hidden md:flex items-center gap-1.5 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-stone-700 border border-stone-200/60 hover:bg-white hover:text-stone-900 transition-colors shadow-2xs"
+              title="Change Assessment Target"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+              <span>GMAT Focus Edition</span>
+              <IconChevronDown className="w-3.5 h-3.5 text-stone-400" />
+            </Link>
           </div>
 
           {/* Desktop Top Links */}
@@ -96,17 +139,87 @@ function StudentNav() {
             })}
           </nav>
 
-          {/* User Profile & Actions */}
-          <div className="flex items-center gap-3">
-            <span className="hidden text-xs text-stone-500 md:inline font-medium">
-              {user?.email}
-            </span>
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-200/80 border border-stone-300/60 text-xs font-semibold text-stone-700 shadow-inner"
-              title={user?.email}
-            >
-              {userInitial}
+          {/* Right Controls: Adjust Glass, Notification Bell, User Avatar, Sign Out */}
+          <div className="flex items-center gap-2.5">
+            {/* Interactive "Adjust glass" feature matching reference screenshot */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setGlassMenuOpen(!glassMenuOpen)}
+                className="flex items-center gap-1.5 rounded-full bg-white/70 hover:bg-white px-3 py-1 text-xs font-medium text-stone-700 border border-stone-200/60 transition-colors shadow-2xs"
+                title="Adjust glass refraction and blur"
+              >
+                <IconSliders className="w-3.5 h-3.5 text-stone-500" />
+                <span className="hidden sm:inline">Adjust glass</span>
+              </button>
+
+              {glassMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-2xl glass-card p-3 shadow-xl border border-white/90 z-50 flex flex-col gap-1.5 text-xs animate-in fade-in zoom-in-95">
+                  <div className="px-2 py-1 font-semibold text-stone-800 border-b border-stone-100 text-[11px] uppercase tracking-wider">
+                    Glass Presets
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => applyGlassPreset('warm')}
+                    className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition ${
+                      glassMode === 'warm'
+                        ? 'bg-stone-900 text-white font-medium'
+                        : 'text-stone-600 hover:bg-stone-100'
+                    }`}
+                  >
+                    <span>Warm Glow</span>
+                    {glassMode === 'warm' && <span className="text-[10px]">Active</span>}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyGlassPreset('frost')}
+                    className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition ${
+                      glassMode === 'frost'
+                        ? 'bg-stone-900 text-white font-medium'
+                        : 'text-stone-600 hover:bg-stone-100'
+                    }`}
+                  >
+                    <span>Deep Acrylic</span>
+                    {glassMode === 'frost' && <span className="text-[10px]">Active</span>}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyGlassPreset('crisp')}
+                    className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition ${
+                      glassMode === 'crisp'
+                        ? 'bg-stone-900 text-white font-medium'
+                        : 'text-stone-600 hover:bg-stone-100'
+                    }`}
+                  >
+                    <span>Crisp Minimal</span>
+                    {glassMode === 'crisp' && <span className="text-[10px]">Active</span>}
+                  </button>
+                </div>
+              )}
             </div>
+
+            {/* Notification Bell */}
+            <button
+              type="button"
+              aria-label="Notifications"
+              className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-white/70 border border-stone-200/60 text-stone-600 hover:text-stone-900 hover:bg-white transition-colors shadow-2xs"
+            >
+              <IconBell className="w-4 h-4" />
+              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-blue-600 ring-2 ring-white" />
+            </button>
+
+            {/* Profile Avatar */}
+            <Link
+              href="/profile"
+              className="flex items-center gap-2 group"
+              title={user?.email || 'Profile'}
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-stone-100 to-stone-200 border border-stone-300/70 text-xs font-semibold text-stone-800 shadow-2xs group-hover:border-stone-400 transition-colors">
+                {userInitial}
+              </div>
+            </Link>
+
+            {/* Sign Out Button */}
             <button
               type="button"
               onClick={() => void signOut().then(() => (window.location.href = '/login'))}
@@ -118,12 +231,39 @@ function StudentNav() {
         </div>
       </header>
 
-      {/* Floating Bottom Navigation Dock (Inspired by the Reference Screenshot) */}
+      {/* Floating Left Vertical Dock (Directly from the Reference Screenshot) */}
+      <aside
+        aria-label="Sidebar Dock Navigation"
+        className="fixed left-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-2 p-2 rounded-2xl glass-pill shadow-xl border border-white/80"
+      >
+        {LEFT_DOCK.map((item) => {
+          const active =
+            pathname === item.href ||
+            (item.href !== '/dashboard' && pathname.startsWith(`${item.href}/`));
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              title={item.label}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${
+                active
+                  ? 'bg-white shadow-sm text-stone-900 border border-stone-200/50'
+                  : 'text-stone-500 hover:bg-white/60 hover:text-stone-900'
+              }`}
+            >
+              <Icon className={`w-5 h-5 ${active ? 'text-blue-600' : 'text-stone-500'}`} />
+            </Link>
+          );
+        })}
+      </aside>
+
+      {/* Floating Bottom Navigation Dock (Inspired by Reference Screenshot) */}
       <aside
         aria-label="Bottom Dock Navigation"
         className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 max-w-[94vw]"
       >
-        <div className="glass-pill flex items-center gap-1 p-1.5 shadow-xl border border-white/80 overflow-x-auto no-scrollbar">
+        <div className="glass-pill flex items-center gap-1.5 p-1.5 shadow-xl border border-white/80 overflow-x-auto no-scrollbar">
           {NAV.map((item) => {
             const active =
               pathname === item.href ||
@@ -133,7 +273,7 @@ function StudentNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all whitespace-nowrap ${
+                className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap ${
                   active
                     ? 'glass-pill-active font-semibold text-stone-900'
                     : 'text-stone-600 hover:bg-white/60 hover:text-stone-900'
