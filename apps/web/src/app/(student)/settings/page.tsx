@@ -10,6 +10,7 @@ import {
 } from '../../../lib/practice';
 import { ApiError } from '../../../lib/apiClient';
 import { PasswordInput } from '../../../components/PasswordInput';
+// P-19 — account, plan settings, consents and data controls.
 
 const PURPOSES = [
   { id: 'analytics', label: 'Anonymous usage analytics' },
@@ -38,7 +39,7 @@ export default function SettingsPage() {
     setError(null);
     try {
       await putPlanSettings({ keepMyPlan });
-      setMsg('Plan settings saved.');
+      setMsg('Plan settings saved successfully.');
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Could not save settings.');
     } finally {
@@ -68,7 +69,7 @@ export default function SettingsPage() {
       a.download = `aptiva-export-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      setMsg('Export downloaded.');
+      setMsg('Export package downloaded.');
       setPassword('');
     } catch (e) {
       setError(e instanceof ApiError ? e.message : 'Export failed — check your password.');
@@ -100,104 +101,119 @@ export default function SettingsPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-      {msg && (
-        <p className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">
-          {msg}
+      <div className="border-b border-stone-200/50 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          Account &amp; Study Settings
+        </h1>
+        <p className="mt-1 text-xs text-stone-500">
+          Manage planner behavior, privacy consents, full data export, and account lifecycle.
         </p>
+      </div>
+
+      {msg && (
+        <div className="rounded-xl border border-emerald-200/80 bg-emerald-50/80 p-3.5 text-xs font-medium text-emerald-900">
+          ✓ {msg}
+        </div>
       )}
       {error && (
-        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3.5 text-xs text-rose-800">
           {error}
-        </p>
+        </div>
       )}
 
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-5">
-        <h2 className="font-semibold">Plan</h2>
-        <label className="mt-3 flex items-center gap-2 text-sm">
+      {/* Plan Settings Card */}
+      <section className="glass-card p-6 flex flex-col gap-3">
+        <h2 className="text-sm font-bold text-stone-900">Adaptive Planner Behavior</h2>
+        <label className="flex items-start gap-2.5 text-xs text-stone-700">
           <input
             type="checkbox"
             checked={keepMyPlan}
             onChange={(e) => setKeepMyPlan(e.target.checked)}
+            className="mt-0.5 rounded border-stone-300 text-blue-600 focus:ring-blue-500"
           />
-          Keep my plan — don&apos;t auto-regenerate after practice sessions
+          <div>
+            <span className="font-semibold text-stone-900">Keep my plan locked</span>
+            <p className="mt-0.5 text-stone-500">
+              Don&apos;t automatically regenerate future days when finishing daily practice drills.
+            </p>
+          </div>
         </label>
-        <p className="mt-1 text-xs text-neutral-500">
-          When off, finishing a session updates your profile and rebuilds future days.
-        </p>
         <button
           type="button"
           onClick={() => void savePlanSettings()}
           disabled={busy}
-          className="mt-3 rounded-md bg-neutral-900 px-4 py-2 text-sm text-white disabled:opacity-50"
+          className="btn-primary w-fit mt-1 py-2 px-4 text-xs font-semibold disabled:opacity-50"
         >
           Save plan settings
         </button>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-5">
-        <h2 className="font-semibold">Consents</h2>
-        <div className="mt-3 flex flex-col gap-2">
+      {/* Consents Card */}
+      <section className="glass-card p-6 flex flex-col gap-3">
+        <h2 className="text-sm font-bold text-stone-900">Privacy &amp; Data Consents</h2>
+        <div className="flex flex-col gap-2.5">
           {PURPOSES.map((p) => (
-            <label key={p.id} className="flex items-center gap-2 text-sm">
+            <label key={p.id} className="flex items-center gap-2.5 text-xs text-stone-700">
               <input
                 type="checkbox"
                 checked={consents[p.id] ?? false}
                 onChange={(e) => void toggleConsent(p.id, e.target.checked)}
+                className="rounded border-stone-300 text-blue-600 focus:ring-blue-500"
               />
-              {p.label}
+              <span className="font-medium text-stone-800">{p.label}</span>
             </label>
           ))}
         </div>
-        <p className="mt-2 text-xs text-neutral-500">
-          Essential processing (running the app) can&apos;t be switched off. Withdrawals are
-          recorded immediately.
+        <p className="text-[11px] text-stone-400">
+          Essential computation (scoring, Bayesian profile updating) cannot be switched off.
+          Withdrawals take effect immediately.
         </p>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-5">
-        <h2 className="font-semibold">Your data</h2>
-        <p className="mt-1 text-sm text-neutral-600">
-          Export everything we store about you, or delete your account. Both require your password.
+      {/* Export Data Card */}
+      <section className="glass-card p-6 flex flex-col gap-3">
+        <h2 className="text-sm font-bold text-stone-900">Your Data Export</h2>
+        <p className="text-xs text-stone-600 leading-relaxed">
+          Export everything Aptiva stores about you: complete attempt logs, session histories,
+          Bayesian topic snapshots, and requirements.
         </p>
-        <div className="mt-3 max-w-xs">
+        <div className="max-w-xs">
           <PasswordInput value={password} onChange={setPassword} autoComplete="current-password" />
         </div>
-        <div className="mt-3 flex gap-3">
-          <button
-            type="button"
-            onClick={() => void doExport()}
-            disabled={busy || !password}
-            className="rounded-md border px-4 py-2 text-sm disabled:opacity-40"
-          >
-            Download my data
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => void doExport()}
+          disabled={busy || !password}
+          className="btn-secondary w-fit py-2 px-4 text-xs font-semibold disabled:opacity-40"
+        >
+          Download JSON export
+        </button>
       </section>
 
-      <section className="rounded-lg border border-red-200 bg-red-50/50 p-5">
-        <h2 className="font-semibold text-red-900">Delete account</h2>
-        <p className="mt-1 text-sm text-red-800">
-          Deletion is scheduled 30 days out so you can change your mind. All your data — profile,
-          plans, attempts, sessions — is removed permanently when it executes.
+      {/* Danger Zone: Delete Account */}
+      <section className="rounded-2xl border border-rose-200/80 bg-rose-50/70 p-6 flex flex-col gap-3">
+        <h2 className="text-sm font-bold text-rose-950">Delete Account &amp; History</h2>
+        <p className="text-xs text-rose-800 leading-relaxed">
+          Deletion is scheduled 30 days in advance so you can change your mind if needed. All
+          personal data, profiles, and logs are permanently wiped.
         </p>
-        <div className="mt-3 flex max-w-xs flex-col gap-2">
+        <div className="flex max-w-xs flex-col gap-2 mt-1">
           <PasswordInput value={password} onChange={setPassword} autoComplete="current-password" />
           <input
             type="text"
             value={confirmDelete}
             onChange={(e) => setConfirmDelete(e.target.value)}
             placeholder="Type DELETE to confirm"
-            className="rounded border border-neutral-300 px-3 py-2 text-sm"
+            className="glass-input px-3.5 py-2 text-xs"
           />
         </div>
         <button
           type="button"
           onClick={() => void doDelete()}
           disabled={busy || !password || confirmDelete !== 'DELETE'}
-          className="mt-3 rounded-md bg-red-700 px-4 py-2 text-sm text-white disabled:opacity-40"
+          className="w-fit rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-semibold py-2 px-4 text-xs transition-colors disabled:opacity-40"
         >
-          Schedule deletion
+          Schedule account deletion
         </button>
       </section>
     </div>

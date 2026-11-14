@@ -16,6 +16,7 @@ import { ApiError } from '../../../lib/apiClient';
 import { createSession, sendBlockFeedback } from '../../../lib/practice';
 import { WhyThisPanel, BLOCK_LABEL } from '../../../components/WhyThisPanel';
 import { ReadinessBand } from '../../../components/ReadinessBand';
+import { IconCalendar, IconSparkles, IconTarget } from '../../../components/Icons';
 
 interface DayGroup {
   dayIndex: number;
@@ -118,14 +119,15 @@ export default function PlanPage() {
 
   if (missing) {
     return (
-      <div className="flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">Plan</h1>
-        <p className="text-neutral-600">
-          No plan yet — save your requirements and we&apos;ll generate a time-boxed plan.
+      <div className="flex flex-col gap-4 max-w-md">
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900">Study Plan</h1>
+        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+          No plan yet — save your requirements and target assessment, and we&apos;ll generate a
+          mathematical time-boxed plan.
         </p>
         <Link
           href="/setup/requirements"
-          className="w-fit rounded-md bg-neutral-900 px-5 py-2.5 text-white hover:bg-neutral-700"
+          className="btn-primary w-fit px-5 py-2.5 text-sm font-semibold inline-block"
         >
           Set up requirements
         </Link>
@@ -134,163 +136,212 @@ export default function PlanPage() {
   }
 
   if (error && !plan) {
-    return <p className="text-red-600">{error}</p>;
+    return (
+      <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs text-rose-800">
+        {error}
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-4">
+    <div className="flex flex-col gap-8">
+      {/* Top Action Bar */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-5">
         <div>
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="text-xs text-neutral-400 hover:text-neutral-600">
-              ← Dashboard
+          <div className="flex items-center gap-2 mb-1">
+            <Link
+              href="/dashboard"
+              className="text-xs font-medium text-stone-400 hover:text-stone-700 transition"
+            >
+              ← Overview
             </Link>
-            <Link href="/plan/history" className="text-xs text-blue-600 underline">
-              History
+            <span className="text-stone-300">·</span>
+            <Link
+              href="/plan/history"
+              className="text-xs font-semibold text-blue-600 hover:underline"
+            >
+              Plan History
             </Link>
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">Your plan</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-stone-900">Your Adaptive Plan</h1>
           {plan && (
-            <p className="mt-1 text-xs text-neutral-500">
-              {plan.plannerMethod === 'knapsack' ? 'Optimised plan' : 'Fallback plan'} ·{' '}
-              {plan.items.length} blocks · engine {plan.engineVersion}
+            <p className="mt-1 text-xs text-stone-500">
+              <span className="capitalize font-semibold text-stone-700">
+                {plan.plannerMethod === 'knapsack'
+                  ? 'Optimised knapsack schedule'
+                  : 'Priority-based plan'}
+              </span>{' '}
+              · {plan.items.length} total blocks · Engine v{plan.engineVersion}
             </p>
           )}
         </div>
-        <div className="flex gap-2">
-          <Link
-            href="/setup/requirements"
-            className="rounded-md border px-3 py-1.5 text-sm hover:bg-neutral-100"
-          >
+        <div className="flex items-center gap-2.5">
+          <Link href="/setup/requirements" className="btn-secondary px-4 py-2 text-xs font-medium">
             Edit requirements
           </Link>
           <button
             type="button"
             onClick={() => void regenerate()}
             disabled={pending}
-            className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+            className="btn-primary px-4 py-2 text-xs font-semibold disabled:opacity-50"
           >
             {pending ? 'Generating…' : 'Regenerate'}
           </button>
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3.5 text-xs text-rose-800">
+          {error}
+        </div>
+      )}
 
+      {/* Target Readiness */}
       <ReadinessBand readiness={readiness} />
 
+      {/* Plan Changes Accordion */}
       {changes.length > 0 && (
-        <details className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-          <summary className="cursor-pointer text-sm font-medium">
-            What changed ({changes.length})
+        <details className="glass-card p-5 group">
+          <summary className="cursor-pointer text-xs font-bold text-stone-800 flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <IconSparkles className="w-4 h-4 text-blue-600" />
+              Recalibration History ({changes.length} revisions)
+            </span>
+            <span className="text-stone-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
-          <ul className="mt-2 flex flex-col gap-1 text-sm text-neutral-600">
+          <ul className="mt-3 flex flex-col gap-2 text-xs text-stone-600 border-t border-stone-100 pt-3">
             {changes.slice(0, 5).map((c) => (
-              <li key={c.id}>
-                {new Date(c.createdAt).toLocaleString()} — {c.trigger} (
-                {String((c.summary as { itemCount?: number }).itemCount ?? '?')} blocks)
+              <li key={c.id} className="flex items-center justify-between">
+                <span>
+                  {new Date(c.createdAt).toLocaleDateString()} —{' '}
+                  <strong className="text-stone-800">{c.trigger}</strong>
+                </span>
+                <span className="text-stone-400 text-[11px]">
+                  {String((c.summary as { itemCount?: number }).itemCount ?? '?')} blocks updated
+                </span>
               </li>
             ))}
           </ul>
         </details>
       )}
 
-      {days.map((day) => (
-        <section
-          key={day.dayIndex}
-          className="rounded-xl border border-slate-200 bg-white shadow-sm p-4"
-        >
-          <header className="mb-3 flex items-center justify-between">
-            <h2 className="font-medium">
-              {day.date
-                ? new Date(`${day.date}T00:00:00`).toLocaleDateString(undefined, {
-                    weekday: 'long',
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                : `Day ${day.dayIndex + 1}`}
-            </h2>
-            <span className="text-sm text-neutral-500">{day.total} min</span>
-          </header>
-          <ol className="flex flex-col gap-2">
-            {day.items.map((item) => {
-              const whyOpen = openWhy.has(item.id);
-              return (
-                <li key={item.id} className="rounded-md border px-3 py-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="rounded bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600">
-                        {BLOCK_LABEL[item.blockType] ?? item.blockType}
-                      </span>
-                      <span className="font-medium">{item.topic.name}</span>
-                      {item.pinned && <span title="Pinned">📌</span>}
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-neutral-600">
-                      <span>{item.minutes} min</span>
-                      {item.rationale.date === today && (
-                        <button
-                          type="button"
-                          disabled={starting !== null}
-                          onClick={() => void startBlock(item.id)}
-                          className="rounded bg-indigo-600 px-3 py-1 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
-                        >
-                          {starting === item.id ? '…' : 'Start'}
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        aria-expanded={whyOpen}
-                        onClick={() =>
-                          setOpenWhy((s) => {
-                            const n = new Set(s);
-                            if (n.has(item.id)) n.delete(item.id);
-                            else n.add(item.id);
-                            return n;
-                          })
-                        }
-                        className="text-xs text-blue-600 underline"
-                      >
-                        Why this?
-                      </button>
-                    </div>
-                  </div>
-                  {whyOpen && <WhyThisPanel rationale={item.rationale} />}
-                  <div className="mt-2 flex items-center gap-2 border-t border-neutral-100 pt-2 text-xs text-neutral-500">
-                    <span>This block:</span>
-                    {(['already_know', 'too_easy', 'not_relevant'] as const).map((r) => {
-                      const key = `${item.id}:${r}`;
-                      const label =
-                        r === 'already_know'
-                          ? 'Already know this'
-                          : r === 'too_easy'
-                            ? 'Too easy'
-                            : 'Not relevant';
-                      return (
-                        <button
-                          key={r}
-                          type="button"
-                          disabled={feedbackBusy === item.id || feedbackSent.has(key)}
-                          onClick={() => void sendFeedback(item.id, r)}
-                          className={`rounded-full border px-2 py-0.5 ${
-                            feedbackSent.has(key)
-                              ? 'border-green-300 bg-green-50 text-green-700'
-                              : 'hover:bg-neutral-100'
-                          } disabled:opacity-50`}
-                        >
-                          {feedbackSent.has(key) ? '✓ ' : ''}
-                          {label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </section>
-      ))}
+      {/* Day Groups */}
+      <div className="flex flex-col gap-6">
+        {days.map((day) => (
+          <section key={day.dayIndex} className="glass-card p-6 flex flex-col gap-4">
+            <header className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-stone-100 text-stone-700 font-bold text-xs">
+                  <IconCalendar className="w-4 h-4 text-stone-600" />
+                </span>
+                <h2 className="text-base font-bold text-stone-900">
+                  {day.date
+                    ? new Date(`${day.date}T00:00:00`).toLocaleDateString(undefined, {
+                        weekday: 'long',
+                        month: 'short',
+                        day: 'numeric',
+                      })
+                    : `Day ${day.dayIndex + 1}`}
+                </h2>
+              </div>
+              <span className="rounded-full bg-stone-100 px-3 py-0.5 text-xs font-semibold text-stone-700 border border-stone-200/50">
+                {day.total} min total
+              </span>
+            </header>
 
-      {!plan && !missing && <p className="text-neutral-500">Loading plan…</p>}
+            <ol className="flex flex-col gap-3">
+              {day.items.map((item) => {
+                const whyOpen = openWhy.has(item.id);
+                return (
+                  <li
+                    key={item.id}
+                    className="rounded-2xl bg-white/70 hover:bg-white/95 border border-stone-200/50 p-4 transition-all shadow-2xs"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <span className="rounded-lg bg-blue-50/80 text-blue-700 border border-blue-200/60 px-2.5 py-1 text-xs font-bold">
+                          {BLOCK_LABEL[item.blockType] ?? item.blockType}
+                        </span>
+                        <span className="font-bold text-sm text-stone-900">{item.topic.name}</span>
+                        {item.pinned && (
+                          <span title="Pinned by user" className="text-xs">
+                            📌
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-3 text-xs">
+                        <span className="font-semibold text-stone-700 bg-stone-100/80 px-2.5 py-1 rounded-md">
+                          {item.minutes} min
+                        </span>
+                        {item.rationale.date === today && (
+                          <button
+                            type="button"
+                            disabled={starting !== null}
+                            onClick={() => void startBlock(item.id)}
+                            className="btn-primary py-1 px-3 text-xs font-semibold disabled:opacity-50 inline-flex items-center gap-1"
+                          >
+                            <IconTarget className="w-3.5 h-3.5" />
+                            <span>{starting === item.id ? '…' : 'Start'}</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          aria-expanded={whyOpen}
+                          onClick={() =>
+                            setOpenWhy((s) => {
+                              const n = new Set(s);
+                              if (n.has(item.id)) n.delete(item.id);
+                              else n.add(item.id);
+                              return n;
+                            })
+                          }
+                          className="font-medium text-blue-600 hover:text-blue-700 underline transition"
+                        >
+                          Why this?
+                        </button>
+                      </div>
+                    </div>
+
+                    {whyOpen && <WhyThisPanel rationale={item.rationale} />}
+
+                    <div className="mt-3 flex items-center gap-2 border-t border-stone-100 pt-2.5 text-xs text-stone-500 flex-wrap">
+                      <span className="text-[11px] font-medium text-stone-400">Feedback:</span>
+                      {(['already_know', 'too_easy', 'not_relevant'] as const).map((r) => {
+                        const key = `${item.id}:${r}`;
+                        const label =
+                          r === 'already_know'
+                            ? 'Already know this'
+                            : r === 'too_easy'
+                              ? 'Too easy'
+                              : 'Not relevant';
+                        return (
+                          <button
+                            key={r}
+                            type="button"
+                            disabled={feedbackBusy === item.id || feedbackSent.has(key)}
+                            onClick={() => void sendFeedback(item.id, r)}
+                            className={`rounded-full border px-2.5 py-0.5 text-[11px] transition-colors ${
+                              feedbackSent.has(key)
+                                ? 'border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold'
+                                : 'border-stone-200 bg-stone-50/80 text-stone-600 hover:bg-white'
+                            } disabled:opacity-50`}
+                          >
+                            {feedbackSent.has(key) ? '✓ ' : ''}
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        ))}
+      </div>
+
+      {!plan && !missing && <p className="text-xs text-stone-400 text-center">Loading plan…</p>}
     </div>
   );
 }

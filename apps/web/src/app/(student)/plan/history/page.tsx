@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getPlan, listPlanVersions, restorePlan, type PlanVersion } from '../../../../lib/practice';
@@ -50,90 +51,110 @@ export default function PlanHistoryPage() {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Plan history</h1>
-        <p className="mt-1 text-sm text-neutral-600">
-          Every regeneration is kept. Restore copies an earlier version&apos;s future days into a
-          new plan — nothing is overwritten.
+    <div className="flex flex-col gap-6">
+      <div className="border-b border-stone-200/50 pb-4">
+        <Link
+          href="/plan"
+          className="text-xs font-medium text-stone-400 hover:text-stone-700 transition"
+        >
+          ← Back to Plan
+        </Link>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-stone-900">
+          Plan Version History
+        </h1>
+        <p className="mt-1 text-xs text-stone-500">
+          Every plan generation is saved immutably. Restoring copies previous future blocks into a
+          brand new version.
         </p>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3.5 text-xs text-rose-800">
+          {error}
+        </div>
+      )}
 
-      <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead className="border-b bg-neutral-50 text-left text-xs uppercase text-neutral-500">
-            <tr>
-              <th className="px-4 py-2">Version</th>
-              <th className="px-4 py-2">Created</th>
-              <th className="px-4 py-2">Trigger</th>
-              <th className="px-4 py-2">Method</th>
-              <th className="px-4 py-2">Items</th>
-              <th className="px-4 py-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {versions.map((v) => (
-              <tr key={v.planId} className="border-b last:border-0">
-                <td className="px-4 py-2">
-                  {v.isCurrent && (
-                    <span className="mr-2 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
-                      current
-                    </span>
-                  )}
-                  <span className="font-mono text-xs">{v.planId.slice(0, 8)}</span>
-                </td>
-                <td className="px-4 py-2">{new Date(v.createdAt).toLocaleString()}</td>
-                <td className="px-4 py-2">{v.trigger}</td>
-                <td className="px-4 py-2">{v.plannerMethod}</td>
-                <td className="px-4 py-2">{v.itemCount}</td>
-                <td className="px-4 py-2 text-right">
-                  {!v.isCurrent && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => void compare(v.planId)}
-                        className="mr-2 text-xs text-blue-600 underline"
-                      >
-                        {compareId === v.planId ? 'hide' : 'compare'}
-                      </button>
-                      <button
-                        type="button"
-                        disabled={restoring !== null}
-                        onClick={() => void restore(v.planId)}
-                        className="rounded border px-2 py-1 text-xs hover:bg-neutral-100"
-                      >
-                        {restoring === v.planId ? '…' : 'Restore'}
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {versions.length === 0 && (
+      <section className="glass-card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead className="border-b border-stone-100 bg-stone-50/60 text-left uppercase text-stone-400 font-semibold tracking-wider">
               <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-neutral-500">
-                  No plan versions yet.
-                </td>
+                <th className="px-5 py-3.5">Version</th>
+                <th className="px-5 py-3.5">Created</th>
+                <th className="px-5 py-3.5">Trigger</th>
+                <th className="px-5 py-3.5">Method</th>
+                <th className="px-5 py-3.5">Blocks</th>
+                <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-stone-100/70">
+              {versions.map((v) => (
+                <tr key={v.planId} className="hover:bg-white/60 transition-colors">
+                  <td className="px-5 py-3.5">
+                    {v.isCurrent && (
+                      <span className="mr-2 rounded-full bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
+                        active
+                      </span>
+                    )}
+                    <span className="font-mono text-xs text-stone-700">{v.planId.slice(0, 8)}</span>
+                  </td>
+                  <td className="px-5 py-3.5 text-stone-600">
+                    {new Date(v.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-5 py-3.5 font-medium text-stone-800">{v.trigger}</td>
+                  <td className="px-5 py-3.5 text-stone-600 capitalize">{v.plannerMethod}</td>
+                  <td className="px-5 py-3.5 font-semibold text-stone-800">{v.itemCount}</td>
+                  <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                    {!v.isCurrent && (
+                      <div className="inline-flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => void compare(v.planId)}
+                          className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition"
+                        >
+                          {compareId === v.planId ? 'Hide' : 'Compare'}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={restoring !== null}
+                          onClick={() => void restore(v.planId)}
+                          className="btn-secondary py-1 px-3 text-xs font-semibold"
+                        >
+                          {restoring === v.planId ? '…' : 'Restore'}
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {versions.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-5 py-8 text-center text-xs text-stone-400">
+                    No previous plan versions recorded yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {comparePlan && current && (
-        <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-          <h2 className="text-sm font-medium text-neutral-700">
-            Compare: current vs {compareId?.slice(0, 8)}
+        <section className="glass-card p-6 flex flex-col gap-4">
+          <h2 className="text-sm font-bold text-stone-900 border-b border-stone-100 pb-3">
+            Comparison: Current Active Plan vs {compareId?.slice(0, 8)}
           </h2>
-          <div className="mt-3 grid gap-4 sm:grid-cols-2 text-sm">
-            <div>
-              <h3 className="font-medium">Current ({current.items.length} items)</h3>
+          <div className="grid gap-6 sm:grid-cols-2 text-xs">
+            <div className="rounded-xl bg-stone-50/70 p-4 border border-stone-200/40">
+              <h3 className="font-bold text-stone-900 mb-2">
+                Current ({current.items.length} items)
+              </h3>
               <TopicSummary items={current.items} />
             </div>
-            <div>
-              <h3 className="font-medium">Selected ({comparePlan.items.length} items)</h3>
+            <div className="rounded-xl bg-blue-50/50 p-4 border border-blue-200/40">
+              <h3 className="font-bold text-blue-900 mb-2">
+                Selected ({comparePlan.items.length} items)
+              </h3>
               <TopicSummary items={comparePlan.items} />
             </div>
           </div>
@@ -148,11 +169,14 @@ function TopicSummary({ items }: { items: { topic: { name: string }; minutes: nu
   for (const i of items) byTopic.set(i.topic.name, (byTopic.get(i.topic.name) ?? 0) + i.minutes);
   const top = [...byTopic.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
   return (
-    <ul className="mt-1 flex flex-col gap-0.5 text-neutral-600">
+    <ul className="flex flex-col gap-1 text-stone-600">
       {top.map(([name, mins]) => (
-        <li key={name} className="flex justify-between">
-          <span>{name}</span>
-          <span>{mins}m</span>
+        <li
+          key={name}
+          className="flex justify-between py-1 border-b border-stone-200/30 last:border-0"
+        >
+          <span className="font-medium text-stone-700">{name}</span>
+          <span className="font-bold text-stone-900">{mins}m</span>
         </li>
       ))}
     </ul>

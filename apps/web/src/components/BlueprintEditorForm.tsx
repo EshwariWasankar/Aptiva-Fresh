@@ -84,7 +84,7 @@ export function BlueprintEditorForm({ topics, assessmentId, initial, onSubmit, o
       return draft;
     });
 
-  const inputCls = 'w-full rounded border px-2 py-1 text-sm';
+  const inputCls = 'w-full glass-input px-3 py-1.5 text-xs';
 
   async function submit() {
     setSaving(true);
@@ -136,7 +136,7 @@ export function BlueprintEditorForm({ topics, assessmentId, initial, onSubmit, o
   }
 
   return (
-    <div className="flex flex-col gap-5 rounded-xl border border-slate-200 bg-white shadow-sm p-5">
+    <div className="glass-card p-6 flex flex-col gap-5">
       {!assessmentId && (
         <div className="grid gap-3 sm:grid-cols-3">
           <div>
@@ -546,11 +546,15 @@ export function BlueprintEditorForm({ topics, assessmentId, initial, onSubmit, o
             sections.length === 0 ||
             (!assessmentId && (!slug || !company || !name))
           }
-          className="rounded-md bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700 hover:bg-neutral-700 disabled:opacity-40"
+          className="btn-primary py-2 px-5 text-xs font-semibold disabled:opacity-40"
         >
           {saving ? 'Saving…' : assessmentId ? 'Publish new version' : 'Create blueprint'}
         </button>
-        <button type="button" onClick={onCancel} className="rounded-md border px-5 py-2 text-sm">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="btn-secondary py-2 px-5 text-xs font-medium"
+        >
           Cancel
         </button>
       </div>

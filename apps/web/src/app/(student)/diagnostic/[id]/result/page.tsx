@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ApiError } from '../../../../../lib/apiClient';
 import { getDiagnosticResult, type DiagnosticResult } from '../../../../../lib/diagnostic';
+import { IconSparkles } from '../../../../../components/Icons';
 
 function pct(v: number | null): string {
   return v == null ? '—' : `${Math.round(v * 100)}%`;
@@ -46,110 +47,161 @@ export default function DiagnosticResultPage() {
   }, [id]);
 
   if (pending) {
-    return <p className="text-neutral-500">Analysing your diagnostic…</p>;
+    return (
+      <div className="glass-card p-12 text-center text-xs text-stone-400">
+        Analysing diagnostic performance and calibrating Bayesian priors…
+      </div>
+    );
   }
   if (error || !result) {
-    return <p className="text-red-600">{error ?? 'No result'}</p>;
+    return (
+      <div className="rounded-2xl border border-rose-200 bg-rose-50/90 p-4 text-xs text-rose-800">
+        {error ?? 'No diagnostic result found'}
+      </div>
+    );
   }
 
   const thinNames = new Map(result.byTopic.map((t) => [t.topicId, t.topicName ?? t.topicId]));
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-5 gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Diagnostic result</h1>
-          <p className="text-sm text-neutral-500">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+            Diagnostic Analysis &amp; Baseline
+          </h1>
+          <p className="mt-1 text-xs text-stone-500">
             {result.totals.answered}/{result.totals.questions} answered · {result.totals.correct}{' '}
-            correct · {pct(result.totals.accuracy)} accuracy
+            correct · {pct(result.totals.accuracy)} overall accuracy
           </p>
         </div>
         {result.coarse && (
-          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
-            Coarse estimate (express)
+          <span className="rounded-full bg-amber-50 border border-amber-200/60 px-3.5 py-1 text-xs font-semibold text-amber-800 shadow-2xs">
+            Coarse estimate (express mode)
           </span>
         )}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <section className="rounded-lg border border-neutral-200 p-4">
-          <h2 className="font-semibold">By topic</h2>
-          <table className="mt-2 w-full text-sm">
-            <thead>
-              <tr className="text-left text-neutral-500">
-                <th className="pr-2">Topic</th>
-                <th className="pr-2">Section</th>
-                <th className="pr-2">Accuracy</th>
-                <th className="pr-2">Time</th>
-                <th>Evidence</th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.byTopic.map((t) => (
-                <tr key={t.topicId} className="border-t border-neutral-100">
-                  <td className="pr-2">{t.topicName ?? t.topicId.slice(0, 8)}</td>
-                  <td className="pr-2 text-neutral-500">{t.sectionName ?? '—'}</td>
-                  <td className="pr-2 font-medium">{pct(t.accuracy)}</td>
-                  <td className="pr-2">{ratio(t.avgTimeRatio)}</td>
-                  <td className={t.thinEvidence ? 'text-amber-600' : 'text-neutral-500'}>
-                    {t.thinEvidence ? 'thin' : `${t.answered} items`}
-                  </td>
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* By Topic Table */}
+        <section className="glass-card p-6 flex flex-col gap-3">
+          <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+            Accuracy by Topic
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-stone-100 text-left text-stone-400 font-semibold uppercase tracking-wider">
+                  <th className="pb-2.5 pr-2">Topic</th>
+                  <th className="pb-2.5 pr-2">Section</th>
+                  <th className="pb-2.5 pr-2">Accuracy</th>
+                  <th className="pb-2.5 pr-2">Pace</th>
+                  <th className="pb-2.5">Evidence</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-stone-100/70">
+                {result.byTopic.map((t) => (
+                  <tr key={t.topicId} className="hover:bg-white/50 transition-colors">
+                    <td className="py-2.5 pr-2 font-medium text-stone-800">
+                      {t.topicName ?? t.topicId.slice(0, 8)}
+                    </td>
+                    <td className="py-2.5 pr-2 text-stone-500">{t.sectionName ?? '—'}</td>
+                    <td className="py-2.5 pr-2 font-bold text-stone-900">{pct(t.accuracy)}</td>
+                    <td className="py-2.5 pr-2 text-stone-600">{ratio(t.avgTimeRatio)}</td>
+                    <td className="py-2.5">
+                      <span
+                        className={`px-2 py-0.5 rounded-md text-[11px] font-medium ${
+                          t.thinEvidence
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200/50'
+                            : 'bg-stone-100 text-stone-600'
+                        }`}
+                      >
+                        {t.thinEvidence ? 'thin' : `${t.answered} items`}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
 
+        {/* Breakdown Metrics */}
         <div className="flex flex-col gap-4">
-          <section className="rounded-lg border border-neutral-200 p-4">
-            <h2 className="font-semibold">By difficulty</h2>
-            <div className="mt-2 flex flex-col gap-1 text-sm">
+          <section className="glass-card p-6 flex flex-col gap-2">
+            <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+              Performance by Difficulty Band
+            </h2>
+            <div className="mt-1 flex flex-col gap-2 text-xs">
               {result.byDifficulty.map((b) => (
-                <div key={b.band} className="flex justify-between">
-                  <span className="capitalize text-neutral-600">{b.label}</span>
-                  <span>
-                    {pct(b.accuracy)}{' '}
-                    <span className="text-neutral-400">
+                <div
+                  key={b.band}
+                  className="flex justify-between items-center rounded-xl bg-stone-50/70 p-2.5 px-3 border border-stone-200/40"
+                >
+                  <span className="capitalize font-semibold text-stone-700">{b.label}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-stone-900">{pct(b.accuracy)}</span>
+                    <span className="text-stone-400 text-[11px]">
                       ({b.correct}/{b.attempts})
                     </span>
-                  </span>
+                  </div>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="rounded-lg border border-neutral-200 p-4 text-sm">
-            <h2 className="font-semibold">Pace</h2>
-            <div className="mt-2 flex flex-col gap-1">
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Avg time vs expected</span>
-                <span>{ratio(result.timeVsExpected.avgRatio)}</span>
+          <section className="glass-card p-6 flex flex-col gap-2 text-xs">
+            <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+              Pacing Analysis
+            </h2>
+            <div className="mt-1 flex flex-col gap-2">
+              <div className="flex justify-between items-center py-1 border-b border-stone-100">
+                <span className="text-stone-600 font-medium">Avg time vs expected</span>
+                <span className="font-bold text-stone-900">
+                  {ratio(result.timeVsExpected.avgRatio)}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Over expected (&gt;1.2×)</span>
-                <span>{pct(result.timeVsExpected.overExpectedShare)}</span>
+              <div className="flex justify-between items-center py-1 border-b border-stone-100">
+                <span className="text-stone-600 font-medium">Over expected (&gt;1.2×)</span>
+                <span className="font-semibold text-stone-800">
+                  {pct(result.timeVsExpected.overExpectedShare)}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Under expected (&lt;0.8×)</span>
-                <span>{pct(result.timeVsExpected.underExpectedShare)}</span>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-stone-600 font-medium">Under expected (&lt;0.8×)</span>
+                <span className="font-semibold text-stone-800">
+                  {pct(result.timeVsExpected.underExpectedShare)}
+                </span>
               </div>
             </div>
           </section>
 
-          <section className="rounded-lg border border-neutral-200 p-4 text-sm">
-            <h2 className="font-semibold">Consistency</h2>
-            <div className="mt-2 flex flex-col gap-1">
-              <div className="flex justify-between">
-                <span className="text-neutral-600">First half</span>
-                <span>{pct(result.consistency.firstHalfAccuracy)}</span>
+          <section className="glass-card p-6 flex flex-col gap-2 text-xs">
+            <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+              Fatigue &amp; Consistency
+            </h2>
+            <div className="mt-1 flex flex-col gap-2">
+              <div className="flex justify-between items-center py-1 border-b border-stone-100">
+                <span className="text-stone-600 font-medium">First half accuracy</span>
+                <span className="font-bold text-stone-900">
+                  {pct(result.consistency.firstHalfAccuracy)}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Second half</span>
-                <span>{pct(result.consistency.secondHalfAccuracy)}</span>
+              <div className="flex justify-between items-center py-1 border-b border-stone-100">
+                <span className="text-stone-600 font-medium">Second half accuracy</span>
+                <span className="font-bold text-stone-900">
+                  {pct(result.consistency.secondHalfAccuracy)}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-600">Drift</span>
-                <span className={result.consistency.unstable ? 'font-medium text-amber-600' : ''}>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-stone-600 font-medium">Accuracy drift</span>
+                <span
+                  className={
+                    result.consistency.unstable
+                      ? 'font-bold text-amber-700'
+                      : 'font-semibold text-stone-800'
+                  }
+                >
                   {result.consistency.drift == null
                     ? '—'
                     : `${Math.round(result.consistency.drift * 100)}%`}
@@ -158,47 +210,39 @@ export default function DiagnosticResultPage() {
               </div>
             </div>
           </section>
-
-          <section className="rounded-lg border border-neutral-200 p-4 text-sm">
-            <h2 className="font-semibold">Skips</h2>
-            <p className="mt-1 text-neutral-600">
-              {result.skipPattern.skippedCount} skipped ({pct(result.skipPattern.skippedShare)})
-              {result.skipPattern.skippedPositions.length > 0 && (
-                <span className="text-neutral-400">
-                  {' '}
-                  at positions {result.skipPattern.skippedPositions.join(', ')}
-                </span>
-              )}
-            </p>
-          </section>
         </div>
       </div>
 
       {result.thinEvidence.length > 0 && (
-        <section className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <h2 className="font-semibold text-amber-900">Needs more evidence</h2>
-          <p className="mt-1 text-sm text-amber-800">
-            These topics had too few items to estimate reliably:{' '}
-            {result.thinEvidence.map((t) => thinNames.get(t) ?? t).join(', ')}. Your plan will
-            include probe questions for them.
+        <section className="rounded-2xl border border-amber-200/80 bg-amber-50/80 p-5 text-xs text-amber-900">
+          <h2 className="font-bold text-amber-950 mb-1 flex items-center gap-1.5">
+            <IconSparkles className="w-4 h-4 text-amber-600" />
+            <span>Thin Evidence Areas</span>
+          </h2>
+          <p className="leading-relaxed">
+            These topics had too few diagnostic items to calibrate high confidence:{' '}
+            <strong className="text-amber-950">
+              {result.thinEvidence.map((t) => thinNames.get(t) ?? t).join(', ')}
+            </strong>
+            . Your initial practice plan will automatically insert calibrated probe questions.
           </p>
         </section>
       )}
 
-      <div className="flex gap-3">
+      <div className="flex gap-3 pt-2">
         <button
           type="button"
           onClick={() => router.push(`/diagnostic/${id}/review`)}
-          className="rounded bg-neutral-900 px-6 py-2 text-sm text-white"
+          className="btn-primary py-2.5 px-6 text-xs font-semibold"
         >
-          Review mistakes
+          Review mistakes →
         </button>
         <button
           type="button"
           onClick={() => router.push('/dashboard')}
-          className="rounded border border-neutral-300 px-6 py-2 text-sm"
+          className="btn-secondary py-2.5 px-6 text-xs font-medium"
         >
-          OK — back to dashboard
+          OK — back to overview
         </button>
       </div>
     </div>

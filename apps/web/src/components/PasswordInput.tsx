@@ -17,7 +17,7 @@ export function PasswordInput({
   onChange,
   autoComplete = 'current-password',
   required = true,
-  className = 'w-full rounded border border-neutral-300 px-3 py-2 pr-10',
+  className = 'w-full glass-input px-3.5 py-2.5 pr-10 text-sm',
   ariaLabel = 'Password',
 }: Props) {
   const [show, setShow] = useState(false);
@@ -36,7 +36,7 @@ export function PasswordInput({
         type="button"
         onClick={() => setShow((v) => !v)}
         aria-label={show ? 'Hide password' : 'Show password'}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-800"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 transition-colors"
       >
         {show ? (
           <svg

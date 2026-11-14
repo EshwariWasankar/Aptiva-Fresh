@@ -97,8 +97,10 @@ export default function BlueprintsPage() {
 
   if (mode.kind === 'new') {
     return (
-      <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold">New blueprint</h1>
+      <div className="flex flex-col gap-5">
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900">
+          New Assessment Blueprint
+        </h1>
         <BlueprintEditorForm
           topics={topics}
           onSubmit={submit}
@@ -145,8 +147,10 @@ export default function BlueprintsPage() {
         }
       : undefined;
     return (
-      <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold">New version — {detail.name}</h1>
+      <div className="flex flex-col gap-5">
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900">
+          New Blueprint Version — {detail.name}
+        </h1>
         <BlueprintEditorForm
           topics={topics}
           assessmentId={mode.assessmentId}
@@ -159,75 +163,92 @@ export default function BlueprintsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Blueprints</h1>
-        <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between border-b border-stone-200/50 pb-5 gap-3">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+            Assessment Blueprints
+          </h1>
+          <p className="mt-1 text-xs text-stone-500">
+            Define corporate assessment test patterns, section durations, and topic weighting
+            matrix.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
           <input
             type="text"
-            placeholder="Draft from records: company"
+            placeholder="Draft from company records…"
             value={draftCompany}
             onChange={(e) => setDraftCompany(e.target.value)}
-            className="w-56 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="glass-input px-3 py-1.5 text-xs w-48"
           />
           <button
             type="button"
             disabled={draftBusy || !draftCompany.trim()}
             onClick={() => void draftFromRecords()}
-            className="rounded-md border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-50 disabled:opacity-50"
+            className="btn-secondary py-1.5 px-3 text-xs disabled:opacity-50"
           >
             Draft from records
           </button>
           <button
             type="button"
             onClick={() => setMode({ kind: 'new' })}
-            className="rounded-md bg-neutral-900 px-4 py-2 text-sm text-white hover:bg-neutral-700"
+            className="btn-primary py-1.5 px-3.5 text-xs font-semibold"
           >
-            New blueprint
+            + New blueprint
           </button>
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3.5 text-xs text-rose-800">
+          {error}
+        </div>
+      )}
+
       {loading ? (
-        <p className="text-neutral-500">Loading…</p>
+        <div className="glass-card p-10 text-center text-xs text-stone-400">
+          Loading blueprints…
+        </div>
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="grid gap-3 sm:grid-cols-2">
           {items.map((a) => (
-            <li key={a.id} className="rounded-lg border bg-white p-4">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <div className="font-medium">{a.name}</div>
-                  <div className="text-sm text-neutral-500">
-                    {a.company} · slug {a.slug}
-                  </div>
+            <li
+              key={a.id}
+              className="glass-card glass-card-interactive p-5 flex flex-col justify-between gap-3"
+            >
+              <div>
+                <div className="font-bold text-sm text-stone-900">{a.name}</div>
+                <div className="text-xs text-stone-500 mt-0.5">
+                  {a.company} · slug: <code className="text-[11px] text-stone-700">{a.slug}</code>
                 </div>
-                <div className="flex items-center gap-2">
-                  {a.versions.map((v) => (
-                    <button
-                      key={v.id}
-                      type="button"
-                      onClick={() => void openDetail(a.id)}
-                      className={`rounded border px-2 py-1 text-xs ${
-                        v.isCurrent ? 'border-emerald-500 text-emerald-700' : 'text-neutral-500'
-                      }`}
-                    >
-                      v{v.version}
-                      {v.isCurrent ? ' · current' : ''}
-                    </button>
-                  ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-stone-100">
+                {a.versions.map((v) => (
                   <button
+                    key={v.id}
                     type="button"
-                    onClick={() => {
-                      void openDetail(a.id).then(() =>
-                        setMode({ kind: 'version', assessmentId: a.id }),
-                      );
-                    }}
-                    className="rounded border px-2 py-1 text-xs hover:bg-neutral-50"
+                    onClick={() => void openDetail(a.id)}
+                    className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold transition-colors ${
+                      v.isCurrent
+                        ? 'bg-emerald-50 border border-emerald-300 text-emerald-800'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    }`}
                   >
-                    New version
+                    v{v.version} {v.isCurrent ? '· active' : ''}
                   </button>
-                </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => {
+                    void openDetail(a.id).then(() =>
+                      setMode({ kind: 'version', assessmentId: a.id }),
+                    );
+                  }}
+                  className="btn-secondary ml-auto py-0.5 px-2.5 text-[11px] font-semibold"
+                >
+                  + New version
+                </button>
               </div>
             </li>
           ))}
@@ -235,42 +256,50 @@ export default function BlueprintsPage() {
       )}
 
       {detail && currentVersion && (
-        <div className="rounded-lg border bg-white p-5">
-          <h2 className="text-lg font-semibold">
-            {detail.name}{' '}
-            <span className="text-sm font-normal text-neutral-500">
-              v{currentVersion.version}
-              {currentVersion.lastVerifiedAt
-                ? ` · verified ${new Date(currentVersion.lastVerifiedAt).toLocaleDateString()}`
-                : ' · unverified'}
+        <div className="glass-card p-6 flex flex-col gap-4 border-2 border-blue-200/60">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-100 pb-3 gap-2">
+            <div>
+              <h2 className="text-lg font-bold text-stone-900">{detail.name}</h2>
+              <span className="text-xs text-stone-500 font-medium">
+                Version {currentVersion.version}{' '}
+                {currentVersion.lastVerifiedAt
+                  ? `· verified ${new Date(currentVersion.lastVerifiedAt).toLocaleDateString()}`
+                  : '· unverified'}
+              </span>
+            </div>
+            <span className="rounded-full bg-blue-50 border border-blue-200/50 px-3 py-1 text-xs font-semibold text-blue-800">
+              {currentVersion.sections.length} test sections
             </span>
-          </h2>
-          <div className="mt-3 flex flex-col gap-3">
+          </div>
+
+          <div className="flex flex-col gap-3">
             {currentVersion.sections.map((s) => (
-              <div key={s.id} className="rounded border p-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-medium">
-                    {s.orderNo}. {s.name}
+              <div
+                key={s.id}
+                className="rounded-xl bg-stone-50/70 p-4 border border-stone-200/40 flex flex-col gap-2"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/30 pb-2">
+                  <span className="font-bold text-xs text-stone-900">
+                    Section {s.orderNo}. {s.name}
                   </span>
                   <ProvenanceBadge source={s.source} />
                 </div>
-                <div className="mt-2 grid gap-1 text-sm text-neutral-600 sm:grid-cols-2">
-                  <div>
-                    {s.durationMin ?? '?'} min · {s.questionCountMin ?? '?'}–
-                    {s.questionCountMax ?? '?'} questions
-                    {s.negativeMarking != null ? ` · −${s.negativeMarking} negative` : ''}
-                  </div>
+                <div className="text-xs text-stone-600 font-medium">
+                  {s.durationMin ?? '?'} min · {s.questionCountMin ?? '?'}–
+                  {s.questionCountMax ?? '?'} questions
+                  {s.negativeMarking != null ? ` · −${s.negativeMarking} negative marking` : ''}
                 </div>
-                <ul className="mt-2 flex flex-col gap-1">
+                <ul className="flex flex-col gap-1.5 pt-1">
                   {s.weights.map((w) => (
                     <li
                       key={w.id}
-                      className="flex flex-wrap items-center justify-between gap-2 text-sm"
+                      className="flex flex-wrap items-center justify-between gap-2 text-xs bg-white/70 p-2 px-3 rounded-lg border border-stone-200/30"
                     >
-                      <span>
-                        {w.topic.name} — {Math.round(w.share * 100)}%
+                      <span className="font-medium text-stone-800">
+                        {w.topic.name} —{' '}
+                        <strong className="text-stone-900">{Math.round(w.share * 100)}%</strong>
                         {w.difficultyBand ? ` · band ${w.difficultyBand}` : ''}
-                        {w.paceSeconds ? ` · ${w.paceSeconds}s` : ''}
+                        {w.paceSeconds ? ` · ~${w.paceSeconds}s` : ''}
                       </span>
                       <ProvenanceBadge source={w.source} />
                     </li>
@@ -279,15 +308,28 @@ export default function BlueprintsPage() {
               </div>
             ))}
           </div>
-          <h3 className="mt-4 text-sm font-medium text-neutral-700">Version history</h3>
-          <ul className="mt-1 text-sm text-neutral-600">
-            {detail.versions.map((v) => (
-              <li key={v.id}>
-                v{v.version} — {v.isCurrent ? 'current' : 'superseded'} · valid from{' '}
-                {new Date(v.validFrom).toLocaleDateString()} · {v.sections.length} sections
-              </li>
-            ))}
-          </ul>
+
+          <div className="pt-2 border-t border-stone-100">
+            <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2">
+              Revision Log
+            </h3>
+            <ul className="flex flex-col gap-1 text-xs text-stone-600">
+              {detail.versions.map((v) => (
+                <li key={v.id} className="flex justify-between py-1">
+                  <span>
+                    v{v.version} —{' '}
+                    {v.isCurrent ? (
+                      <strong className="text-emerald-700">active</strong>
+                    ) : (
+                      'superseded'
+                    )}{' '}
+                    · valid from {new Date(v.validFrom).toLocaleDateString()}
+                  </span>
+                  <span className="text-stone-400">{v.sections.length} sections</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </div>

@@ -52,17 +52,27 @@ export default function ReviewPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Review queue</h1>
-        <div className="flex gap-2 text-sm">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-5 gap-3">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+            Editorial Review Queue
+          </h1>
+          <p className="mt-1 text-xs text-stone-500">
+            {total} item{total === 1 ? '' : 's'} awaiting evaluation. Dual-reviewer approval is
+            required for diagnostic publication.
+          </p>
+        </div>
+        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-white/80 self-start sm:self-auto">
           {(['draft', 'reviewed'] as const).map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => setStatus(s)}
-              className={`rounded border px-3 py-1 ${
-                status === s ? 'bg-neutral-900 text-white' : 'bg-white'
+              className={`rounded-full px-4 py-1 text-xs font-semibold capitalize transition-all ${
+                status === s
+                  ? 'glass-pill-active text-stone-900'
+                  : 'text-stone-500 hover:text-stone-800'
               }`}
             >
               {s}
@@ -70,50 +80,69 @@ export default function ReviewPage() {
           ))}
         </div>
       </div>
-      <p className="text-sm text-neutral-500">
-        {total} item{total === 1 ? '' : 's'} awaiting review. Approvals from two distinct reviewers
-        are required before diagnostic and reassessment items can be published.
-      </p>
 
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3.5 text-xs text-rose-800">
+          {error}
+        </div>
+      )}
+
       {loading ? (
-        <p className="text-neutral-500">Loading…</p>
+        <div className="glass-card p-10 text-center text-xs text-stone-400">
+          Loading review queue…
+        </div>
       ) : items.length === 0 ? (
-        <p className="text-neutral-500">Queue is empty.</p>
+        <div className="glass-card p-12 text-center text-xs text-stone-400">
+          Review queue is currently empty for status: {status}.
+        </div>
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-4">
           {items.map((q) => (
-            <li key={q.id} className="rounded-lg border bg-white p-4">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <Link href={`/admin/questions/${q.id}`} className="font-medium hover:underline">
-                    <Katex text={q.stem.slice(0, 300)} />
+            <li key={q.id} className="glass-card p-6 flex flex-col gap-3">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="min-w-0 flex-1 flex flex-col gap-2">
+                  <Link
+                    href={`/admin/questions/${q.id}`}
+                    className="font-semibold text-sm text-stone-900 hover:text-blue-600 transition"
+                  >
+                    <Katex text={q.stem.slice(0, 280) + (q.stem.length > 280 ? '…' : '')} />
                   </Link>
-                  <div className="mt-1 text-xs text-neutral-500">
-                    {q.format} · {q.topic.name} · band {q.difficultyPrior} · pool {q.pool} ·{' '}
-                    {q.sourceName ?? 'no source'}
-                    {q.options.length > 0 &&
-                      ` · ${q.options.filter((o) => o.isCorrect).length} correct option(s)`}
+                  <div className="flex items-center gap-2 text-[11px] text-stone-500 flex-wrap">
+                    <span className="font-semibold text-stone-700 bg-stone-100/90 px-2 py-0.5 rounded-md">
+                      {q.topic.name}
+                    </span>
+                    <span>·</span>
+                    <span className="uppercase">{q.format}</span>
+                    <span>·</span>
+                    <span>Band {q.difficultyPrior}</span>
+                    <span>·</span>
+                    <span className="capitalize">{q.pool} pool</span>
+                    {q.options.length > 0 && (
+                      <>
+                        <span>·</span>
+                        <span>{q.options.filter((o) => o.isCorrect).length} correct</span>
+                      </>
+                    )}
                   </div>
                   {q.reviews.length > 0 && (
-                    <div className="mt-1 text-xs text-neutral-500">
+                    <div className="text-[11px] text-stone-500 bg-stone-50/70 p-2 rounded-lg border border-stone-200/40">
                       {q.reviews.length} prior review(s):{' '}
-                      {q.reviews.map((r) => `${r.reviewer.email}:${r.decision}`).join(', ')}
+                      {q.reviews.map((r) => `${r.reviewer.email} (${r.decision})`).join(', ')}
                     </div>
                   )}
                   <input
-                    className="mt-2 w-full rounded border px-2 py-1 text-sm"
-                    placeholder="Review notes (optional)"
+                    className="glass-input mt-1 px-3 py-1.5 text-xs"
+                    placeholder="Review notes or feedback for author (optional)…"
                     value={notes[q.id] ?? ''}
                     onChange={(e) => setNotes((n) => ({ ...n, [q.id]: e.target.value }))}
                   />
                 </div>
-                <div className="flex shrink-0 gap-2">
+                <div className="flex shrink-0 items-center gap-2">
                   <button
                     type="button"
                     disabled={busy === q.id}
                     onClick={() => void decide(q, 'approve')}
-                    className="rounded-md bg-emerald-700 px-4 py-2 text-sm text-white hover:bg-emerald-600 disabled:opacity-40"
+                    className="rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-2 text-xs transition-colors shadow-2xs disabled:opacity-40"
                   >
                     Approve
                   </button>
@@ -121,7 +150,7 @@ export default function ReviewPage() {
                     type="button"
                     disabled={busy === q.id}
                     onClick={() => void decide(q, 'reject')}
-                    className="rounded-md border border-red-300 px-4 py-2 text-sm text-red-700 hover:bg-red-50 disabled:opacity-40"
+                    className="btn-secondary py-2 px-4 text-xs font-semibold text-rose-700 hover:bg-rose-50 border-rose-200 disabled:opacity-40"
                   >
                     Reject
                   </button>

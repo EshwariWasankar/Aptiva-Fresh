@@ -117,8 +117,8 @@ export function QuestionEditor({ question, topics }: Props) {
     }
   }
 
-  const inputCls = 'w-full rounded border px-3 py-1.5 text-sm';
-  const labelCls = 'mb-1 block text-sm font-medium text-neutral-700';
+  const inputCls = 'w-full glass-input px-3.5 py-2 text-xs font-medium';
+  const labelCls = 'mb-1 block text-xs font-semibold text-stone-700';
 
   return (
     <div className="flex flex-col gap-5">
@@ -400,14 +400,14 @@ export function QuestionEditor({ question, topics }: Props) {
           type="button"
           onClick={() => void save()}
           disabled={saving || !form.topicId || !form.stem.trim()}
-          className="rounded-md bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700 hover:bg-neutral-700 disabled:opacity-40"
+          className="btn-primary py-2 px-5 text-xs font-semibold disabled:opacity-40"
         >
           {saving ? 'Saving…' : question ? 'Save changes' : 'Create question'}
         </button>
         <button
           type="button"
           onClick={() => router.push('/admin/questions')}
-          className="rounded-md border px-5 py-2 text-sm"
+          className="btn-secondary py-2 px-5 text-xs font-medium"
         >
           Cancel
         </button>

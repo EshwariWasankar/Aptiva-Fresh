@@ -1,29 +1,29 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { startReassessment } from '../../../lib/practice';
 import { ApiError } from '../../../lib/apiClient';
 import { getProfile, type ProfileResponse } from '../../../lib/profile';
-import { useEffect } from 'react';
+import { IconActivity } from '../../../components/Icons';
 
 const KINDS = [
   {
     kind: 'check' as const,
-    title: 'Short check',
-    body: '~10 questions across topics — a quick pulse on retention.',
+    title: 'Short Check',
+    body: '~10 questions across topics — a quick pulse on current retention.',
     minutes: 10,
   },
   {
     kind: 'topic' as const,
-    title: 'Topic test',
-    body: '~15 questions on one topic you choose.',
+    title: 'Targeted Topic Test',
+    body: '~15 questions on one topic you select to test deep mastery.',
     minutes: 15,
   },
   {
     kind: 'mock' as const,
-    title: 'Mock',
-    body: '~30 questions across the blueprint — closest to test day.',
+    title: 'Full Blueprint Mock',
+    body: '~30 questions across sections — closest mirror to actual exam day.',
     minutes: 30,
   },
 ];
@@ -73,68 +73,73 @@ export default function ReassessmentPage() {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Reassessment</h1>
-        <p className="mt-1 text-sm text-neutral-600">
-          Reassessment uses questions you haven&apos;t seen before, so improvement reflects learning
-          — not memory. Compare against your diagnostic baseline afterwards.
+    <div className="flex flex-col gap-6">
+      <div className="border-b border-stone-200/50 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          Targeted Reassessments
+        </h1>
+        <p className="mt-1 text-xs text-stone-500">
+          Reassessments strictly serve unseen questions to verify real skill acquisition against
+          your initial diagnostic baseline.
         </p>
       </div>
 
       {notice && (
-        <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        <div className="rounded-xl border border-amber-200/80 bg-amber-50/80 p-3.5 text-xs text-amber-900">
           {notice}
-        </p>
+        </div>
       )}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3.5 text-xs text-rose-800">
+          {error}
+        </div>
+      )}
 
-      {kindTopicPicker(topics, topicId, setTopicId)}
+      {topics.length > 0 && (
+        <label className="flex max-w-sm flex-col gap-1.5 text-xs font-semibold text-stone-700">
+          Select Topic (for Topic Test)
+          <select
+            value={topicId}
+            onChange={(e) => setTopicId(e.target.value)}
+            className="glass-input px-3.5 py-2.5 text-xs font-medium"
+          >
+            <option value="">Select a topic from your syllabus…</option>
+            {topics.map((t) => (
+              <option key={t.topicId} value={t.topicId}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-3">
         {KINDS.map((k) => (
           <section
             key={k.kind}
-            className="flex flex-col rounded-xl border border-slate-200 bg-white shadow-sm p-5"
+            className="glass-card glass-card-interactive p-6 flex flex-col justify-between gap-4 group"
           >
-            <h2 className="font-semibold">{k.title}</h2>
-            <p className="mt-1 flex-1 text-sm text-neutral-600">{k.body}</p>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-stone-100 text-stone-700 font-bold text-xs group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                  <IconActivity className="w-4 h-4" />
+                </span>
+                <span className="text-[11px] font-semibold text-stone-400">~{k.minutes} min</span>
+              </div>
+              <h2 className="text-base font-bold text-stone-900">{k.title}</h2>
+              <p className="mt-2 text-xs text-stone-600 leading-relaxed">{k.body}</p>
+            </div>
             <button
               type="button"
               disabled={pending !== null || (k.kind === 'topic' && !topicId)}
               onClick={() => void start(k.kind)}
-              className="mt-4 rounded-md bg-neutral-900 px-4 py-2 text-sm text-white disabled:opacity-40"
+              className="btn-primary w-full py-2.5 px-4 text-xs font-semibold disabled:opacity-40"
             >
-              {pending === k.kind ? 'Starting…' : `Start (${k.minutes} min)`}
+              {pending === k.kind ? 'Preparing session…' : `Start (${k.minutes} min)`}
             </button>
           </section>
         ))}
       </div>
     </div>
-  );
-}
-
-function kindTopicPicker(
-  topics: { topicId: string; name: string }[],
-  topicId: string,
-  setTopicId: (v: string) => void,
-) {
-  if (topics.length === 0) return null;
-  return (
-    <label className="flex max-w-sm flex-col gap-1 text-sm">
-      Topic for topic test
-      <select
-        value={topicId}
-        onChange={(e) => setTopicId(e.target.value)}
-        className="rounded border border-neutral-300 px-3 py-2"
-      >
-        <option value="">Select a topic…</option>
-        {topics.map((t) => (
-          <option key={t.topicId} value={t.topicId}>
-            {t.name}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }

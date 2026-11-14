@@ -1,30 +1,66 @@
 'use client';
 
+import Link from 'next/link';
 import type { ReadinessResponse } from '../lib/content';
+import { IconActivity, IconArrowUpRight, IconSparkles } from './Icons';
 
-/** P-12/P-13 readiness band — a range with a confidence badge, never a bare number. */
+/** P-12/P-13 readiness band styled to match the reference hero card aesthetic. */
 export function ReadinessBand({ readiness }: { readiness: ReadinessResponse | null }) {
   if (!readiness) return null;
   const low = Math.round(readiness.bandLow * 100);
   const high = Math.round(readiness.bandHigh * 100);
-  const conf =
+
+  const confBadge =
     readiness.confidence === 'high'
-      ? 'bg-green-100 text-green-800'
+      ? 'bg-blue-50 text-blue-700 border border-blue-200/60'
       : readiness.confidence === 'medium'
-        ? 'bg-amber-100 text-amber-800'
-        : 'bg-neutral-200 text-neutral-700';
+        ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
+        : 'bg-stone-100 text-stone-600 border border-stone-200/60';
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm font-medium text-neutral-700">Readiness estimate</h2>
-        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${conf}`}>
-          {readiness.confidence} confidence
-        </span>
+    <div className="glass-card p-6 flex flex-col justify-between gap-5">
+      <div>
+        <div className="flex items-center justify-between text-stone-500">
+          <span className="text-xs font-semibold tracking-wide uppercase text-stone-400">
+            Target Readiness
+          </span>
+          <span className="p-1.5 rounded-lg bg-stone-100/80 text-stone-600">
+            <IconActivity className="w-4 h-4" />
+          </span>
+        </div>
+
+        <div className="mt-3 flex items-baseline gap-2">
+          <span className="text-4xl font-bold tracking-tight text-stone-900">
+            {low}–{high}%
+          </span>
+        </div>
+
+        <div className="mt-2.5 flex items-center gap-2">
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${confBadge}`}
+          >
+            <IconSparkles className="w-3 h-3 text-blue-600" />
+            {readiness.confidence} confidence
+          </span>
+        </div>
       </div>
-      <p className="mt-1 text-2xl font-semibold tracking-tight">
-        {low}–{high}%
-      </p>
-      <p className="mt-1 text-xs text-neutral-500">{readiness.disclaimer}</p>
+
+      {/* Inset Action Pill matching the reference card's "Everyday account ↗" */}
+      <Link
+        href="/profile"
+        className="group flex items-center justify-between rounded-xl bg-stone-100/70 hover:bg-stone-100 p-3.5 border border-stone-200/60 transition-all"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-xs border border-stone-200/60 text-stone-700">
+            <IconActivity className="w-4 h-4 text-blue-600" />
+          </div>
+          <div>
+            <div className="text-xs font-semibold text-stone-800">Mastery Profile Breakdown</div>
+            <div className="text-[11px] text-stone-500 line-clamp-1">{readiness.disclaimer}</div>
+          </div>
+        </div>
+        <IconArrowUpRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 transition-colors" />
+      </Link>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { api, ApiError } from '../lib/apiClient';
 
@@ -34,24 +35,27 @@ function VerifyEmailInner() {
   }, [token]);
 
   return (
-    <div className="flex flex-col gap-3 text-center">
-      <h1 className="text-xl font-semibold">Verify email</h1>
-      <p className="text-sm text-neutral-600">
-        {state === 'working' && 'Verifying…'}
-        {state === 'done' && message}
-        {state === 'error' && message}
+    <div className="flex flex-col gap-4 text-center">
+      <h1 className="text-xl font-bold tracking-tight text-stone-900">Verify email</h1>
+      <p className="text-xs text-stone-600 leading-relaxed">
+        {state === 'working' && 'Verifying your token…'}
+        {state === 'done' && <span className="text-emerald-700 font-medium">{message}</span>}
+        {state === 'error' && <span className="text-rose-700">{message}</span>}
         {state === 'idle' && ''}
       </p>
-      <a href="/login" className="text-sm text-neutral-600 underline">
+      <Link
+        href="/login"
+        className="btn-primary mt-2 py-2.5 px-4 text-xs font-semibold inline-block"
+      >
         Go to sign in
-      </a>
+      </Link>
     </div>
   );
 }
 
 export function VerifyEmailPanel() {
   return (
-    <Suspense fallback={<p className="text-sm text-neutral-500">Loading…</p>}>
+    <Suspense fallback={<p className="text-xs text-stone-400">Loading…</p>}>
       <VerifyEmailInner />
     </Suspense>
   );

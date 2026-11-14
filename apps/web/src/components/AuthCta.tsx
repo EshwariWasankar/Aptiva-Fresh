@@ -10,19 +10,22 @@ import { useSession } from '../lib/session';
 export function AuthNavCta() {
   const { user, loading, signOut } = useSession();
   if (loading) {
-    return <span className="text-sm text-neutral-400">…</span>;
+    return <span className="text-xs text-stone-400">…</span>;
   }
   if (user) {
     return (
-      <span className="flex items-center gap-4 text-sm">
-        <span className="text-neutral-500">{user.email}</span>
-        <Link href="/dashboard" className="font-medium text-neutral-900 hover:underline">
+      <span className="flex items-center gap-3 text-xs">
+        <span className="text-stone-500 hidden sm:inline">{user.email}</span>
+        <Link
+          href="/dashboard"
+          className="btn-primary px-3.5 py-1.5 text-xs font-semibold shadow-xs"
+        >
           Dashboard
         </Link>
         <button
           type="button"
           onClick={() => void signOut().then(() => (window.location.href = '/'))}
-          className="text-neutral-600 underline"
+          className="text-stone-500 hover:text-stone-800 transition"
         >
           Sign out
         </button>
@@ -30,14 +33,14 @@ export function AuthNavCta() {
     );
   }
   return (
-    <span className="flex items-center gap-4 text-sm">
-      <Link href="/login" className="text-neutral-600 hover:text-neutral-900">
+    <span className="flex items-center gap-3 text-xs">
+      <Link
+        href="/login"
+        className="font-medium text-stone-600 hover:text-stone-900 transition px-2 py-1"
+      >
         Sign in
       </Link>
-      <Link
-        href="/register"
-        className="rounded-md bg-neutral-900 px-4 py-2 text-white hover:bg-neutral-700"
-      >
+      <Link href="/register" className="btn-primary px-4 py-2 text-xs font-semibold shadow-xs">
         Get started
       </Link>
     </span>
@@ -49,28 +52,52 @@ export function AuthHeroCta({ assessmentsHref = '#blueprints' }: { assessmentsHr
   if (loading) return null;
   if (user) {
     return (
-      <div className="mt-2 flex gap-3">
+      <div className="mt-2 flex flex-wrap gap-3">
         <Link
           href="/dashboard"
-          className="rounded-md bg-neutral-900 px-5 py-2.5 text-white hover:bg-neutral-700"
+          className="btn-primary px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2"
         >
-          Go to dashboard
+          <span>Go to dashboard</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
         </Link>
-        <a href={assessmentsHref} className="rounded-md border px-5 py-2.5 hover:bg-neutral-100">
+        <a href={assessmentsHref} className="btn-secondary px-5 py-2.5 text-sm font-medium">
           See supported assessments
         </a>
       </div>
     );
   }
   return (
-    <div className="mt-2 flex gap-3">
+    <div className="mt-2 flex flex-wrap gap-3">
       <Link
         href="/register"
-        className="rounded-md bg-neutral-900 px-5 py-2.5 text-white hover:bg-neutral-700"
+        className="btn-primary px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2"
       >
-        Create free account
+        <span>Create free account</span>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       </Link>
-      <a href={assessmentsHref} className="rounded-md border px-5 py-2.5 hover:bg-neutral-100">
+      <a href={assessmentsHref} className="btn-secondary px-5 py-2.5 text-sm font-medium">
         See supported assessments
       </a>
     </div>

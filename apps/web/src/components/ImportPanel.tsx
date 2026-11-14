@@ -23,12 +23,9 @@ import { ApiError } from '../lib/apiClient';
 
 type Tab = 'questions' | 'company' | 'coverage';
 
-const inputCls =
-  'w-full rounded border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-500 focus:outline-none';
-const btnCls =
-  'rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700 disabled:opacity-50';
-const btnGhost =
-  'rounded border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-100 disabled:opacity-50';
+const inputCls = 'w-full glass-input px-3.5 py-2 text-xs';
+const btnCls = 'btn-primary px-4 py-2 text-xs font-semibold disabled:opacity-50';
+const btnGhost = 'btn-secondary px-3 py-1.5 text-xs font-medium disabled:opacity-50';
 
 function ErrorBox({ error }: { error: unknown }) {
   if (!error) return null;
@@ -621,20 +618,32 @@ export default function ImportPanel() {
     { id: 'coverage', label: 'Coverage' },
   ];
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold tracking-tight">Import</h1>
-      <div className="flex gap-1 border-b border-neutral-200">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
-            className={`px-4 py-2 text-sm ${
-              tab === t.id ? 'border-b-2 border-neutral-900 font-semibold' : 'text-neutral-500'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-4 gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-stone-900">
+            Batch Ingest &amp; Coverage
+          </h1>
+          <p className="mt-1 text-xs text-stone-500">
+            Import question sets, validate company blueprint records, and check syllabus coverage
+            metrics.
+          </p>
+        </div>
+        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-white/80 self-start sm:self-auto">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`rounded-full px-3.5 py-1 text-xs font-semibold transition-all ${
+                tab === t.id
+                  ? 'glass-pill-active text-stone-900'
+                  : 'text-stone-500 hover:text-stone-800'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
       {tab === 'questions' && <QuestionImportTab />}
       {tab === 'company' && <CompanyTab />}

@@ -9,6 +9,7 @@ import {
   type SessionSummary,
 } from '../../../../../../lib/practice';
 import { ApiError } from '../../../../../../lib/apiClient';
+import { IconSparkles } from '../../../../../../components/Icons';
 
 /** P-15 — post-session summary; polls E-043 until recalculation settles. */
 export default function SessionSummaryPage() {
@@ -52,20 +53,40 @@ export default function SessionSummaryPage() {
     }
   }
 
-  if (error && !summary) return <p className="text-red-600">{error}</p>;
-  if (!summary) return <p className="text-neutral-500">Loading summary…</p>;
+  if (error && !summary) {
+    return (
+      <div className="rounded-2xl border border-rose-200 bg-rose-50/90 p-4 text-xs text-rose-800">
+        {error}
+      </div>
+    );
+  }
+  if (!summary) {
+    return (
+      <div className="glass-card p-10 text-center text-xs text-stone-400">
+        Compiling session performance summary…
+      </div>
+    );
+  }
 
   const recalcLabel =
     summary.recalcStatus === 'done'
-      ? 'Profile updated'
+      ? 'Profile successfully recalibrated'
       : summary.recalcStatus === 'failed'
-        ? 'Update failed'
-        : 'Updating your profile…';
+        ? 'Profile update failed'
+        : 'Recalibrating your mastery profile in background…';
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-5">
-      <h1 className="text-2xl font-semibold tracking-tight">Session summary</h1>
+    <div className="mx-auto flex max-w-2xl flex-col gap-6">
+      <div className="border-b border-stone-200/50 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          Session Performance Summary
+        </h1>
+        <p className="mt-1 text-xs text-stone-500">
+          Immediate feedback breakdown and Bayesian profile calibration metrics.
+        </p>
+      </div>
 
+      {/* 4 Stat Cards */}
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           ['Answered', String(summary.answered)],
@@ -75,23 +96,31 @@ export default function SessionSummaryPage() {
         ].map(([k, v]) => (
           <div
             key={k}
-            className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 text-center"
+            className="glass-card p-5 text-center flex flex-col justify-center items-center gap-1"
           >
-            <div className="text-2xl font-semibold tracking-tight">{v}</div>
-            <div className="text-xs text-neutral-500">{k}</div>
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">{v}</div>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+              {k}
+            </div>
           </div>
         ))}
       </section>
 
+      {/* Topics Breakdown */}
       {summary.topics.length > 0 && (
-        <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-          <h2 className="text-sm font-medium text-neutral-700">By topic</h2>
-          <ul className="mt-2 flex flex-col gap-1 text-sm">
+        <section className="glass-card p-6 flex flex-col gap-3">
+          <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+            Performance by Topic
+          </h2>
+          <ul className="flex flex-col gap-2">
             {summary.topics.map((t) => (
-              <li key={t.topicId} className="flex justify-between">
-                <span>{t.name}</span>
-                <span className="text-neutral-500">
-                  {t.correct}/{t.attempted}
+              <li
+                key={t.topicId}
+                className="flex items-center justify-between rounded-xl bg-stone-50/70 p-3 px-3.5 border border-stone-200/40 text-xs"
+              >
+                <span className="font-semibold text-stone-800">{t.name}</span>
+                <span className="font-bold text-stone-700 bg-white/90 px-2.5 py-0.5 rounded-md border border-stone-200/40">
+                  {t.correct} / {t.attempted} correct
                 </span>
               </li>
             ))}
@@ -99,34 +128,37 @@ export default function SessionSummaryPage() {
         </section>
       )}
 
+      {/* Recalc Status Banner */}
       <div
-        className={`rounded-lg border p-4 text-sm ${
-          summary.recalcStatus === 'failed'
-            ? 'border-amber-300 bg-amber-50 text-amber-900'
-            : 'border-neutral-200 bg-neutral-50 text-neutral-700'
+        className={`rounded-2xl border p-4 text-xs font-medium flex items-center justify-between ${
+          summary.recalcStatus === 'done'
+            ? 'border-emerald-200/80 bg-emerald-50/80 text-emerald-900'
+            : summary.recalcStatus === 'failed'
+              ? 'border-amber-200/80 bg-amber-50/80 text-amber-900'
+              : 'border-blue-200/80 bg-blue-50/80 text-blue-900'
         }`}
       >
-        {recalcLabel}
+        <div className="flex items-center gap-2">
+          <IconSparkles className="w-4 h-4 text-current" />
+          <span>{recalcLabel}</span>
+        </div>
         {summary.recalcStatus === 'failed' && (
           <button
             type="button"
             onClick={() => void retry()}
             disabled={retrying}
-            className="ml-3 rounded border border-amber-400 px-3 py-1 text-xs"
+            className="btn-secondary py-1 px-3 text-[11px] font-semibold"
           >
             {retrying ? 'Retrying…' : 'Retry'}
           </button>
         )}
       </div>
 
-      <div className="flex gap-3">
-        <Link
-          href="/plan"
-          className="rounded-md bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-        >
-          View updated plan
+      <div className="flex gap-3 pt-2">
+        <Link href="/plan" className="btn-primary py-2.5 px-5 text-xs font-semibold">
+          View updated plan →
         </Link>
-        <Link href="/practice" className="rounded-md border px-5 py-2 text-sm">
+        <Link href="/practice" className="btn-secondary py-2.5 px-5 text-xs font-medium">
           Back to practice
         </Link>
       </div>

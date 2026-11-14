@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useState, type FormEvent } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 import { api, ApiError } from '../lib/apiClient';
@@ -52,40 +53,48 @@ function ResetRequest() {
 
   if (sent) {
     return (
-      <p className="text-sm text-neutral-700">
-        If an account exists for that email, a reset link is on its way. Check your inbox.
-      </p>
+      <div className="rounded-xl bg-blue-50/80 border border-blue-200/60 p-4 text-xs text-blue-900 leading-relaxed">
+        If an account exists for that email, a reset link is on its way. Check your inbox and spam
+        folder.
+      </div>
     );
   }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-      <h1 className="text-xl font-semibold">Reset password</h1>
-      <label className="flex flex-col gap-1 text-sm">
+      <h1 className="text-xl font-bold tracking-tight text-stone-900">Reset password</h1>
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
         Email
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded border border-neutral-300 px-3 py-2"
+          className="glass-input px-3.5 py-2.5 text-sm"
+          placeholder="you@college.edu"
         />
       </label>
       {error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p
+          role="alert"
+          className="rounded-xl border border-rose-200 bg-rose-50/90 p-3 text-xs text-rose-800"
+        >
           {error}
         </p>
       ) : null}
       <button
         type="submit"
         disabled={pending}
-        className="rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+        className="btn-primary py-2.5 px-4 text-sm font-semibold disabled:opacity-50"
       >
         {pending ? 'Sending…' : 'Send reset link'}
       </button>
-      <a href="/login" className="text-sm text-neutral-600 underline">
+      <Link
+        href="/login"
+        className="text-xs text-stone-500 hover:text-blue-600 transition text-center"
+      >
         Back to sign in
-      </a>
+      </Link>
     </form>
   );
 }
@@ -131,34 +140,37 @@ function ResetConfirm({ token }: { token: string }) {
   if (done) {
     return (
       <div className="flex flex-col gap-3 text-center">
-        <p className="text-sm text-neutral-700">Password updated. You can sign in now.</p>
-        <a href="/login" className="text-sm text-neutral-600 underline">
+        <p className="text-sm font-medium text-stone-800">Password updated. You can sign in now.</p>
+        <Link href="/login" className="btn-primary py-2.5 px-4 text-sm font-semibold">
           Go to sign in
-        </a>
+        </Link>
       </div>
     );
   }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-      <h1 className="text-xl font-semibold">Choose a new password</h1>
-      <label className="flex flex-col gap-1 text-sm">
+      <h1 className="text-xl font-bold tracking-tight text-stone-900">Choose a new password</h1>
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
         New password
         <PasswordInput value={password} onChange={setPassword} autoComplete="new-password" />
       </label>
-      <label className="flex flex-col gap-1 text-sm">
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
         Confirm password
         <PasswordInput value={confirm} onChange={setConfirm} autoComplete="new-password" />
       </label>
       {error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p
+          role="alert"
+          className="rounded-xl border border-rose-200 bg-rose-50/90 p-3 text-xs text-rose-800"
+        >
           {error}
         </p>
       ) : null}
       <button
         type="submit"
         disabled={pending}
-        className="rounded bg-neutral-900 px-4 py-2 text-white disabled:opacity-50"
+        className="btn-primary py-2.5 px-4 text-sm font-semibold disabled:opacity-50"
       >
         {pending ? 'Updating…' : 'Update password'}
       </button>
@@ -168,7 +180,7 @@ function ResetConfirm({ token }: { token: string }) {
 
 export function ResetPasswordPanel() {
   return (
-    <Suspense fallback={<p className="text-sm text-neutral-500">Loading…</p>}>
+    <Suspense fallback={<p className="text-xs text-stone-400">Loading…</p>}>
       <ResetPasswordInner />
     </Suspense>
   );

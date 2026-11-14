@@ -12,6 +12,17 @@ import {
 } from '../../../lib/content';
 import { ReadinessBand } from '../../../components/ReadinessBand';
 import { ApiError } from '../../../lib/apiClient';
+import {
+  IconCalendar,
+  IconCheck,
+  IconArrowUpRight,
+  IconSparkles,
+  IconTarget,
+  IconBook,
+  IconUser,
+  IconSettings,
+  IconCompass,
+} from '../../../components/Icons';
 
 interface ChangeEntry {
   id: string;
@@ -79,138 +90,266 @@ export default function StudentHomePage() {
   const latestChange = changes[0];
   const changeItems = (latestChange?.summary?.changes as string[] | undefined) ?? [];
 
+  const currentMonthYear = new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date());
+
+  const userDisplayName = user?.email ? user.email.split('@')[0] : 'Scholar';
+
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="mt-1 text-sm text-neutral-600">
-          Welcome back{user?.email ? `, ${user.email}` : ''}.
-        </p>
+    <div className="flex flex-col gap-8">
+      {/* Overview Header with Date Stamp matching the reference image */}
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between border-b border-stone-200/50 pb-5">
+        <div>
+          <span className="text-xs font-medium tracking-wide text-stone-500">
+            Welcome back, {userDisplayName}
+          </span>
+          <h1 className="mt-0.5 text-3xl font-bold tracking-tight text-stone-900">Overview</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-stone-100/80 border border-stone-200/60 px-3.5 py-1 text-xs font-medium text-stone-600 shadow-xs">
+            {currentMonthYear}
+          </span>
+        </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      {/* Primary Top Row: Readiness Band & Today's Plan */}
+      <div className="grid gap-6 lg:grid-cols-2">
         <ReadinessBand readiness={readiness} />
 
-        <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium text-neutral-700">Today&apos;s plan</h2>
-            <Link href="/plan" className="text-xs text-blue-600 underline">
-              Full plan
+        {/* Today's Plan Card (Styled to match Cash Flow / Plan Card) */}
+        <section className="glass-card p-6 flex flex-col justify-between gap-5">
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold tracking-wide uppercase text-stone-400">
+                  Daily Schedule
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+              </div>
+              <Link
+                href="/plan"
+                className="text-xs font-medium text-blue-600 hover:text-blue-700 transition inline-flex items-center gap-1"
+              >
+                Full plan
+                <IconArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="mt-3 flex items-baseline justify-between">
+              <h2 className="text-xl font-bold text-stone-900">Today&apos;s plan</h2>
+              <span className="text-xs text-stone-500 font-medium">
+                {todayItems.length} block{todayItems.length === 1 ? '' : 's'} scheduled
+              </span>
+            </div>
+
+            {noPlan ? (
+              <div className="mt-4 rounded-xl bg-amber-50/70 border border-amber-200/60 p-4 text-xs text-amber-900">
+                No active plan yet —{' '}
+                <Link href="/setup/requirements" className="font-semibold text-blue-700 underline">
+                  set up requirements
+                </Link>{' '}
+                to generate your personalized blueprint.
+              </div>
+            ) : todayItems.length === 0 ? (
+              <div className="mt-4 rounded-xl bg-stone-100/60 border border-stone-200/60 p-4 text-xs text-stone-600 flex items-center gap-2.5">
+                <IconCalendar className="w-4 h-4 text-stone-400" />
+                <span>Rest day or no blocks scheduled for today. Great time for a review!</span>
+              </div>
+            ) : (
+              <ul className="mt-4 flex flex-col gap-2.5">
+                {todayItems.map((i) => (
+                  <li
+                    key={i.id}
+                    className="flex items-center justify-between rounded-xl bg-stone-100/60 hover:bg-stone-100/90 border border-stone-200/50 p-2.5 px-3 transition-colors text-xs"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                      <span className="font-semibold text-stone-800">
+                        {BLOCK_LABEL[i.blockType] ?? i.blockType}
+                      </span>
+                      <span className="text-stone-400">·</span>
+                      <span className="text-stone-600 font-medium">{i.topic.name}</span>
+                    </div>
+                    <span className="font-semibold text-stone-700 bg-white px-2 py-0.5 rounded-md shadow-2xs border border-stone-200/40">
+                      {i.minutes}m
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="pt-2">
+            <Link
+              href="/practice"
+              className="btn-primary flex items-center justify-center gap-2 w-full py-2.5 px-4 text-sm font-semibold"
+            >
+              <IconTarget className="w-4 h-4" />
+              <span>Start practising</span>
             </Link>
           </div>
-          {noPlan ? (
-            <p className="mt-2 text-sm text-neutral-600">
-              No plan yet —{' '}
-              <Link href="/setup/requirements" className="text-blue-600 underline">
-                set up requirements
-              </Link>
-              .
-            </p>
-          ) : todayItems.length === 0 ? (
-            <p className="mt-2 text-sm text-neutral-500">Rest day or no plan loaded.</p>
-          ) : (
-            <ul className="mt-2 flex flex-col gap-1 text-sm">
-              {todayItems.map((i) => (
-                <li key={i.id} className="flex justify-between">
-                  <span>
-                    {BLOCK_LABEL[i.blockType] ?? i.blockType} — {i.topic.name}
-                  </span>
-                  <span className="text-neutral-500">{i.minutes}m</span>
-                </li>
-              ))}
-            </ul>
-          )}
-          <Link
-            href="/practice"
-            className="mt-3 inline-block rounded-md bg-neutral-900 px-4 py-2 text-sm text-white"
-          >
-            Start practising
-          </Link>
         </section>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-          <h2 className="text-sm font-medium text-neutral-700">Priority topics</h2>
-          {priorities.length === 0 ? (
-            <p className="mt-2 text-sm text-neutral-500">No plan priorities yet.</p>
-          ) : (
-            <ol className="mt-2 flex flex-col gap-1 text-sm">
-              {priorities.map((i, idx) => (
-                <li key={i.id} className="flex justify-between">
-                  <span>
-                    {idx + 1}. {i.topic.name}
-                  </span>
-                  <span className="text-neutral-500">
-                    {i.blockType.replace(/_/g, ' ')} · {i.minutes}m
-                  </span>
-                </li>
-              ))}
-            </ol>
-          )}
+      {/* Secondary Row: Priority Topics & Low Priority / Maintenance */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Priority Topics Card (Styled like Recent Activity with refined icons & badges) */}
+        <section className="glass-card p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <h2 className="text-sm font-semibold text-stone-800 flex items-center gap-2">
+                <IconSparkles className="w-4 h-4 text-blue-600" />
+                Priority topics
+              </h2>
+              <span className="text-xs text-stone-400">High leverage</span>
+            </div>
+
+            {priorities.length === 0 ? (
+              <p className="mt-4 text-xs text-stone-500">No plan priorities available yet.</p>
+            ) : (
+              <ol className="mt-3 flex flex-col gap-2.5">
+                {priorities.map((i, idx) => (
+                  <li
+                    key={i.id}
+                    className="flex items-center justify-between rounded-xl bg-stone-50/80 hover:bg-stone-100/80 p-2.5 px-3 border border-stone-200/40 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-50 text-[11px] font-bold text-blue-700 border border-blue-200/60">
+                        {idx + 1}
+                      </span>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-semibold text-stone-800">{i.topic.name}</span>
+                        <span className="text-[11px] text-stone-500 capitalize">
+                          {i.blockType.replace(/_/g, ' ')}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-xs font-medium text-stone-600 bg-white/80 px-2 py-0.5 rounded-md border border-stone-200/40">
+                      {i.minutes}m
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
         </section>
 
-        <section className="rounded-xl border border-slate-200 bg-white shadow-sm p-4">
-          <h2 className="text-sm font-medium text-neutral-700">Low priority (maintenance)</h2>
-          {lowPriority.length === 0 ? (
-            <p className="mt-2 text-sm text-neutral-500">
-              Strong topics appear here once your profile shows mastery.
-            </p>
-          ) : (
-            <ul className="mt-2 flex flex-col gap-1 text-sm">
-              {lowPriority.map((i) => (
-                <li key={i.id} className="flex justify-between">
-                  <span>{i.topic.name}</span>
-                  <span className="text-neutral-500">{i.minutes}m</span>
-                </li>
-              ))}
-            </ul>
-          )}
+        {/* Low Priority (Maintenance) Card */}
+        <section className="glass-card p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <h2 className="text-sm font-semibold text-stone-800 flex items-center gap-2">
+                <IconCheck className="w-4 h-4 text-emerald-600" />
+                Low priority (maintenance)
+              </h2>
+              <span className="text-xs text-stone-400">Mastered areas</span>
+            </div>
+
+            {lowPriority.length === 0 ? (
+              <p className="mt-4 text-xs text-stone-500">
+                Strong topics appear here once your profile demonstrates consistent mastery.
+              </p>
+            ) : (
+              <ul className="mt-3 flex flex-col gap-2.5">
+                {lowPriority.map((i) => (
+                  <li
+                    key={i.id}
+                    className="flex items-center justify-between rounded-xl bg-stone-50/80 hover:bg-stone-100/80 p-2.5 px-3 border border-stone-200/40 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                      <span className="text-xs font-medium text-stone-800">{i.topic.name}</span>
+                    </div>
+                    <span className="text-xs font-medium text-stone-500 bg-white/80 px-2 py-0.5 rounded-md border border-stone-200/40">
+                      {i.minutes}m
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </section>
       </div>
 
+      {/* What Changed Banner (if recalibration occurred) */}
       {latestChange && changeItems.length > 0 && (
-        <section className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <h2 className="text-sm font-medium text-blue-900">What changed</h2>
-          <ul className="mt-2 flex flex-col gap-1 text-sm text-blue-900">
+        <section className="rounded-2xl border border-blue-200/80 bg-blue-50/80 backdrop-blur-md p-5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-blue-900 flex items-center gap-2">
+              <IconSparkles className="w-4 h-4 text-blue-600" />
+              What changed in your plan
+            </h2>
+            <span className="text-xs text-blue-700 font-medium">
+              {new Date(latestChange.createdAt).toLocaleDateString()} · {latestChange.trigger}
+            </span>
+          </div>
+          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-blue-900/90 list-disc list-inside">
             {changeItems.map((c, idx) => (
               <li key={idx}>{c}</li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-blue-700">
-            {new Date(latestChange.createdAt).toLocaleString()} · {latestChange.trigger}
-          </p>
         </section>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {[
-          {
-            href: '/onboarding/diagnostic',
-            title: 'Diagnostic',
-            body: 'Baseline assessment — take it once.',
-          },
-          {
-            href: '/profile',
-            title: 'Profile',
-            body: 'Per-topic estimates, intervals and error mix.',
-          },
-          {
-            href: '/notebook',
-            title: 'Notebook',
-            body: 'Mistakes scheduled for review at 1, 3, 7, 14 days.',
-          },
-          { href: '/settings', title: 'Settings', body: 'Plan settings and data controls.' },
-        ].map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="rounded-xl border border-slate-200 bg-white shadow-sm p-5 transition hover:border-neutral-400"
-          >
-            <h2 className="mb-1 font-semibold">{c.title}</h2>
-            <p className="text-sm text-neutral-600">{c.body}</p>
-          </Link>
-        ))}
+      {/* Quick Launch Cards Hub */}
+      <div>
+        <div className="mb-3 text-xs font-semibold tracking-wide uppercase text-stone-400">
+          Core Workspaces
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              href: '/onboarding/diagnostic',
+              title: 'Diagnostic',
+              body: 'Baseline assessment across aptitude sections.',
+              icon: IconCompass,
+            },
+            {
+              href: '/profile',
+              title: 'Mastery Profile',
+              body: 'Per-topic estimates, confidence intervals & radar.',
+              icon: IconUser,
+            },
+            {
+              href: '/notebook',
+              title: 'Spaced Notebook',
+              body: 'Mistakes scheduled for review at 1, 3, 7, 14 days.',
+              icon: IconBook,
+            },
+            {
+              href: '/settings',
+              title: 'Plan Settings',
+              body: 'Pacing controls, hours/day, commitments & data.',
+              icon: IconSettings,
+            },
+          ].map((c) => {
+            const Icon = c.icon;
+            return (
+              <Link
+                key={c.href}
+                href={c.href}
+                className="glass-card glass-card-interactive p-5 flex flex-col justify-between gap-3 group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100/90 text-stone-700 border border-stone-200/50 group-hover:border-blue-300 group-hover:text-blue-600 transition-colors">
+                    <Icon className="w-4 h-4" />
+                  </span>
+                  <IconArrowUpRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 transition-colors" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-stone-900 group-hover:text-blue-600 transition-colors">
+                    {c.title}
+                  </h3>
+                  <p className="mt-1 text-xs text-stone-500 line-clamp-2 leading-relaxed">
+                    {c.body}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

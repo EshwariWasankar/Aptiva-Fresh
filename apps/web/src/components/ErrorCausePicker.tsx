@@ -42,21 +42,24 @@ export function ErrorCausePicker({
   }
 
   if (saved) {
-    return <p className="text-xs text-green-700">Tagged: {saved}</p>;
+    return <p className="text-xs font-semibold text-emerald-800">Tagged cause: {saved}</p>;
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
+      <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+        Tag the cause of this mistake:
+      </span>
       <div className="flex flex-wrap gap-1.5">
         {types.map((t) => (
           <button
             key={t.code}
             type="button"
             onClick={() => setSelected(t.code)}
-            className={`rounded-full border px-2.5 py-1 text-xs ${
+            className={`rounded-full px-3 py-1 text-xs transition-all ${
               selected === t.code
-                ? 'border-neutral-900 bg-neutral-900 text-white'
-                : 'border-neutral-300 text-neutral-700 hover:border-neutral-500'
+                ? 'bg-stone-900 text-white font-semibold shadow-xs'
+                : 'border border-stone-200/80 bg-white/70 text-stone-700 hover:border-blue-400 hover:text-blue-700'
             }`}
           >
             {t.label}
@@ -64,25 +67,25 @@ export function ErrorCausePicker({
         ))}
       </div>
       {selected && (
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2 pt-1">
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Optional note"
+            placeholder="Add optional detail on your thought process…"
             aria-label="Optional note"
-            className="flex-1 rounded border border-neutral-300 px-2 py-1 text-xs"
+            className="glass-input flex-1 px-3 py-1.5 text-xs"
           />
           <button
             type="button"
             onClick={() => void save()}
-            className="rounded bg-neutral-900 px-3 py-1 text-xs text-white"
+            className="btn-primary py-1.5 px-4 text-xs font-semibold"
           >
-            Save
+            Save tag
           </button>
         </div>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-rose-600">{error}</p>}
     </div>
   );
 }

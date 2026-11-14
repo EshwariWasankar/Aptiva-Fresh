@@ -36,10 +36,10 @@ export function TopicTable({ rows }: { rows: ProfileTopicRow[] }) {
   }, [rows, sort, dir]);
 
   const head = (key: SortKey, label: string) => (
-    <th className="px-3 py-2 text-left">
+    <th className="px-4 py-3 text-left">
       <button
         type="button"
-        className="font-medium hover:underline"
+        className="font-bold text-stone-700 hover:text-blue-600 transition inline-flex items-center gap-1"
         onClick={() => {
           if (sort === key) setDir((d) => (d === 1 ? -1 : 1));
           else {
@@ -48,62 +48,49 @@ export function TopicTable({ rows }: { rows: ProfileTopicRow[] }) {
           }
         }}
       >
-        {label}
-        {sort === key ? (dir === 1 ? ' ↑' : ' ↓') : ''}
+        <span>{label}</span>
+        <span className="text-[10px] text-stone-400">
+          {sort === key ? (dir === 1 ? '▲' : '▼') : ''}
+        </span>
       </button>
     </th>
   );
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead className="border-b text-neutral-500">
+      <table className="w-full text-xs">
+        <thead className="border-b border-stone-100 bg-stone-50/60 text-stone-400 font-semibold uppercase tracking-wider">
           <tr>
             {head('name', 'Topic')}
-            {head('rating', 'Estimate (range)')}
-            {head('attempts', 'Items')}
-            {head('accuracy', 'Accuracy EMA')}
-            <th className="px-3 py-2 text-left">Error mix</th>
-            <th className="px-3 py-2 text-left">Evidence</th>
+            <th className="px-4 py-3 text-left font-semibold">Section</th>
+            {head('rating', 'Mastery rating')}
+            <th className="px-4 py-3 text-left font-semibold">95% interval</th>
+            {head('attempts', 'Attempts')}
+            {head('accuracy', 'Recent accuracy')}
+            <th className="px-4 py-3 text-left font-semibold">Primary errors</th>
           </tr>
         </thead>
-        <tbody>
-          {sorted.map((r) => (
-            <tr key={r.topicId} className="border-b last:border-0">
-              <td className="px-3 py-2">
-                <div className="font-medium">{r.topic.name}</div>
-                <div className="text-xs text-neutral-500">{r.sectionSlug}</div>
-              </td>
-              <td className="px-3 py-2">
-                <span className="font-medium">{Math.round(r.rating)}</span>
-                <span className="text-neutral-500">
-                  {' '}
-                  ({Math.round(r.intervalLow)}–{Math.round(r.intervalHigh)})
-                </span>
-              </td>
-              <td className="px-3 py-2">{r.attemptCount}</td>
-              <td className="px-3 py-2">
-                {r.accuracyEma != null ? `${Math.round(r.accuracyEma * 100)}%` : '—'}
-              </td>
-              <td className="px-3 py-2 text-xs">{errorMixSummary(r)}</td>
-              <td className="px-3 py-2">
-                {r.attemptCount < 15 ? (
-                  <span className="rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-800">
-                    Early estimate
-                  </span>
-                ) : (
-                  <span className="text-xs text-neutral-500">ok</span>
-                )}
-              </td>
-            </tr>
-          ))}
+        <tbody className="divide-y divide-stone-100/70">
+          {sorted.map((r) => {
+            const acc = r.accuracyEma == null ? '—' : `${Math.round(r.accuracyEma * 100)}%`;
+            return (
+              <tr key={r.topic.id} className="hover:bg-white/60 transition-colors">
+                <td className="px-4 py-3 font-semibold text-stone-900">{r.topic.name}</td>
+                <td className="px-4 py-3 text-stone-500 capitalize">{r.sectionSlug}</td>
+                <td className="px-4 py-3 font-mono font-bold text-blue-700">
+                  {r.rating.toFixed(2)}
+                </td>
+                <td className="px-4 py-3 font-mono text-stone-500">
+                  [{r.intervalLow.toFixed(2)}, {r.intervalHigh.toFixed(2)}]
+                </td>
+                <td className="px-4 py-3 text-stone-700 font-medium">{r.attemptCount}</td>
+                <td className="px-4 py-3 font-bold text-stone-800">{acc}</td>
+                <td className="px-4 py-3 text-stone-500 text-[11px]">{errorMixSummary(r)}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
-      {sorted.length === 0 && (
-        <p className="py-6 text-center text-neutral-500">
-          No profile data yet — complete the diagnostic to build your baseline.
-        </p>
-      )}
     </div>
   );
 }

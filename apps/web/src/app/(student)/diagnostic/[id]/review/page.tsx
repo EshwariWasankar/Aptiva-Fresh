@@ -33,150 +33,194 @@ export default function DiagnosticReviewPage() {
     setSkipped((prev) => new Set(prev).add(item.attemptId));
   }
 
-  if (error) return <p className="text-red-600">{error}</p>;
-  if (!data) return <p className="text-neutral-500">Loading review…</p>;
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-rose-200 bg-rose-50/90 p-4 text-xs text-rose-800">
+        {error}
+      </div>
+    );
+  }
+  if (!data) {
+    return (
+      <div className="glass-card p-12 text-center text-xs text-stone-400">
+        Loading mistake review…
+      </div>
+    );
+  }
 
   const misses = data.items.filter((i) => i.isCorrect !== true && !skipped.has(i.attemptId));
 
   if (misses.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl py-12 text-center">
-        <h1 className="text-xl font-semibold">Nothing to review</h1>
-        <p className="mt-2 text-neutral-600">Every answered question was correct.</p>
+      <div className="mx-auto max-w-md py-16 text-center flex flex-col items-center gap-3">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 font-bold text-xl">
+          ✓
+        </span>
+        <h1 className="text-xl font-bold tracking-tight text-stone-900">Nothing to review</h1>
+        <p className="text-xs text-stone-500">Every answered question was completely correct.</p>
+        <button
+          type="button"
+          onClick={() => router.push('/dashboard')}
+          className="btn-primary mt-2 py-2 px-5 text-xs font-semibold"
+        >
+          Back to overview →
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Review your mistakes</h1>
-        <p className="text-sm text-neutral-500">
-          {misses.length} item{misses.length === 1 ? '' : 's'} to look at. Tag why each went wrong —
-          your label is what we store.
+    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+      <div className="border-b border-stone-200/50 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          Review Diagnostic Mistakes
+        </h1>
+        <p className="mt-1 text-xs text-stone-500">
+          {misses.length} item{misses.length === 1 ? '' : 's'} to analyze. Tag why each went wrong
+          so your adaptive planner can schedule targeted concept repairs.
         </p>
       </div>
 
-      {misses.map((item) => (
-        <article
-          key={item.attemptId}
-          className="rounded-xl border border-slate-200 bg-white shadow-sm p-5"
-        >
-          <div className="flex items-center justify-between text-xs text-neutral-500">
-            <span>
-              Q{item.sequenceNo} · {item.topicName} ·{' '}
-              {item.timeMs != null && item.expectedTimeMs > 0
-                ? `${(item.timeMs / item.expectedTimeMs).toFixed(2)}× expected time`
-                : '—'}
-            </span>
-            <span
-              className={`rounded px-2 py-0.5 ${item.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-            >
-              {item.isCorrect ? 'Correct' : item.skipped ? 'Skipped' : 'Wrong'}
-            </span>
-          </div>
-
-          <div className="mt-3">
-            <Katex text={item.stem} className="text-sm leading-6" />
-          </div>
-
-          {item.format === 'mcq' && (
-            <ul className="mt-3 flex flex-col gap-1 text-sm">
-              {item.options.map((o) => (
-                <li
-                  key={o.id}
-                  className={`rounded px-3 py-1.5 ${
-                    o.isCorrect
-                      ? 'bg-green-50 text-green-900'
-                      : o.id === item.selectedOptionId
-                        ? 'bg-red-50 text-red-900'
-                        : 'text-neutral-600'
-                  }`}
-                >
-                  {o.isCorrect ? '✓ ' : o.id === item.selectedOptionId ? '✗ ' : ''}
-                  <Katex text={o.text} />
-                </li>
-              ))}
-            </ul>
-          )}
-          {item.format === 'numerical' && (
-            <p className="mt-3 text-sm">
-              <span className="text-neutral-500">Correct answer: </span>
-              <span className="font-mono font-medium">
-                {item.numericAnswer}
-                {item.answerFormat === 'integer' ? '' : ` (${item.answerFormat})`}
+      <div className="flex flex-col gap-5">
+        {misses.map((item) => (
+          <article key={item.attemptId} className="glass-card p-6 flex flex-col gap-4">
+            <div className="flex items-center justify-between text-xs border-b border-stone-100 pb-3">
+              <span className="font-semibold text-stone-600">
+                Q{item.sequenceNo} · {item.topicName} ·{' '}
+                {item.timeMs != null && item.expectedTimeMs > 0
+                  ? `${(item.timeMs / item.expectedTimeMs).toFixed(2)}× expected pace`
+                  : '—'}
               </span>
-              <span className="ml-3 text-neutral-500">Yours: </span>
-              <span className="font-mono">{item.numericInput ?? '—'}</span>
-            </p>
-          )}
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
+                  item.isCorrect
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/50'
+                    : item.skipped
+                      ? 'bg-stone-100 text-stone-700'
+                      : 'bg-rose-50 text-rose-800 border border-rose-200/50'
+                }`}
+              >
+                {item.isCorrect ? 'Correct' : item.skipped ? 'Skipped' : 'Incorrect'}
+              </span>
+            </div>
 
-          {item.solution && (
-            <details className="mt-3">
-              <summary className="cursor-pointer text-sm text-blue-700">Worked solution</summary>
-              <div className="mt-2 rounded bg-neutral-50 p-3 text-sm">
-                <Katex text={item.solution} />
+            <div className="text-sm font-medium text-stone-900 leading-relaxed">
+              <Katex text={item.stem} className="text-sm leading-6" />
+            </div>
+
+            {item.format === 'mcq' && (
+              <ul className="flex flex-col gap-2 text-xs">
+                {item.options.map((o) => (
+                  <li
+                    key={o.id}
+                    className={`rounded-xl p-3 px-3.5 border transition-all ${
+                      o.isCorrect
+                        ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 font-semibold'
+                        : o.id === item.selectedOptionId
+                          ? 'bg-rose-50/90 border-rose-300 text-rose-950 font-semibold'
+                          : 'bg-stone-50/50 border-stone-200/50 text-stone-600'
+                    }`}
+                  >
+                    {o.isCorrect ? '✓ ' : o.id === item.selectedOptionId ? '✗ ' : ''}
+                    <Katex text={o.text} />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {item.format === 'numerical' && (
+              <div className="rounded-xl bg-stone-50/80 p-3.5 border border-stone-200/40 text-xs flex items-center gap-4">
+                <div>
+                  <span className="text-stone-400 font-medium">Correct answer: </span>
+                  <span className="font-mono font-bold text-emerald-800">
+                    {item.numericAnswer}
+                    {item.answerFormat === 'integer' ? '' : ` (${item.answerFormat})`}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-stone-400 font-medium">Your answer: </span>
+                  <span className="font-mono font-bold text-rose-800">
+                    {item.numericInput ?? '—'}
+                  </span>
+                </div>
               </div>
-            </details>
-          )}
+            )}
 
-          {item.feedback && (
-            <p className="mt-2 text-xs text-neutral-500">
-              Tagged: {item.feedback.errorTypeLabel}
-              {item.feedback.freeText ? ` — ${item.feedback.freeText}` : ''}
-            </p>
-          )}
-          {item.inference?.conflict && conflicts.get(item.attemptId) !== false && (
-            <div className="mt-2">
-              <ConflictNote
-                onDismiss={() => {
-                  setConflicts((m) => {
-                    const next = new Map(m);
-                    next.set(item.attemptId, false);
-                    return next;
-                  });
-                }}
-              />
-            </div>
-          )}
+            {item.solution && (
+              <details className="rounded-xl bg-stone-50/80 border border-stone-200/50 p-4 group">
+                <summary className="cursor-pointer text-xs font-bold text-blue-700 flex items-center justify-between">
+                  <span>Worked step-by-step solution</span>
+                  <span className="text-stone-400 group-open:rotate-180 transition-transform">
+                    ▼
+                  </span>
+                </summary>
+                <div className="mt-3 rounded-lg bg-white/80 p-3 text-xs text-stone-800 leading-relaxed border border-stone-200/40">
+                  <Katex text={item.solution} />
+                </div>
+              </details>
+            )}
 
-          {!item.feedback && !item.inference?.conflict && (
-            <div className="mt-3">
-              <ErrorCausePicker
-                attemptId={item.attemptId}
-                onSaved={(r) => {
-                  if (r.conflict) setConflicts((m) => new Map(m).set(item.attemptId, true));
-                  void getDiagnosticReview(id).then(setData);
-                }}
-              />
-            </div>
-          )}
-          {item.feedback && !item.inference?.conflict && (
-            <button
-              type="button"
-              onClick={() => skip(item)}
-              className="mt-3 text-xs text-neutral-400 underline"
-            >
-              Skip for now
-            </button>
-          )}
-        </article>
-      ))}
+            {item.feedback && (
+              <p className="text-xs text-stone-500">
+                Tagged cause:{' '}
+                <strong className="text-stone-800">{item.feedback.errorTypeLabel}</strong>
+                {item.feedback.freeText ? ` — ${item.feedback.freeText}` : ''}
+              </p>
+            )}
 
-      <div className="mt-6 flex gap-3 border-t pt-4">
+            {item.inference?.conflict && conflicts.get(item.attemptId) !== false && (
+              <div className="mt-1">
+                <ConflictNote
+                  onDismiss={() => {
+                    setConflicts((m) => {
+                      const next = new Map(m);
+                      next.set(item.attemptId, false);
+                      return next;
+                    });
+                  }}
+                />
+              </div>
+            )}
+
+            {!item.feedback && !item.inference?.conflict && (
+              <div className="mt-1 rounded-xl bg-stone-50/70 p-3.5 border border-stone-200/40">
+                <ErrorCausePicker
+                  attemptId={item.attemptId}
+                  onSaved={(r) => {
+                    if (r.conflict) setConflicts((m) => new Map(m).set(item.attemptId, true));
+                    void getDiagnosticReview(id).then(setData);
+                  }}
+                />
+              </div>
+            )}
+
+            {item.feedback && !item.inference?.conflict && (
+              <button
+                type="button"
+                onClick={() => skip(item)}
+                className="text-xs text-stone-400 hover:text-stone-600 underline transition w-fit"
+              >
+                Skip for now
+              </button>
+            )}
+          </article>
+        ))}
+      </div>
+
+      <div className="flex gap-3 pt-3 border-t border-stone-200/50">
         <button
           type="button"
           onClick={() => router.push(`/diagnostic/${id}/result`)}
-          className="rounded border border-neutral-300 px-5 py-2 text-sm"
+          className="btn-secondary py-2.5 px-5 text-xs font-medium"
         >
           ← Back to result
         </button>
         <button
           type="button"
           onClick={() => router.push('/dashboard')}
-          className="rounded bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+          className="btn-primary py-2.5 px-5 text-xs font-semibold"
         >
-          Save &amp; done
+          Save &amp; complete review
         </button>
       </div>
     </div>

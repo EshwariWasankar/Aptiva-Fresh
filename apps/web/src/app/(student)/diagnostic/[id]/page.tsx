@@ -12,6 +12,7 @@ import {
   type ServedQuestion,
 } from '../../../../lib/diagnostic';
 import { randomUUID } from '../../../../lib/uuid';
+import { IconClock } from '../../../../components/Icons';
 
 interface Item {
   question: ServedQuestion;
@@ -154,10 +155,14 @@ export default function DiagnosticRunnerPage() {
 
   if (paused) {
     return (
-      <div className="mx-auto max-w-xl py-16 text-center">
-        <h1 className="text-xl font-semibold">Paused</h1>
-        <p className="mt-2 text-neutral-600">
-          Your progress is saved. You can pause only once — resume when you're ready.
+      <div className="mx-auto max-w-md py-16 text-center flex flex-col items-center gap-4">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-800 font-bold text-xl">
+          ⏸
+        </span>
+        <h1 className="text-xl font-bold tracking-tight text-stone-900">Diagnostic Paused</h1>
+        <p className="text-xs text-stone-600 leading-relaxed">
+          Your progress has been safely saved. Each student can pause once during the baseline cycle
+          — resume whenever you&apos;re ready.
         </p>
         <button
           type="button"
@@ -165,9 +170,9 @@ export default function DiagnosticRunnerPage() {
             setPaused(false);
             void loadNext();
           }}
-          className="mt-6 rounded bg-neutral-900 px-6 py-2 text-white"
+          className="btn-primary mt-2 py-2.5 px-6 text-xs font-semibold"
         >
-          Resume
+          Resume Diagnostic →
         </button>
       </div>
     );
@@ -175,57 +180,74 @@ export default function DiagnosticRunnerPage() {
 
   if (done) {
     return (
-      <div className="mx-auto max-w-xl py-16 text-center">
-        <h1 className="text-xl font-semibold">All questions answered</h1>
-        <p className="mt-2 text-neutral-600">
-          {done.answered}/{done.total} recorded. Submit to see your analysed result.
+      <div className="mx-auto max-w-md py-16 text-center flex flex-col items-center gap-4">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 font-bold text-xl">
+          ✓
+        </span>
+        <h1 className="text-2xl font-bold tracking-tight text-stone-900">All questions answered</h1>
+        <p className="text-xs text-stone-600 leading-relaxed">
+          {done.answered} of {done.total} questions recorded. Submit to generate your baseline
+          profile and precision study plan.
         </p>
         <button
           type="button"
           disabled={submitting}
           onClick={() => void doSubmit()}
-          className="mt-6 rounded bg-neutral-900 px-6 py-2 text-white disabled:opacity-50"
+          className="btn-primary mt-2 py-2.5 px-6 text-xs font-semibold disabled:opacity-50"
         >
-          {submitting ? 'Submitting…' : 'Submit diagnostic'}
+          {submitting ? 'Submitting…' : 'Submit diagnostic →'}
         </button>
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-xs text-rose-700">{error}</p>}
       </div>
     );
   }
 
   if (!item) {
-    return <p className="text-neutral-500">{error ?? 'Loading…'}</p>;
+    return <p className="text-xs text-stone-400 text-center">{error ?? 'Loading question…'}</p>;
   }
 
   const q = item.question;
   const canAnswer = q.format === 'mcq' ? selected !== null : numeric.trim() !== '';
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-5">
-      <div className="flex items-center justify-between text-sm text-neutral-500">
-        <span>
+    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+      {/* Header with question count and timer */}
+      <div className="glass-header flex items-center justify-between px-5 py-3">
+        <span className="text-xs font-bold text-stone-800 uppercase tracking-wider">
           Question {item.position} of {item.total}
         </span>
-        <span className="font-mono">{fmtElapsed(elapsed)}</span>
-        <span>expected ~{Math.round(q.expectedTimeMs / 1000)}s</span>
+        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-stone-700 bg-stone-100/90 px-3 py-1 rounded-full border border-stone-200/50 shadow-2xs">
+          <IconClock className="w-3.5 h-3.5 text-blue-600" />
+          <span>{fmtElapsed(elapsed)}</span>
+          <span className="text-stone-400 font-normal">
+            · target ~{Math.round(q.expectedTimeMs / 1000)}s
+          </span>
+        </div>
       </div>
-      <div className="h-1.5 w-full rounded bg-neutral-200">
+
+      {/* Progress Bar in Royal Blue */}
+      <div className="h-1.5 w-full rounded-full bg-stone-200/60 overflow-hidden">
         <div
-          className="h-1.5 rounded bg-neutral-900"
+          className="h-1.5 rounded-full bg-blue-600 transition-all duration-300"
           style={{ width: `${(item.position / item.total) * 100}%` }}
         />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
-        <Katex text={q.stem} className="text-base leading-7" />
+      {/* Question Card */}
+      <div className="glass-card p-6 sm:p-8 flex flex-col gap-6">
+        <div className="text-sm sm:text-base font-medium text-stone-900 leading-relaxed">
+          <Katex text={q.stem} />
+        </div>
 
         {q.format === 'mcq' ? (
-          <div className="mt-5 flex flex-col gap-2" role="radiogroup" aria-label="Answer options">
+          <div className="flex flex-col gap-2.5" role="radiogroup" aria-label="Answer options">
             {q.options.map((o) => (
               <label
                 key={o.id}
-                className={`flex cursor-pointer items-center gap-3 rounded border px-4 py-3 text-sm ${
-                  selected === o.id ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-200'
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 px-4 text-xs sm:text-sm font-medium transition-all ${
+                  selected === o.id
+                    ? 'border-blue-600 bg-blue-50/90 text-blue-900 shadow-xs ring-1 ring-blue-500'
+                    : 'border-stone-200/70 bg-stone-50/60 hover:bg-white text-stone-800'
                 }`}
               >
                 <input
@@ -234,15 +256,15 @@ export default function DiagnosticRunnerPage() {
                   value={o.id}
                   checked={selected === o.id}
                   onChange={() => setSelected(o.id)}
-                  className="accent-neutral-900"
+                  className="accent-blue-600"
                 />
                 <Katex text={o.text} />
               </label>
             ))}
           </div>
         ) : (
-          <div className="mt-5">
-            <label htmlFor="numeric-answer" className="text-sm text-neutral-600">
+          <div className="mt-2 flex flex-col gap-1.5">
+            <label htmlFor="numeric-answer" className="text-xs font-semibold text-stone-700">
               Your answer
             </label>
             <input
@@ -252,39 +274,45 @@ export default function DiagnosticRunnerPage() {
               value={numeric}
               onChange={(e) => setNumeric(e.target.value)}
               placeholder="e.g. 42 or 3.14"
-              className="mt-1 w-48 rounded border border-neutral-300 px-3 py-2 font-mono"
+              className="glass-input w-48 px-3.5 py-2.5 text-sm font-mono"
             />
             {q.answerFormat === 'integer' && (
-              <p className="mt-1 text-xs text-neutral-500">Whole number expected.</p>
+              <p className="text-[11px] text-stone-400">Whole integer expected.</p>
             )}
           </div>
         )}
       </div>
 
-      {error && <p className="rounded bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+      {error && (
+        <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3.5 text-xs text-rose-800">
+          {error}
+        </div>
+      )}
 
-      <div className="flex items-center justify-between">
+      {/* Bottom Action Footer */}
+      <div className="flex items-center justify-between pt-1">
         <button
           type="button"
           onClick={() => void doPause()}
           disabled={submitting}
-          className="text-sm text-neutral-500 underline disabled:opacity-50"
+          className="text-xs text-stone-500 hover:text-stone-800 underline transition disabled:opacity-50"
         >
-          Pause (once)
+          Pause test (once)
         </button>
         <div className="flex gap-3">
           <button
             type="button"
             disabled={submitting}
             onClick={() => void next()}
-            className="rounded bg-neutral-900 px-6 py-2 text-sm text-white disabled:opacity-50"
+            className="btn-primary py-2 px-6 text-xs font-semibold disabled:opacity-50"
           >
             {item.answered ? 'Next' : canAnswer ? 'Answer & next' : 'Skip & next'}
           </button>
         </div>
       </div>
-      <p className="text-xs text-neutral-400">
-        Answers are marked on the server; correctness is revealed after you submit.
+      <p className="text-[11px] text-stone-400 text-center">
+        Answers are marked and timed on the server; accuracy breakdown is revealed upon final
+        submission.
       </p>
     </div>
   );

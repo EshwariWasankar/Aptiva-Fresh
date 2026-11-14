@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { AuthHeroCta, AuthNavCta } from '../../components/AuthCta';
 import type { PublicAssessment } from '../../lib/content';
+import { IconArrowUpRight, IconCompass, IconTarget, IconActivity } from '../../components/Icons';
 
 export const metadata: Metadata = {
   title: 'Aptiva — placement aptitude preparation that adapts to you',
@@ -24,89 +25,185 @@ async function fetchAssessments(): Promise<PublicAssessment[]> {
 
 const STEPS = [
   {
+    step: '1',
     title: 'Take the diagnostic',
     body: 'A timed, mixed-format baseline across Quant, Logical Reasoning, Data Interpretation and Verbal — about 30 minutes, pausable once.',
+    icon: IconCompass,
   },
   {
+    step: '2',
     title: 'Get your plan',
     body: 'A time-boxed daily schedule built from your profile and your target assessment blueprint — with the reasoning behind every block.',
+    icon: IconTarget,
   },
   {
+    step: '3',
     title: 'Practise and recalibrate',
     body: 'Session feedback updates your profile continuously; the plan adapts as your readiness changes.',
+    icon: IconActivity,
   },
 ];
 
 export default async function LandingPage() {
   const assessments = await fetchAssessments();
-  const featured = assessments.filter((a) => a.slug !== 'generic').slice(0, 3);
+  const featured = assessments.filter((a) => a.slug !== 'generic').slice(0, 4);
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-12 px-6 py-16">
-      <header className="flex items-center justify-between">
-        <span className="text-xl font-semibold">Aptiva</span>
-        <nav className="flex items-center gap-4 text-sm">
-          <AuthNavCta />
-        </nav>
-      </header>
-
-      <section className="flex flex-col gap-4">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Placement prep that starts with what you don&apos;t know.
-        </h1>
-        <p className="max-w-2xl text-lg text-neutral-600">
-          Aptiva runs a setup diagnostic, builds a baseline profile across aptitude topics, and
-          generates a time-boxed practice plan matched to the assessment you&apos;re targeting.
-        </p>
-        <AuthHeroCta />
-      </section>
-
-      <section className="grid gap-4 sm:grid-cols-3">
-        {STEPS.map((s, i) => (
-          <div key={s.title} className="rounded-lg border bg-white p-5">
-            <div className="mb-2 text-sm font-medium text-neutral-500">Step {i + 1}</div>
-            <h2 className="mb-1 font-semibold">{s.title}</h2>
-            <p className="text-sm text-neutral-600">{s.body}</p>
+    <div className="min-h-screen py-6 px-4 sm:px-6">
+      <div className="mx-auto max-w-5xl flex flex-col gap-8">
+        {/* Floating Top Glass Header */}
+        <header className="glass-header flex items-center justify-between px-6 py-3.5">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-xs">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+              </svg>
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold tracking-tight text-stone-900">Aptiva</span>
+              <span className="hidden sm:inline text-stone-400">|</span>
+              <span className="hidden sm:inline text-xs text-stone-500 font-medium">
+                Adaptive Placement Workspace
+              </span>
+            </div>
           </div>
-        ))}
-      </section>
+          <nav className="flex items-center gap-4 text-sm">
+            <AuthNavCta />
+          </nav>
+        </header>
 
-      <section id="blueprints" className="flex flex-col gap-4">
-        <h2 className="text-2xl font-semibold">Assessment blueprints</h2>
-        <p className="text-neutral-600">
-          Every blueprint lists its sections, timings and topic weights — each with its source and
-          confidence level.
-        </p>
-        {featured.length === 0 ? (
-          <p className="text-sm text-neutral-500">
-            Blueprints are being prepared — check back soon.
-          </p>
-        ) : (
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {featured.map((a) => (
-              <li key={a.id}>
-                <Link
-                  href={`/assessments/${a.slug}`}
-                  className="block rounded-lg border bg-white p-4 hover:border-neutral-400"
+        {/* Hero & Content Inside Glass Sheet */}
+        <div className="glass-sheet p-8 sm:p-12 flex flex-col gap-12">
+          {/* Hero Section */}
+          <section className="flex flex-col gap-5 max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50/80 border border-blue-200/60 px-3.5 py-1 text-xs font-semibold text-blue-700 w-fit shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+              Diagnostic-Driven Placement Engine
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-stone-900 leading-[1.15]">
+              Placement prep that starts with what you don&apos;t know.
+            </h1>
+            <p className="text-base sm:text-lg text-stone-600 leading-relaxed">
+              Aptiva runs a calibrated setup diagnostic, maps your precision baseline across
+              aptitude topics, and generates a time-boxed practice plan mathematically tuned to the
+              company assessment you&apos;re targeting.
+            </p>
+            <div className="pt-2">
+              <AuthHeroCta />
+            </div>
+          </section>
+
+          {/* 3 Step Cards */}
+          <section className="grid gap-5 sm:grid-cols-3">
+            {STEPS.map((s) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={s.title}
+                  className="glass-card p-6 flex flex-col justify-between gap-4 group"
                 >
-                  <div className="font-medium">{a.name}</div>
-                  <div className="text-sm text-neutral-500">
-                    {a.company} · v{a.currentVersion?.version ?? '?'}
-                    {a.currentVersion?.lastVerifiedAt
-                      ? ` · verified ${new Date(a.currentVersion.lastVerifiedAt).toLocaleDateString()}`
-                      : ' · unverified'}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-stone-100 text-stone-700 font-bold text-xs border border-stone-200/60 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                        <Icon className="w-4 h-4" />
+                      </span>
+                      <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+                        Step {s.step}
+                      </span>
+                    </div>
+                    <h2 className="text-base font-bold text-stone-900 mb-2">{s.title}</h2>
+                    <p className="text-xs text-stone-600 leading-relaxed">{s.body}</p>
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+                </div>
+              );
+            })}
+          </section>
 
-      <footer className="border-t pt-6 text-xs text-neutral-600">
-        Aptiva is an independent study tool. It is not affiliated with, endorsed by, or connected to
-        any assessment provider.
-      </footer>
+          {/* Blueprints Section */}
+          <section
+            id="blueprints"
+            className="flex flex-col gap-5 pt-4 border-t border-stone-200/50"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-1">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight text-stone-900">
+                  Supported Assessment Blueprints
+                </h2>
+                <p className="text-xs sm:text-sm text-stone-600 mt-1">
+                  Every blueprint lists tested sections, exact timings, topic weightings, and real
+                  verification dates.
+                </p>
+              </div>
+            </div>
+
+            {featured.length === 0 ? (
+              <div className="glass-card p-6 text-center text-xs text-stone-500">
+                Blueprints are being prepared — check back soon.
+              </div>
+            ) : (
+              <ul className="grid gap-4 sm:grid-cols-2">
+                {featured.map((a) => (
+                  <li key={a.id}>
+                    <Link
+                      href={`/assessments/${a.slug}`}
+                      className="glass-card glass-card-interactive p-5 flex items-center justify-between group block"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <div className="text-sm font-bold text-stone-900 group-hover:text-blue-600 transition-colors">
+                          {a.name}
+                        </div>
+                        <div className="text-xs text-stone-500 flex items-center gap-1.5 flex-wrap">
+                          <span className="font-medium text-stone-700">{a.company}</span>
+                          <span>·</span>
+                          <span>v{a.currentVersion?.version ?? '?'}</span>
+                          <span>·</span>
+                          <span className="inline-flex items-center gap-1 text-[11px]">
+                            {a.currentVersion?.lastVerifiedAt ? (
+                              <span className="text-emerald-700 font-medium">
+                                ✓ verified{' '}
+                                {new Date(a.currentVersion.lastVerifiedAt).toLocaleDateString()}
+                              </span>
+                            ) : (
+                              <span className="text-stone-400">unverified</span>
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                      <IconArrowUpRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 transition-colors shrink-0 ml-3" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <footer className="border-t border-stone-200/50 pt-6 text-[11px] text-stone-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>
+              Aptiva is an independent adaptive study system. Not affiliated with or endorsed by any
+              assessment provider.
+            </span>
+            <div className="flex gap-4">
+              <Link href="/privacy" className="hover:underline">
+                Privacy
+              </Link>
+              <Link href="/login" className="hover:underline">
+                Sign in
+              </Link>
+            </div>
+          </footer>
+        </div>
+      </div>
     </div>
   );
 }
