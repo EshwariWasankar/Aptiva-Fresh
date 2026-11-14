@@ -12,6 +12,11 @@ import { PlansModule } from './plans/plans.module';
 import { ReassessmentModule } from './reassessment/reassessment.module';
 import { PrivacyModule } from './privacy/privacy.module';
 import { UsersModule } from './users/users.module';
+import { CommitmentsModule } from './commitments/commitments.module';
+import { BillingModule } from './billing/billing.module';
+import { ExternalScoresModule } from './external-scores/external-scores.module';
+import { PatternsModule } from './patterns/patterns.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { AuditModule } from './common/audit/audit.module';
 import { AdminAuditInterceptor } from './common/audit/admin-audit.interceptor';
 import { ConfigModule } from './common/config/config.module';
@@ -44,6 +49,11 @@ import { HealthModule } from './health/health.module';
     PlansModule,
     ReassessmentModule,
     PrivacyModule,
+    CommitmentsModule,
+    BillingModule,
+    ExternalScoresModule,
+    PatternsModule,
+    NotificationsModule,
     HealthModule,
   ],
   providers: [

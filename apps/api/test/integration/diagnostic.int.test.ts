@@ -66,8 +66,8 @@ describe('diagnostics (integration)', () => {
     for (const n of ['DATABASE_URL', 'REDIS_URL', 'JWT_ACCESS_SECRET']) {
       if (!process.env[n]) throw new Error(`${n} is not set`);
     }
-    process.env.RATE_LIMIT_FACTOR ??= '1000';
-    process.env.ATTEMPT_MIN_IDLE_MS ??= '50';
+    process.env.RATE_LIMIT_FACTOR = '1000';
+    process.env.ATTEMPT_MIN_IDLE_MS = '50';
     app = await createApp();
     prisma = app.get(PrismaService);
     stream = app.get(AttemptStreamService);

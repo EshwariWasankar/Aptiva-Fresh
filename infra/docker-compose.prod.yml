@@ -1,0 +1,127 @@
+name: aptiva-prod
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-aptiva}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aptiva_secure_password_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-aptiva}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-aptiva} -d ${POSTGRES_DB:-aptiva}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aptiva-internal
+
+  redis:
+    image: redis:8-alpine
+    restart: always
+    command: redis-server --appendonly yes --protected-mode no
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aptiva-internal
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-aptiva}:${POSTGRES_PASSWORD:-aptiva_secure_password_2026}@postgres:5432/${POSTGRES_DB:-aptiva}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      RATE_LIMIT_FACTOR: ${RATE_LIMIT_FACTOR:-1}
+      ATTEMPT_CONSUMER_ENABLED: 'false'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:4000/api/v1/health || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - aptiva-internal
+
+  worker:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    restart: always
+    command: ['node', 'dist/src/main.js']
+    environment:
+      NODE_ENV: production
+      PORT: 4001
+      DATABASE_URL: postgresql://${POSTGRES_USER:-aptiva}:${POSTGRES_PASSWORD:-aptiva_secure_password_2026}@postgres:5432/${POSTGRES_DB:-aptiva}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      ATTEMPT_CONSUMER_ENABLED: 'true'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aptiva-internal
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      API_INTERNAL_URL: http://api:4000
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://aptiva.app}
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - aptiva-internal
+
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:-localhost}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@aptiva.local}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - api
+    networks:
+      - aptiva-internal
+
+networks:
+  aptiva-internal:
+    driver: bridge
+
+volumes:
+  pgdata:
+  redisdata:
+  caddy_data:
+  caddy_config:

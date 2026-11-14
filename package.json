@@ -24,7 +24,10 @@
     "prepare": "husky",
     "db:seed-diagnostic": "tsx prisma/seed-diagnostic.ts",
     "db:seed-mcq-topics": "tsx prisma/seed-mcq-topics.ts",
-    "db:bulk-publish": "tsx prisma/bulk-publish.ts"
+    "db:bulk-publish": "tsx prisma/bulk-publish.ts",
+    "create-admin": "tsx tools/create-admin.ts",
+    "pilot:eval": "tsx tools/pilot-eval.ts",
+    "smoke": "node tools/prod-smoke.mjs"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

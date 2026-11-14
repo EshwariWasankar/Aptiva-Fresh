@@ -26,7 +26,14 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }];
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      {
+        source:
+          '/:path(dashboard|plan|practice|reassessment|notebook|profile|settings|setup|onboarding|admin|diagnostic|result|review)/:subpath*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ];
   },
   // Same-origin proxy so the refresh cookie stays first-party (PH-1).
   async rewrites() {

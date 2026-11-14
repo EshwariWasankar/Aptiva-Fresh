@@ -6,14 +6,14 @@ import { expect, test } from '@playwright/test';
  * E2E_EMAIL / E2E_PASSWORD (defaults to the local dev admin).
  */
 
-const EMAIL = process.env.E2E_EMAIL ?? 'admin@aptiva.local';
-const PASSWORD = process.env.E2E_PASSWORD ?? 'Admin-pass-123!';
+const EMAIL = process.env.E2E_EMAIL ?? 'student@aptiva.local';
+const PASSWORD = process.env.E2E_PASSWORD ?? 'Aptiva-Student-2026!#XyZ';
 
 test('keyboard-only diagnostic: intro → runner → result → review', async ({ page }) => {
   // ---- login (P-01 form) ----
   await page.goto('/login');
   await page.getByLabel(/email/i).fill(EMAIL);
-  await page.getByLabel(/password/i).fill(PASSWORD);
+  await page.getByLabel(/^password$/i).fill(PASSWORD);
   await page.getByRole('button', { name: /sign in|log in/i }).click();
   await expect(page).toHaveURL(/dashboard/, { timeout: 15_000 });
 

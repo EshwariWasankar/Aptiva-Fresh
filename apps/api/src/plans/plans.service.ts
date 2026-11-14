@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  blendBlueprints,
   buildCandidates,
   ENGINE_VERSION,
   labelFor,
@@ -18,6 +19,7 @@ import {
   type PlanCandidate,
   type PriorityTopicInput,
   type ReadinessTopicInput,
+  type TargetInput,
 } from '@aptiva/engine';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../common/prisma/prisma.service';
@@ -62,7 +64,10 @@ export class PlansService {
     const req = await this.prisma.preparationRequirement.findFirst({
       where: { userId, isActive: true },
       orderBy: { createdAt: 'desc' },
-      include: { assessment: { select: { id: true, slug: true, name: true, company: true } } },
+      include: {
+        assessment: { select: { id: true, slug: true, name: true, company: true } },
+        targets: { select: { id: true, company: true, targetDate: true, weight: true } },
+      },
     });
     if (!req) return { requirement: null };
     return { requirement: this.serializeRequirement(req) };
@@ -106,7 +111,7 @@ export class PlansService {
         where: { userId, isActive: true },
         data: { isActive: false, supersededAt: new Date() },
       });
-      return tx.preparationRequirement.create({
+      const created = await tx.preparationRequirement.create({
         data: {
           userId,
           assessmentId: body.assessmentId ?? null,
@@ -122,7 +127,29 @@ export class PlansService {
               ? Prisma.DbNull
               : (body.knownInfo as Prisma.InputJsonValue),
         },
-        include: { assessment: { select: { id: true, slug: true, name: true, company: true } } },
+        include: {
+          assessment: { select: { id: true, slug: true, name: true, company: true } },
+          targets: true,
+        },
+      });
+
+      if (body.targets && body.targets.length > 0) {
+        await tx.preparationTarget.createMany({
+          data: body.targets.map((t) => ({
+            requirementId: created.id,
+            company: t.company,
+            targetDate: new Date(`${t.targetDate}T00:00:00Z`),
+            weight: t.weight ?? 1.0,
+          })),
+        });
+      }
+
+      return tx.preparationRequirement.findUniqueOrThrow({
+        where: { id: created.id },
+        include: {
+          assessment: { select: { id: true, slug: true, name: true, company: true } },
+          targets: true,
+        },
       });
     });
 
@@ -158,6 +185,7 @@ export class PlansService {
     isActive: boolean;
     createdAt: Date;
     assessment?: { id: string; slug: string; name: string; company: string } | null;
+    targets?: Array<{ id: string; company: string; targetDate: Date; weight: number }> | null;
   }) {
     return {
       id: r.id,
@@ -173,6 +201,13 @@ export class PlansService {
       knownInfo: r.knownInfo,
       isActive: r.isActive,
       createdAt: r.createdAt,
+      targets:
+        r.targets?.map((t) => ({
+          id: t.id,
+          company: t.company,
+          targetDate: toIsoDate(t.targetDate),
+          weight: t.weight,
+        })) ?? [],
     };
   }
 
@@ -198,20 +233,16 @@ export class PlansService {
   // ---------------------------------------------------------- blueprint
 
   /**
-   * Resolve the blueprint for a requirement: the assessment's current
-   * version when mode=assessment_specific and an assessment is set,
-   * otherwise the 'generic' assessment. Returns engine input + provenance.
+   * Loads a raw BlueprintInput for a single assessment ID or the generic fallback.
    */
-  async resolveBlueprint(requirement: {
-    mode: string;
-    assessmentId: string | null;
-  }): Promise<{ input: BlueprintInput; unverified: boolean }> {
-    let assessmentId = requirement.assessmentId;
+  async loadBlueprintForAssessment(
+    assessmentId: string | null,
+  ): Promise<{ input: BlueprintInput; unverified: boolean }> {
+    let targetId = assessmentId;
     let unverified = false;
-    if (requirement.mode !== 'assessment_specific' || !assessmentId) {
+    if (!targetId) {
       const generic = await this.prisma.assessment.findUnique({ where: { slug: 'generic' } });
       if (!generic) {
-        // No blueprint at all — planner still works on priors only.
         return {
           input: {
             slug: 'none',
@@ -223,12 +254,12 @@ export class PlansService {
           unverified: true,
         };
       }
-      assessmentId = generic.id;
+      targetId = generic.id;
       unverified = true;
     }
 
     const version = await this.prisma.assessmentVersion.findFirst({
-      where: { assessmentId: assessmentId!, isCurrent: true },
+      where: { assessmentId: targetId, isCurrent: true },
       include: {
         sections: {
           include: {
@@ -309,7 +340,7 @@ export class PlansService {
     }
     const weightList = [...merged.values()];
     const assessment = await this.prisma.assessment.findUnique({
-      where: { id: assessmentId! },
+      where: { id: targetId },
       select: { slug: true },
     });
 
@@ -323,6 +354,61 @@ export class PlansService {
       },
       unverified,
     };
+  }
+
+  /**
+   * Resolve the blueprint for a requirement:
+   * If multiple targets exist, blends their blueprints using priority & date split (FR-022, PH13-T03).
+   * Otherwise uses assessment's current version when mode=assessment_specific, or generic.
+   */
+  async resolveBlueprint(requirement: {
+    id?: string;
+    mode: string;
+    assessmentId: string | null;
+  }): Promise<{ input: BlueprintInput; unverified: boolean }> {
+    if (requirement.id) {
+      const targets = await this.prisma.preparationTarget.findMany({
+        where: { requirementId: requirement.id },
+      });
+      if (targets.length > 1) {
+        const targetInputs: TargetInput[] = [];
+        for (const t of targets) {
+          const assm = await this.prisma.assessment.findFirst({
+            where: {
+              OR: [
+                { company: { contains: t.company, mode: 'insensitive' } },
+                { name: { contains: t.company, mode: 'insensitive' } },
+                {
+                  slug: {
+                    contains: t.company.toLowerCase().replace(/\s+/g, '-'),
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            },
+          });
+          const bp = await this.loadBlueprintForAssessment(assm?.id ?? null);
+          const daysLeft = Math.max(
+            0,
+            Math.ceil((t.targetDate.getTime() - todayUtc().getTime()) / DAY_MS),
+          );
+          targetInputs.push({
+            company: t.company,
+            targetDate: toIsoDate(t.targetDate),
+            daysLeft,
+            weight: t.weight,
+            blueprint: bp.input,
+          });
+        }
+        const blended = blendBlueprints(targetInputs);
+        return { input: blended.blueprint, unverified: false };
+      }
+    }
+
+    if (requirement.mode !== 'assessment_specific' || !requirement.assessmentId) {
+      return this.loadBlueprintForAssessment(null);
+    }
+    return this.loadBlueprintForAssessment(requirement.assessmentId);
   }
 
   // ---------------------------------------------------------- plan build
@@ -545,6 +631,7 @@ export class PlansService {
   private async buildEngineInputs(
     userId: string,
     requirement: {
+      id?: string;
       deadlineDate: Date;
       testDate: Date;
       wantedTopics: unknown;

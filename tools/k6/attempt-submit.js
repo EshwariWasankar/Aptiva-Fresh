@@ -41,9 +41,13 @@ const submitMs = new Trend('submit_ms', true);
 const errors = new Rate('errors');
 
 export function setup() {
-  const res = http.post(`${API_URL}/auth/login`, JSON.stringify({ email: EMAIL, password: PASSWORD }), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const res = http.post(
+    `${API_URL}/auth/login`,
+    JSON.stringify({ email: EMAIL, password: PASSWORD }),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
   if (res.status !== 201) throw new Error(`login failed: ${res.status} ${res.body}`);
   return { token: res.json('data.accessToken') };
 }
@@ -54,7 +58,9 @@ export default function (data) {
     Authorization: `Bearer ${data.token}`,
   };
 
-  const session = http.post(`${API_URL}/sessions`, JSON.stringify({ kind: 'practice' }), { headers });
+  const session = http.post(`${API_URL}/sessions`, JSON.stringify({ kind: 'practice' }), {
+    headers,
+  });
   if (session.status !== 201) {
     errors.add(1);
     if (__ITER < 5) console.log(`session ${session.status}: ${session.body}`);
@@ -64,8 +70,11 @@ export default function (data) {
 
   // Rotate across QUESTION_IDS="qid1:oid1,qid2:oid2,..." so repeated
   // iterations don't collide on the same user's attempt history.
-  const pairs = (__ENV.QUESTION_IDS || __ENV.QUESTION_ID + ':' + (__ENV.OPTION_ID || '')).split(',');
-  const [questionId, selectedOptionId] = pairs[(__ITER % pairs.length || 0) % pairs.length].split(':');
+  const pairs = (__ENV.QUESTION_IDS || __ENV.QUESTION_ID + ':' + (__ENV.OPTION_ID || '')).split(
+    ',',
+  );
+  const [questionId, selectedOptionId] =
+    pairs[(__ITER % pairs.length || 0) % pairs.length].split(':');
   if (!questionId) {
     errors.add(1);
     console.log('QUESTION_IDS env required');
@@ -92,6 +101,8 @@ export default function (data) {
     if (__ITER < 5) console.log(`put ${res.status}: ${res.body}`);
   }
 
-  http.post(`${API_URL}/sessions/${sessionId}/finish`, JSON.stringify({ attemptIds: [] }), { headers });
+  http.post(`${API_URL}/sessions/${sessionId}/finish`, JSON.stringify({ attemptIds: [] }), {
+    headers,
+  });
   sleep(0.2);
 }

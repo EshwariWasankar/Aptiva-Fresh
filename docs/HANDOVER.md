@@ -116,15 +116,15 @@ Every screen, every button, every endpoint. Routes marked 🔒 require login;
 
 ### 4.1 Public / marketing
 
-| Route | What it does |
-|---|---|
-| `/` | Landing page. Auth-aware CTAs: logged-out → "Create free account"/"See assessments"; logged-in → "Go to dashboard". Step cards are static marketing. |
+| Route                 | What it does                                                                                                                                                                                                                                                               |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                   | Landing page. Auth-aware CTAs: logged-out → "Create free account"/"See assessments"; logged-in → "Go to dashboard". Step cards are static marketing.                                                                                                                       |
 | `/assessments/[slug]` | Public assessment page (e.g. `/assessments/tcs-online-assessment`): duration, question count, negative marking, format mix, **topic weights with provenance badges** (source file @ commit, `candidate_reported` vs `verified` flags), disclaimer footer. No login needed. |
-| `/login` | Email + password (`PasswordInput` eye toggle). Errors: generic "Invalid email or password" (429 → rate-limit message; network down → "Cannot reach the server"). Link to `/reset-password` and `/register`. Google OAuth button when configured. Success → `/dashboard`. |
-| `/register` | Email, password (policy: length + HIBP breach check), graduation year, branch, optional college, **mandatory consent checkbox** (privacy notice version `2026-11`). Success → session → `/dashboard`. |
-| `/reset-password` | Two-step: request link by email → set new password via `?token=`. Backend sends email via `EMAIL_API_KEY` (unverified in dev). |
-| `/verify-email` | Consumes `?token=` from verification email; shows status. |
-| `/privacy` | Static privacy page. |
+| `/login`              | Email + password (`PasswordInput` eye toggle). Errors: generic "Invalid email or password" (429 → rate-limit message; network down → "Cannot reach the server"). Link to `/reset-password` and `/register`. Google OAuth button when configured. Success → `/dashboard`.   |
+| `/register`           | Email, password (policy: length + HIBP breach check), graduation year, branch, optional college, **mandatory consent checkbox** (privacy notice version `2026-11`). Success → session → `/dashboard`.                                                                      |
+| `/reset-password`     | Two-step: request link by email → set new password via `?token=`. Backend sends email via `EMAIL_API_KEY` (unverified in dev).                                                                                                                                             |
+| `/verify-email`       | Consumes `?token=` from verification email; shows status.                                                                                                                                                                                                                  |
+| `/privacy`            | Static privacy page.                                                                                                                                                                                                                                                       |
 
 ### 4.2 Student app shell
 
@@ -213,8 +213,8 @@ wanted topics, preparation level, known-info notes.
   - **Why this?** expandable → `GET …/rationale` panel: accuracy, conceptual
     share, blueprint share + source, days left, priority, expected gain,
     "would change if…"
-  - **Block feedback row** (PH9-T07): *Already know this / Too easy /
-    Not relevant* → `POST …/feedback`; `too_easy`/`not_relevant` suppress that
+  - **Block feedback row** (PH9-T07): _Already know this / Too easy /
+    Not relevant_ → `POST …/feedback`; `too_easy`/`not_relevant` suppress that
     topic from new candidates for 14 days. ✓ shows when recorded.
 - **History** link → `/plan/history`.
 
@@ -309,7 +309,7 @@ Entries auto-resolve when you answer that topic correctly later.
 
 ### 4.19 Settings — `/settings` (P-19)
 
-- **Plan**: *Keep my plan* checkbox → `PUT /me/plan-settings`. When ON, session
+- **Plan**: _Keep my plan_ checkbox → `PUT /me/plan-settings`. When ON, session
   recalcs still update profiles/readiness but do **not** auto-regenerate the plan.
 - **Consents**: toggles for `analytics`, `marketing`, `support` →
   `PUT /me/consents` appends `consent_records` (essential processing can't be
@@ -339,11 +339,11 @@ Nav (admin role only): Overview · Questions · Import · Blueprints · Review.
   same reviewer twice → 409. Approvals are what unlock diagnostic/reassessment
   publishing.
 - **Import** `/admin/import` (`ImportPanel`):
-  - *Question sources*: pick `ds-01`/`ds-11`/`ds-12` → **Dry run** (report:
+  - _Question sources_: pick `ds-01`/`ds-11`/`ds-12` → **Dry run** (report:
     files seen, parsed, accepted, rejected w/ reasons, duplicates) or real
     import (reversible batch, lands as drafts).
-  - *Company data*: TCS-pattern records, unmapped-phrase synonym queue.
-  - *Coverage*: pool/section/difficulty stats + below-threshold table.
+  - _Company data_: TCS-pattern records, unmapped-phrase synonym queue.
+  - _Coverage_: pool/section/difficulty stats + below-threshold table.
 - **Blueprints** `/admin/blueprints` (`BlueprintEditorForm`): versioned
   topic-weight blueprints with provenance (`verified`/`candidate_reported`),
   difficulty bands, pace seconds; one `is_current` per assessment; generic
@@ -361,11 +361,13 @@ Auth: `Authorization: Bearer <accessToken>` (15 min JWT); refresh via httpOnly
 cookie `POST /auth/refresh` (rotation + family revocation on replay).
 
 ### Auth & users
+
 `POST /auth/register|login|logout|refresh|verify-email|google` ·
 `POST /auth/password-reset/request|confirm` · `GET /me` (profile+consents) ·
 `GET/PUT /me/profile` · `GET /me/profile/history`
 
 ### Content (public read / admin write)
+
 `GET /assessments`, `GET /assessments/:slug` ·
 `GET /questions/:id` (sanitized, no keys) ·
 Admin: `GET/POST/PUT /admin/questions`, `POST /admin/questions/:id/review`,
@@ -373,6 +375,7 @@ Admin: `GET/POST/PUT /admin/questions`, `POST /admin/questions/:id/review`,
 import endpoints, `GET /admin/item-stats`, lesson CRUD.
 
 ### Attempts & sessions
+
 `POST /sessions` · `GET /sessions/:id/next` (serves question, stamps shown_at) ·
 `GET /sessions/:id/questions/:questionId` · `PUT /sessions/:id/attempts/:questionId`
 (idempotent by attemptId, server marks + times) · `POST /sessions/:id/finish`
@@ -380,25 +383,30 @@ import endpoints, `GET /admin/item-stats`, lesson CRUD.
 `GET /sessions/:id/reveal/:attemptId` · `PUT /attempts/:attemptId/error-feedback`
 
 ### Diagnostics
+
 `GET /me/diagnostics/active` · `POST /me/diagnostics` · `GET /me/diagnostics/:id/next`
 · `PUT /me/diagnostics/:id/answers/:questionId` · `POST …/pause|submit`
 · `GET …/result|review` · `GET /me/diagnostics/error-types`
 
 ### Plans & profile
+
 `GET/PUT /me/requirements` · `POST /me/plans` · `GET /me/plans` (history) ·
 `GET /me/plans/current` · `GET /me/plans/:planId` · `GET …/items/:itemId/rationale`
 · `GET …/changes` · `POST …/restore` · `POST …/items/:itemId/feedback` ·
 `GET/PUT /me/plan-settings` · `GET /me/readiness` · `GET /me/profile[/history]`
 
 ### Reassessment & notebook
+
 `POST /me/reassessments` · `GET /me/reassessments/:id/comparison` ·
 `GET /me/notebook`
 
 ### Privacy
+
 `GET /me/data-export` (re-auth header) · `DELETE /me` (re-auth, 202) ·
 `PUT /me/consents`
 
 ### Ops
+
 `GET /health` (liveness) · `GET /ready` (DB+Redis, 503 when down) ·
 `GET /api/docs` Swagger UI.
 
@@ -526,7 +534,7 @@ only), `RECALC_QUEUE_NAME`/`PROFILE_QUEUE_NAME` (queue isolation in tests),
   cross-user 404s and student→admin 403s.
 - Answer keys: Redis-cached server-side; reveal endpoint only after the attempt
   row exists; submit responses carry no key material.
- Helmet CSP (API) + Next.js `headers()` (XFO DENY, nosniff, Referrer-Policy,
+  Helmet CSP (API) + Next.js `headers()` (XFO DENY, nosniff, Referrer-Policy,
   Permissions-Policy, CSP).
 - Rate limiting: in-memory fixed window per route/IP (single instance — needs
   Redis backing for multi-instance, PH-12 note).
@@ -550,23 +558,23 @@ only), `RECALC_QUEUE_NAME`/`PROFILE_QUEUE_NAME` (queue isolation in tests),
 ## 11. Known gaps & honest limitations
 
 1. **Content depth is now decent but uneven**: ~1,381 practice + 200 diagnostic +
-  164 reassessment published. DS-11/DS-12 are MCQ-heavy; DS-01 is numerical-only.
-  Multi-answer word problems from DS-01 were rejected at import (9 files) — some
-  borderline two-part items may remain; review before high-stakes use.
+   164 reassessment published. DS-11/DS-12 are MCQ-heavy; DS-01 is numerical-only.
+   Multi-answer word problems from DS-01 were rejected at import (9 files) — some
+   borderline two-part items may remain; review before high-stakes use.
 2. **Diagnostic composer is deterministic** — same student gets the same 12/27
-  items (seeded shuffle). Diversifies as pools grow; randomization is future work.
+   items (seeded shuffle). Diversifies as pools grow; randomization is future work.
 3. **Diagnostic pool = curated slice**, approvals recorded by script — see §8 caveat.
 4. **Email delivery unverified** — reset/verify flows exist; `EMAIL_API_KEY` must
-  be configured and tested before pilot.
+   be configured and tested before pilot.
 5. **No MFA**, no payment/billing (PH-13 backlog), no reminders, no Hindi UI.
 6. **Single-instance assumptions**: in-memory rate limiter; BullMQ workers run
-  inside the API process — fine for pilot scale, revisit for PH-12 multi-instance.
+   inside the API process — fine for pilot scale, revisit for PH-12 multi-instance.
 7. **Recalc throughput** ~6–7 sessions/s observed; backlog drains but consider
-  worker concurrency if volume grows.
+   worker concurrency if volume grows.
 8. **Counsel review pending** for `docs/PRIVACY.md`; **ZAP baseline scan not yet
-  run** — both are PH-10/12 pilot gates.
+   run** — both are PH-10/12 pilot gates.
 9. **Upload pipeline deferred** (E-022 optional) — if document upload is added,
-  the Section-23 quarantine/scan chain applies.
+   the Section-23 quarantine/scan chain applies.
 10. **Deferred backlog** (PH-13): pilot evaluation, billing tiers, multi-target
     plans, streaks, external score log, pattern reports, reminders, Hindi,
     adaptive (information-based) diagnostic, IRT/BKT, ILP planner, LLM hints.

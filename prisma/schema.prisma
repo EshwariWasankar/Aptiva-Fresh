@@ -53,6 +53,12 @@ model User {
   readinessEstimates ReadinessEstimate[]
   mistakeEntries     MistakeEntry[]
   reassessmentResults ReassessmentResult[]
+  passes             UserPass[]
+  commitments        UserCommitment[]
+  practiceDays       PracticeDay[]
+  externalScores     ExternalScore[]
+  patternReports     PatternReport[]
+  notificationPreference NotificationPreference?
 
   @@map("users")
 }
@@ -590,6 +596,7 @@ model PreparationRequirement {
   assessment Assessment? @relation(fields: [assessmentId], references: [id])
   plans      PracticePlan[]
   readiness  ReadinessEstimate[]
+  targets    PreparationTarget[]
 
   @@index([userId, isActive])
   @@map("preparation_requirements")
@@ -705,4 +712,164 @@ model ReassessmentResult {
   baseline   ProfileSnapshot @relation(fields: [baselineSnapshotId], references: [id])
 
   @@map("reassessment_results")
+}
+
+// ---------------------------------------------------------------- Phase 13 Post-launch & Backlog
+
+model UserPass {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  tier        String    // free | sprint_7d | sprint_14d | season_1m | season_3m
+  status      String    @default("active") // active | expired | canceled
+  validFrom   DateTime  @default(now()) @map("valid_from") @db.Timestamptz(6)
+  validUntil  DateTime  @map("valid_until") @db.Timestamptz(6)
+  externalId  String?   @map("external_id")
+  amountCents Int       @default(0) @map("amount_cents")
+  currency    String    @default("INR")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("user_passes")
+}
+
+model BillingEvent {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  idempotencyKey String    @unique @map("idempotency_key")
+  gateway        String    // razorpay | stripe | mock
+  eventType      String    @map("event_type")
+  payload        Json
+  processedAt    DateTime  @default(now()) @map("processed_at") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([idempotencyKey])
+  @@map("billing_events")
+}
+
+model PreparationTarget {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requirementId String    @map("requirement_id") @db.Uuid
+  company       String
+  targetDate    DateTime  @map("target_date") @db.Date
+  weight        Float     @default(1.0)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  requirement PreparationRequirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+
+  @@index([requirementId])
+  @@map("preparation_targets")
+}
+
+model UserCommitment {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  type             String    // days | minutes
+  target           Int
+  startDate        DateTime  @default(now()) @map("start_date") @db.Date
+  restDaysAllowed  Int       @default(1) @map("rest_days_allowed") @db.SmallInt
+  restDayUsed      Boolean   @default(false) @map("rest_day_used")
+  status           String    @default("active") // active | completed | broken | ended_by_user
+  daysDone         Int       @default(0) @map("days_done") @db.SmallInt
+  minutesDone      Int       @default(0) @map("minutes_done")
+  endedAt          DateTime? @map("ended_at") @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@map("user_commitments")
+}
+
+model PracticeDay {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String   @map("user_id") @db.Uuid
+  date              DateTime @db.Date
+  activeSeconds     Int      @default(0) @map("active_seconds")
+  questionsAnswered Int      @default(0) @map("questions_answered")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId, date])
+  @@map("practice_days")
+}
+
+model ExternalScore {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  source         String    // AMCAT | eLitmus | CoCubes | TCS NQT | CampusMock | Manual | CSV
+  assessmentName String    @map("assessment_name")
+  takenAt        DateTime  @map("taken_at") @db.Date
+  totalScore     Float     @map("total_score")
+  maxScore       Float     @map("max_score")
+  percentile     Float?
+  sectionScores  Json?     @map("section_scores")
+  reliability    Float     @default(0.8)
+  notes          String?
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, takenAt])
+  @@map("external_scores")
+}
+
+model PatternReport {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @map("user_id") @db.Uuid
+  assessmentId String?   @map("assessment_id") @db.Uuid
+  company      String
+  field        String    // numQuestions | timeLimit | sectionWeights | negativeMarking | calculatorAllowed
+  claim        Json
+  weight       Float     @default(1.0)
+  status       String    @default("pending") // pending | approved | rejected
+  reviewedAt   DateTime? @map("reviewed_at") @db.Timestamptz(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([company, status])
+  @@map("pattern_reports")
+}
+
+model PatternDriftAlert {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  company    String
+  section    String
+  topicId    String?   @map("topic_id")
+  oldWeight  Float     @map("old_weight")
+  newWeight  Float     @map("new_weight")
+  detectedAt DateTime  @default(now()) @map("detected_at") @db.Timestamptz(6)
+  severity   String    @default("medium") // low | medium | high
+  status     String    @default("open") // open | resolved | dismissed
+  notes      String?
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([company, status])
+  @@map("pattern_drift_alerts")
+}
+
+model NotificationPreference {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId             String   @unique @map("user_id") @db.Uuid
+  optInReminders     Boolean  @default(false) @map("opt_in_reminders")
+  optInWeeklySummary Boolean  @default(false) @map("opt_in_weekly_summary")
+  dailyLimit         Int      @default(1) @map("daily_limit") @db.SmallInt
+  preferredHourUtc   Int      @default(14) @map("preferred_hour_utc") @db.SmallInt
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
 }

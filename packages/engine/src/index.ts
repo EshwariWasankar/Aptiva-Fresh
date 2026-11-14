@@ -58,12 +58,15 @@ export {
   conceptualShareOf,
   urgencyOf,
   targetProficiency,
+  blendBlueprints,
   type BlueprintInput,
   type BlueprintWeightInput,
   type PriorityFactors,
   type PriorityTopicInput,
   type RequirementInput,
   type TopicPriority,
+  type TargetInput,
+  type BlendedTargetOutput,
 } from './priority.js';
 
 export {
@@ -90,3 +93,12 @@ export {
   type ReadinessTopicInput,
   type ReadinessTopicOut,
 } from './readiness.js';
+
+export {
+  evaluateCommitment,
+  DEFAULT_COMMITMENT_CONFIG,
+  type CommitmentConfig,
+  type CommitmentEval,
+  type CommitmentRow,
+  type PracticeDay,
+} from './commitments.js';

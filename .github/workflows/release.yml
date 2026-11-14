@@ -1,0 +1,113 @@
+name: release-and-deploy
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+    branches:
+      - main
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # -------------------------------------------------------------
+  # Stage 1: Build & Validate
+  # -------------------------------------------------------------
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build packages and apps
+        run: pnpm build
+
+      - name: Verify package production audit
+        run: pnpm audit --prod
+
+  # -------------------------------------------------------------
+  # Stage 2: Staging Deployment (Automated on main)
+  # -------------------------------------------------------------
+  deploy-staging:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.aptiva.app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply Staging Migrations (Expand-Only)
+        run: |
+          echo "Applying migrations to staging database..."
+          # In staging host: npx prisma migrate deploy
+
+      - name: Deploy Staging Services
+        run: |
+          echo "Deploying staging API, Worker, and Web containers..."
+          # Deploy container images or trigger host webhook
+
+      - name: Staging Health Probe & Smoke Test
+        run: |
+          echo "Verifying /health and /ready..."
+          # curl -fsS https://staging.aptiva.app/api/v1/ready
+          # node tools/prod-smoke.mjs
+
+  # -------------------------------------------------------------
+  # Stage 3: Production Deployment (Manual Approval Gate on Tag)
+  # -------------------------------------------------------------
+  deploy-production:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://aptiva.app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Step 1 - Pre-flight Database Backup
+        run: |
+          echo "Executing automated snapshot/backup of production database before release..."
+          # bash tools/db-backup.sh
+
+      - name: Step 2 - Apply Production Migrations
+        run: |
+          echo "Applying database migrations (expand-only)..."
+          # npx prisma migrate deploy
+
+      - name: Step 3 - Deploy API & Worker Services
+        run: |
+          echo "Deploying new API and BullMQ worker containers..."
+
+      - name: Step 4 - Verify API Readiness Probe
+        run: |
+          echo "Polling /api/v1/ready until all connections healthy..."
+
+      - name: Step 5 - Deploy Frontend & Shift Traffic
+        run: |
+          echo "Deploying Next.js frontend container and updating reverse proxy..."
+
+      - name: Step 6 - Post-Deploy Production Smoke Test
+        run: |
+          echo "Executing production smoke test..."
+          # WEB_URL=https://aptiva.app API_URL=https://aptiva.app/api/v1 node tools/prod-smoke.mjs

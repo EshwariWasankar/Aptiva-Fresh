@@ -204,3 +204,110 @@ export function priorities(
   out.sort((a, b) => b.priority - a.priority || a.topicId.localeCompare(b.topicId));
   return out;
 }
+
+export interface TargetInput {
+  company: string;
+  targetDate: string;
+  daysLeft: number;
+  weight: number;
+  blueprint: BlueprintInput;
+}
+
+export interface BlendedTargetOutput {
+  blueprint: BlueprintInput;
+  effectiveDaysLeft: number;
+  targetCount: number;
+}
+
+/**
+ * Blends multiple company blueprints by date and priority split (FR-022, PH13-T03).
+ * Produces one coherent blueprint with combined topic weights and effective urgency horizon.
+ */
+export function blendBlueprints(targets: TargetInput[]): BlendedTargetOutput {
+  if (targets.length === 0) {
+    throw new Error('At least one target is required to blend blueprints');
+  }
+  if (targets.length === 1) {
+    const first = targets[0]!;
+    return {
+      blueprint: first.blueprint,
+      effectiveDaysLeft: first.daysLeft,
+      targetCount: 1,
+    };
+  }
+
+  const totalRawWeight = targets.reduce((sum, t) => sum + Math.max(0.01, t.weight), 0);
+  const normalizedTargets = targets.map((t) => ({
+    ...t,
+    normWeight: Math.max(0.01, t.weight) / totalRawWeight,
+  }));
+
+  // Effective days left is the min days left with weight adjustment
+  const effectiveDaysLeft = Math.max(
+    0,
+    Math.round(normalizedTargets.reduce((acc, t) => acc + t.daysLeft * t.normWeight, 0)),
+  );
+
+  const topicMap = new Map<
+    string,
+    {
+      topicId: string;
+      share: number;
+      difficultyBandSum: number;
+      paceSecondsSum: number;
+      weightCount: number;
+      sectionSlug: string | null;
+    }
+  >();
+
+  for (const t of normalizedTargets) {
+    for (const w of t.blueprint.weights) {
+      const existing = topicMap.get(w.topicId);
+      const blendedShare = w.share * t.normWeight;
+      if (existing) {
+        existing.share += blendedShare;
+        if (w.difficultyBand != null) existing.difficultyBandSum += w.difficultyBand * t.normWeight;
+        if (w.paceSeconds != null) existing.paceSecondsSum += w.paceSeconds * t.normWeight;
+        existing.weightCount += t.normWeight;
+        if (!existing.sectionSlug && w.sectionSlug) existing.sectionSlug = w.sectionSlug;
+      } else {
+        topicMap.set(w.topicId, {
+          topicId: w.topicId,
+          share: blendedShare,
+          difficultyBandSum: w.difficultyBand != null ? w.difficultyBand * t.normWeight : 0,
+          paceSecondsSum: w.paceSeconds != null ? w.paceSeconds * t.normWeight : 0,
+          weightCount: t.normWeight,
+          sectionSlug: w.sectionSlug,
+        });
+      }
+    }
+  }
+
+  // Normalize shares so sum of shares is 1.0 (or total blended share)
+  const totalBlendedShare = Array.from(topicMap.values()).reduce(
+    (sum, item) => sum + item.share,
+    0,
+  );
+  const weights: BlueprintWeightInput[] = Array.from(topicMap.values()).map((item) => ({
+    topicId: item.topicId,
+    share: totalBlendedShare > 0 ? item.share / totalBlendedShare : item.share,
+    difficultyBand:
+      item.weightCount > 0 ? Math.round(item.difficultyBandSum / item.weightCount) : null,
+    paceSeconds: item.weightCount > 0 ? Math.round(item.paceSecondsSum / item.weightCount) : null,
+    sectionSlug: item.sectionSlug,
+  }));
+
+  const blendedSlug = `blended-${targets.map((t) => t.company.toLowerCase().replace(/\s+/g, '-')).join('-')}`;
+
+  return {
+    blueprint: {
+      slug: blendedSlug,
+      sourceType: 'blended_multi_target',
+      confidence: 'medium',
+      negativeMarking: targets[0]?.blueprint.negativeMarking ?? null,
+      weights,
+    },
+    effectiveDaysLeft,
+    targetCount: targets.length,
+  };
+}

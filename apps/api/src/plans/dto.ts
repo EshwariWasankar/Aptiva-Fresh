@@ -19,6 +19,15 @@ export const MinutesPerWeekday = z
   .strict();
 export type MinutesPerWeekday = z.infer<typeof MinutesPerWeekday>;
 
+export const TargetSplitItem = z
+  .object({
+    company: z.string().min(1),
+    targetDate: isoDate,
+    weight: z.number().positive().default(1.0),
+  })
+  .strict();
+export type TargetSplitItem = z.infer<typeof TargetSplitItem>;
+
 export const RequirementsBody = z
   .object({
     assessmentId: z.string().uuid().nullable().optional(),
@@ -39,6 +48,7 @@ export const RequirementsBody = z
       .nullable()
       .optional(),
     knownInfo: z.record(z.string(), z.unknown()).nullable().optional(),
+    targets: z.array(TargetSplitItem).max(5).optional(),
   })
   .strict();
 export type RequirementsBody = z.infer<typeof RequirementsBody>;

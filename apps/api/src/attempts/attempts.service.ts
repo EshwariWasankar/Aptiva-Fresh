@@ -404,6 +404,30 @@ export class AttemptsService {
       },
     });
     await this.invalidateSession(sessionId);
+
+    // Update practice_days for commitments & streaks (PH13-T04)
+    try {
+      const today = new Date();
+      const todayDate = new Date(
+        Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
+      );
+      await this.prisma.practiceDay.upsert({
+        where: { userId_date: { userId, date: todayDate } },
+        update: {
+          activeSeconds: { increment: Math.max(0, actualMinutes * 60) },
+          questionsAnswered: { increment: persisted.size },
+        },
+        create: {
+          userId,
+          date: todayDate,
+          activeSeconds: Math.max(0, actualMinutes * 60),
+          questionsAnswered: persisted.size,
+        },
+      });
+    } catch (streakErr) {
+      this.logger.warn(`Failed to record practice day: ${String(streakErr)}`);
+    }
+
     try {
       await this.recalc.enqueueRecalc({ sessionId, userId });
     } catch (err) {

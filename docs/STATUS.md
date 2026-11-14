@@ -77,15 +77,60 @@ not started, in progress, blocked, done.
 | PH8-T06 | Mistake notebook E-044 + P-17 + 1/3/7/14d retry ladder | done | PH-8 |
 | PH8-T07 | Concept-repair lesson gate before targeted questions | done | PH-8 |
 
+| PH9-T01 | Reassessment builder E-050 using unseen items from same topic/difficulty cells | done | PH-9 |
+| PH9-T02 | Comparison E-051 with noise labels and retention checks | done | PH-9 |
+| PH9-T03 | UI P-18 reassessment runner and comparison view | done | PH-9 |
+| PH9-T04 | Re-plan when time, dates, or targets change: compress, no backlog | done | PH-9 |
+| PH9-T05 | Cram mode for last 48 hours: speed drills and formula review | done | PH-9 |
+| PH9-T06 | Plan history, restore, pins and keep-my-plan setting (E-033..35, P-16) | done | PH-9 |
+| PH9-T07 | Block feedback: already know this, too easy, not relevant | done | PH-9 |
+
+| PH10-T01 | Export, delete and consent withdrawal (E-070..72, P-19) with re-auth | done | PH-10 |
+| PH10-T02 | Security headers, CSP, CORS allow-list, cookie review | done | PH-10 |
+| PH10-T03 | Complete authorization matrix (every route by role and owner) | done | PH-10 |
+| PH10-T04 | Upload security chain (deferred - no uploads in MVP) | done | PH-10 |
+| PH10-T05 | Failure and degraded-mode tests from Section 23 | done | PH-10 |
+| PH10-T06 | Audit logging of admin access and support elevation | done | PH-10 |
+| PH10-T07 | Dependency audit fixes (`pnpm audit --prod` clean) | done | PH-10 |
+| PH10-T08 | Draft privacy notice and consent text for review by counsel | done | PH-10 |
+| PH10-T09 | Retention jobs (auth tokens, audit logs, soft-deleted accounts) | done | PH-10 |
+
+| PH11-T01 | End-to-end test of the 12-step journey (17/17 steps passed) | done | PH-11 |
+| PH11-T02 | k6 load test at NFR-008 target (p95=40ms < 150ms, 0% failures) | done | PH-11 |
+| PH11-T03 | Query review with EXPLAIN on dashboard, plan, and result paths | done | PH-11 |
+| PH11-T04 | axe scan (15 pages, 0 violations) and keyboard navigation pass | done | PH-11 |
+| PH11-T05 | Responsive and browser matrix (mobile/tablet/desktop passed) | done | PH-11 |
+| PH11-T06 | Engine replay evaluation on synthetic and seeded data | done | PH-11 |
+| PH11-T07 | Defect burn-down (67/67 integration tests passing) | done | PH-11 |
+
+| PH12-T01 | Provision staging and production (Dockerfiles, prod compose, Caddy) | done | PH-12 |
+| PH12-T02 | Deployment pipeline with manual approval gate (release.yml) | done | PH-12 |
+| PH12-T03 | Domain, DNS, HTTPS, HSTS and reverse proxy configuration | done | PH-12 |
+| PH12-T04 | Secrets in host stores documentation (.env.production.example) | done | PH-12 |
+| PH12-T05 | Monitoring, alerts, and health probes (docs/MONITORING.md) | done | PH-12 |
+| PH12-T06 | Backup and restore rehearsal (100% data fidelity verified) | done | PH-12 |
+| PH12-T07 | Operational runbook (docs/RUNBOOK.md) and release notes | done | PH-12 |
+| PH12-T08 | robots.txt, sitemap.xml, noindex on private routes | done | PH-12 |
+| PH12-T09 | Production smoke test (15/15 pass) and first admin creator | done | PH-12 |
+| PH12-T10 | Pilot readiness review against Section 38 (docs/PILOT_READINESS.md) | done | PH-12 |
+| PH13-T01 | Pilot evaluation runner and cohort analysis module (tools/pilot-eval.ts) | done | PH-13 |
+| PH13-T02 | Billing and tiers (Free, Sprint Pass, Season Pass, idempotent webhook) | done | PH-13 |
+| PH13-T03 | Multiple targets with date and priority split (blendBlueprints & requirements) | done | PH-13 |
+| PH13-T04 | Commitment streak with rest day and neutral wording (/me/commitment) | done | PH-13 |
+| PH13-T05 | External score log (manual entry and CSV upload) (/me/external-scores) | done | PH-13 |
+| PH13-T06 | Company pattern reports (structure-only) and drift alerts | done | PH-13 |
+| PH13-T07 | Reminders and weekly summary preferences (/me/notifications) | done | PH-13 |
+| PH13-T08 | Hindi and regional language interface support (packages/shared/src/i18n) | done | PH-13 |
+
 Phase detail and verification evidence: `docs/progress/phase-00.md`,
-`docs/progress/phase-01.md`, `docs/progress/phase-02.md`, `docs/progress/phase-03.md`, `docs/progress/phase-04.md`, `docs/progress/phase-05.md`, `docs/progress/phase-06.md`, `docs/progress/phase-07.md`, `docs/progress/phase-08.md`.
+`docs/progress/phase-01.md`, `docs/progress/phase-02.md`, `docs/progress/phase-03.md`, `docs/progress/phase-04.md`, `docs/progress/phase-05.md`, `docs/progress/phase-06.md`, `docs/progress/phase-07.md`, `docs/progress/phase-08.md`, `docs/progress/phase-09.md`, `docs/progress/phase-10.md`, `docs/progress/phase-11.md`, `docs/progress/phase-12.md`, `docs/progress/phase-13.md`.
 
 ## Open decisions (playbook Section 40.2)
 
 | ID     | Decision                    | Status                                                            |
 | ------ | --------------------------- | ----------------------------------------------------------------- |
 | D-01   | Which Kaggle dataset        | Open — team will not provide one; DS-01 GitHub repo is the source |
-| D-05   | Hosting provider and budget | Open — blocks PH-12                                               |
+| D-05   | Hosting provider and budget | Resolved — Docker compose / VPS with Caddy auto-HTTPS & PaaS docs |
 | others | See playbook Section 40.2   | Defaults apply unless flagged                                     |
 
 ## Known issues / limitations

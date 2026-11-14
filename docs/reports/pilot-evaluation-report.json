@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-11-14T12:48:57.958Z",
+  "source": "synthetic_benchmark",
+  "totalStudents": 120,
+  "pilotStats": {
+    "cohort": "pilot",
+    "n": 60,
+    "baselineMean": 49.11,
+    "baselineStd": 12.97,
+    "postMean": 69.02,
+    "postStd": 14.31,
+    "meanAbsoluteGain": 19.91,
+    "meanRelativeGain": 0.424,
+    "cohensD": 1.458,
+    "cohensDConfidenceInterval": [1.015, 1.901],
+    "meanPaceImprovementSec": 13.9,
+    "retentionRate": 100,
+    "sectionGains": {
+      "quantitative": 21.9,
+      "logical": 20.9,
+      "verbal": 20.9,
+      "dataInterpretation": 20.9
+    }
+  },
+  "controlStats": {
+    "cohort": "control",
+    "n": 60,
+    "baselineMean": 49.11,
+    "baselineStd": 12.97,
+    "postMean": 54.16,
+    "postStd": 14.19,
+    "meanAbsoluteGain": 5.06,
+    "meanRelativeGain": 0.111,
+    "cohensD": 0.372,
+    "cohensDConfidenceInterval": [0.008, 0.736],
+    "meanPaceImprovementSec": 2.1,
+    "retentionRate": 100,
+    "sectionGains": {
+      "quantitative": 7.05,
+      "logical": 6.05,
+      "verbal": 6.05,
+      "dataInterpretation": 6.05
+    }
+  },
+  "betweenGroupEffectSize": 1.042,
+  "pEstimate": 0.0001,
+  "summary": "Pilot cohort achieved a mean score gain of +19.91% (Cohen's d = 1.458, 95% CI [1.015, 1.901]), significantly outperforming control group (+5.06%, d = 0.372). Average pace improved by 13.9s per question with 100% completion rate."
+}

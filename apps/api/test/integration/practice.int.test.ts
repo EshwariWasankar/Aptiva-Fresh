@@ -60,8 +60,8 @@ describe('practice daily loop (integration, PH-8)', () => {
     for (const n of ['DATABASE_URL', 'REDIS_URL', 'JWT_ACCESS_SECRET']) {
       if (!process.env[n]) throw new Error(`${n} is not set`);
     }
-    process.env.RATE_LIMIT_FACTOR ??= '1000';
-    process.env.ATTEMPT_MIN_IDLE_MS ??= '50';
+    process.env.RATE_LIMIT_FACTOR = '1000';
+    process.env.ATTEMPT_MIN_IDLE_MS = '50';
     // Isolate queue workers from a concurrently running dev API.
     process.env.RECALC_QUEUE_NAME ??= `aptiva-recalc-test-${process.pid}`;
     process.env.PROFILE_QUEUE_NAME ??= `aptiva-profile-test-${process.pid}`;
