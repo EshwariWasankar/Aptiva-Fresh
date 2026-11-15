@@ -131,7 +131,7 @@ export default function PracticeRunnerPage() {
   const ss = Math.floor((elapsed % 60000) / 1000);
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 w-full overflow-hidden question-container">
       {/* Top Session Progress Bar */}
       <div className="glass-card flex items-center justify-between px-5 py-3">
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -167,13 +167,13 @@ export default function PracticeRunnerPage() {
 
       {/* Lesson View */}
       {phase === 'lesson' && next?.lesson && (
-        <section className="glass-card p-6 sm:p-8 flex flex-col gap-4">
+        <section className="glass-card p-6 sm:p-8 flex flex-col gap-4 overflow-hidden max-w-full">
           <div className="flex items-center gap-2 text-xs font-bold text-purple-700 uppercase tracking-wider">
             <IconSparkles className="w-4 h-4" />
             <span>Key Concept</span>
           </div>
-          <h2 className="text-xl font-bold text-slate-900">{next.lesson.title}</h2>
-          <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 bg-purple-50/50 p-4 rounded-xl border border-purple-100/60">
+          <h2 className="text-xl font-bold text-slate-900 break-words">{next.lesson.title}</h2>
+          <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 bg-purple-50/50 p-4 rounded-xl border border-purple-100/60 break-words [overflow-wrap:anywhere] overflow-x-auto">
             {next.lesson.content}
           </div>
           <button
@@ -188,25 +188,25 @@ export default function PracticeRunnerPage() {
 
       {/* Question View */}
       {phase === 'question' && q && (
-        <section className="glass-card p-6 sm:p-8 flex flex-col gap-6">
-          <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed">
+        <section className="glass-card p-6 sm:p-8 flex flex-col gap-6 overflow-hidden max-w-full">
+          <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed max-w-full break-words [overflow-wrap:anywhere] overflow-x-auto">
             <Katex text={q.stem} />
           </div>
 
           {q.format === 'mcq' ? (
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2.5 max-w-full">
               {q.options.map((o) => (
                 <button
                   key={o.id}
                   type="button"
                   onClick={() => setSelected(o.id)}
-                  className={`rounded-xl border p-3.5 px-4 text-left text-xs sm:text-sm font-medium transition-all ${
+                  className={`rounded-xl border p-3.5 px-4 text-left text-xs sm:text-sm font-medium transition-all max-w-full break-words [overflow-wrap:anywhere] flex items-start ${
                     selected === o.id
                       ? 'border-purple-600 bg-purple-50/90 text-purple-950 shadow-xs ring-1 ring-purple-500'
                       : 'border-purple-100/70 bg-white/70 hover:bg-white text-slate-800'
                   }`}
                 >
-                  {o.text}
+                  <Katex text={o.text} className="max-w-full break-words" />
                 </button>
               ))}
             </div>
@@ -222,12 +222,12 @@ export default function PracticeRunnerPage() {
                     ? 'Whole number answer'
                     : `Decimal answer${q.decimalPlaces ? ` (up to ${q.decimalPlaces} places)` : ''}`
                 }
-                className="glass-input w-64 px-4 py-2.5 text-sm"
+                className="glass-input w-64 max-w-full px-4 py-2.5 text-sm"
               />
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-purple-50">
+          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-purple-50 max-w-full">
             <button
               type="button"
               disabled={q.format === 'mcq' ? !selected : !numeric.trim()}

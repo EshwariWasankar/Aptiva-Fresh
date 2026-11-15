@@ -70,7 +70,7 @@ export default function DiagnosticReviewPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 w-full overflow-hidden question-container">
       <div className="border-b border-purple-100/60 pb-4">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Review Diagnostic Mistakes
@@ -81,9 +81,12 @@ export default function DiagnosticReviewPage() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 w-full">
         {misses.map((item) => (
-          <article key={item.attemptId} className="glass-card p-6 flex flex-col gap-4">
+          <article
+            key={item.attemptId}
+            className="glass-card p-6 flex flex-col gap-4 overflow-hidden max-w-full"
+          >
             <div className="flex items-center justify-between text-xs border-b border-purple-50 pb-3">
               <span className="font-semibold text-slate-600">
                 Q{item.sequenceNo} · {item.topicName} ·{' '}
@@ -104,16 +107,16 @@ export default function DiagnosticReviewPage() {
               </span>
             </div>
 
-            <div className="text-sm font-medium text-slate-900 leading-relaxed">
-              <Katex text={item.stem} className="text-sm leading-6" />
+            <div className="text-sm font-medium text-slate-900 leading-relaxed max-w-full break-words [overflow-wrap:anywhere] overflow-x-auto">
+              <Katex text={item.stem} className="text-sm leading-6 max-w-full break-words" />
             </div>
 
             {item.format === 'mcq' && (
-              <ul className="flex flex-col gap-2 text-xs">
+              <ul className="flex flex-col gap-2 text-xs max-w-full">
                 {item.options.map((o) => (
                   <li
                     key={o.id}
-                    className={`rounded-xl p-3 px-3.5 border transition-all ${
+                    className={`rounded-xl p-3 px-3.5 border transition-all max-w-full break-words [overflow-wrap:anywhere] flex items-start ${
                       o.isCorrect
                         ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 font-semibold'
                         : o.id === item.selectedOptionId
@@ -121,8 +124,10 @@ export default function DiagnosticReviewPage() {
                           : 'bg-white/60 border-purple-100/60 text-slate-600'
                     }`}
                   >
-                    {o.isCorrect ? '✓ ' : o.id === item.selectedOptionId ? '✗ ' : ''}
-                    <Katex text={o.text} />
+                    <span className="shrink-0 mr-1.5">
+                      {o.isCorrect ? '✓' : o.id === item.selectedOptionId ? '✗' : '•'}
+                    </span>
+                    <Katex text={o.text} className="max-w-full break-words" />
                   </li>
                 ))}
               </ul>

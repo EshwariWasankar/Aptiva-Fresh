@@ -217,3 +217,26 @@ body {
   color: #4c1d95;
   box-shadow: 0 2px 10px rgba(124, 58, 237, 0.08);
 }
+
+/* Question Container Overflow Prevention & KaTeX math rendering */
+.question-container {
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.katex-display {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  max-width: 100% !important;
+  padding: 0.35rem 0 !important;
+  margin: 0.5rem 0 !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.katex {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

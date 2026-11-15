@@ -28,9 +28,20 @@ export function Katex({ text, className }: { text: string; className?: string })
   }, [text]);
 
   if (html === null) {
-    return <span className={className}>{text}</span>;
+    return (
+      <span
+        className={`inline-block max-w-full break-words [overflow-wrap:anywhere] ${className ?? ''}`}
+      >
+        {text}
+      </span>
+    );
   }
-  return <span className={className} dangerouslySetInnerHTML={{ __html: html }} />;
+  return (
+    <span
+      className={`inline-block max-w-full break-words [overflow-wrap:anywhere] ${className ?? ''}`}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
 }
 
 function escapeHtml(s: string): string {
@@ -44,7 +55,8 @@ function renderMixed(input: string, katex: KatexApi): string {
       if (part.startsWith('$$') && part.endsWith('$$')) {
         const tex = part.slice(2, -2);
         try {
-          return katex.renderToString(tex, { displayMode: true, throwOnError: false });
+          const rendered = katex.renderToString(tex, { displayMode: true, throwOnError: false });
+          return `<span class="block max-w-full overflow-x-auto my-1 py-0.5">${rendered}</span>`;
         } catch {
           return `<code>${escapeHtml(tex)}</code>`;
         }

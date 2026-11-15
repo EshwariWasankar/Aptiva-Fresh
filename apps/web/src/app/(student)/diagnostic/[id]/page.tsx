@@ -208,7 +208,7 @@ export default function DiagnosticRunnerPage() {
   const canAnswer = q.format === 'mcq' ? selected !== null : numeric.trim() !== '';
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 w-full overflow-hidden question-container">
       {/* Header with question count and timer */}
       <div className="glass-card flex items-center justify-between px-5 py-3">
         <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
@@ -232,17 +232,21 @@ export default function DiagnosticRunnerPage() {
       </div>
 
       {/* Question Card */}
-      <div className="glass-card p-6 sm:p-8 flex flex-col gap-6">
-        <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed">
+      <div className="glass-card p-6 sm:p-8 flex flex-col gap-6 overflow-hidden max-w-full">
+        <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed max-w-full break-words [overflow-wrap:anywhere] overflow-x-auto">
           <Katex text={q.stem} />
         </div>
 
         {q.format === 'mcq' ? (
-          <div className="flex flex-col gap-2.5" role="radiogroup" aria-label="Answer options">
+          <div
+            className="flex flex-col gap-2.5 max-w-full"
+            role="radiogroup"
+            aria-label="Answer options"
+          >
             {q.options.map((o) => (
               <label
                 key={o.id}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 px-4 text-xs sm:text-sm font-medium transition-all ${
+                className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 px-4 text-xs sm:text-sm font-medium transition-all max-w-full break-words [overflow-wrap:anywhere] ${
                   selected === o.id
                     ? 'border-purple-600 bg-purple-50/90 text-purple-950 shadow-xs ring-1 ring-purple-500'
                     : 'border-purple-100/70 bg-white/70 hover:bg-white text-slate-800'
@@ -254,9 +258,9 @@ export default function DiagnosticRunnerPage() {
                   value={o.id}
                   checked={selected === o.id}
                   onChange={() => setSelected(o.id)}
-                  className="accent-purple-600"
+                  className="accent-purple-600 mt-0.5 shrink-0"
                 />
-                <Katex text={o.text} />
+                <Katex text={o.text} className="max-w-full break-words" />
               </label>
             ))}
           </div>
@@ -272,7 +276,7 @@ export default function DiagnosticRunnerPage() {
               value={numeric}
               onChange={(e) => setNumeric(e.target.value)}
               placeholder="e.g. 42 or 3.14"
-              className="glass-input w-48 px-3.5 py-2.5 text-sm font-mono"
+              className="glass-input w-48 max-w-full px-3.5 py-2.5 text-sm font-mono"
             />
             {q.answerFormat === 'integer' && (
               <p className="text-[11px] text-slate-400">Whole integer expected.</p>
