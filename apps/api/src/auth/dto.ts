@@ -34,6 +34,23 @@ export const PasswordResetConfirmDtoSchema = z.object({
 });
 export type PasswordResetConfirmDto = z.infer<typeof PasswordResetConfirmDtoSchema>;
 
+export const RequestOtpDtoSchema = z.object({
+  email: z.string().email('Invalid email address').max(320),
+});
+export type RequestOtpDto = z.infer<typeof RequestOtpDtoSchema>;
+
+export const VerifyOtpDtoSchema = z.object({
+  email: z.string().email('Invalid email address').max(320),
+  otp: z.string().regex(/^\d{6}$/, 'OTP must be exactly 6 digits'),
+});
+export type VerifyOtpDto = z.infer<typeof VerifyOtpDtoSchema>;
+
+export const ResetWithOtpDtoSchema = z.object({
+  resetToken: z.string().min(10).max(200),
+  password: z.string().min(10, 'Password must be at least 10 characters').max(200),
+});
+export type ResetWithOtpDto = z.infer<typeof ResetWithOtpDtoSchema>;
+
 export const UpdateMeDtoSchema = z.object({
   gradYear: z.number().int().min(1990).max(2100).nullable().optional(),
   branch: z.string().max(120).nullable().optional(),

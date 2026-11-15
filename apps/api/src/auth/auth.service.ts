@@ -7,13 +7,14 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
+import { randomInt, randomUUID } from 'node:crypto';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../common/prisma/prisma.service';
 import { ENV, type Env } from '../common/config/env';
 import { randomToken, safeEqual, sha256Hex } from '../common/crypto';
 import { AuditService } from '../common/audit/audit.service';
 import { MailerService } from '../common/mail/mailer.service';
+import { RedisService } from '../common/redis/redis.service';
 import { PasswordPolicyError, PasswordService } from './password.service';
 import { TokenService } from './token.service';
 import type { LoginDto, RegisterDto } from './dto';
@@ -21,6 +22,10 @@ import type { PublicUser } from './dto';
 
 const EMAIL_VERIFY_TTL_MS = 24 * 60 * 60 * 1000;
 const PASSWORD_RESET_TTL_MS = 60 * 60 * 1000;
+const OTP_TTL_SECONDS = 300; // 5 minutes
+const OTP_COOLDOWN_SECONDS = 60; // 60 seconds
+const OTP_MAX_ATTEMPTS = 5;
+const RESET_TOKEN_TTL_SECONDS = 600; // 10 minutes
 
 export interface IssuedSession {
   accessToken: string;
@@ -38,6 +43,7 @@ export class AuthService {
     private readonly tokens: TokenService,
     private readonly audit: AuditService,
     private readonly mailer: MailerService,
+    private readonly redis: RedisService,
     @Inject(ENV) private readonly env: Env,
   ) {}
 
@@ -250,6 +256,223 @@ export class AuthService {
       action: 'auth.password_reset_confirmed',
       objectType: 'user',
       objectId: record.userId,
+    });
+  }
+
+  // ------------------------------------------------------------- OTP Password Reset
+
+  async requestPasswordResetOtp(
+    rawEmail: string,
+  ): Promise<{ success: boolean; message: string; cooldownSeconds: number }> {
+    const email = rawEmail.trim().toLowerCase();
+    const cooldownKey = `aptiva:otp:cooldown:${email}`;
+    const ttlRemaining = await this.redis.client.ttl(cooldownKey);
+    if (ttlRemaining > 0) {
+      throw new BadRequestException({
+        code: 'COOLDOWN_ACTIVE',
+        message: `Please wait ${ttlRemaining} second${ttlRemaining === 1 ? '' : 's'} before requesting a new code.`,
+        details: { retryAfterSeconds: ttlRemaining },
+      });
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    // Anti-enumeration: Generic response regardless of whether account exists.
+    const genericResponse = {
+      success: true,
+      message: 'If an account matches that email, a 6-digit verification code has been sent.',
+      cooldownSeconds: OTP_COOLDOWN_SECONDS,
+    };
+
+    if (!user) {
+      // Set cooldown key to maintain identical timing/rate limits for non-existent emails
+      await this.redis.client.setex(cooldownKey, OTP_COOLDOWN_SECONDS, '1');
+      return genericResponse;
+    }
+
+    // Invalidate any previously issued OTP for this email
+    const otpKey = `aptiva:otp:${email}`;
+    await this.redis.client.del(otpKey);
+
+    // Generate cryptographically secure 6-digit OTP
+    const otp = randomInt(100_000, 1_000_000).toString();
+
+    // Securely hash OTP before storing in Redis (with server secret + email salt)
+    const salt = this.env.JWT_ACCESS_SECRET || 'aptiva-otp-salt';
+    const otpHashed = sha256Hex(`${otp}:${salt}:${email}`);
+
+    const payload = {
+      userId: user.id,
+      email,
+      otpHashed,
+      attempts: 0,
+      maxAttempts: OTP_MAX_ATTEMPTS,
+      createdAt: Date.now(),
+    };
+
+    // Store hashed OTP with 5-minute TTL
+    await this.redis.client.setex(otpKey, OTP_TTL_SECONDS, JSON.stringify(payload));
+    // Set 60-second cooldown
+    await this.redis.client.setex(cooldownKey, OTP_COOLDOWN_SECONDS, '1');
+
+    // Deliver OTP via MailerService (console logger in dev, transactional provider in prod)
+    await this.mailer.send({
+      to: email,
+      subject: 'Your Aptiva Password Reset Code',
+      text: `Your 6-digit verification code is: ${otp}\n\nThis code expires in 5 minutes. If you did not request this, please ignore this email.`,
+    });
+
+    await this.audit.record({
+      actorId: user.id,
+      action: 'auth.password_reset_otp_requested',
+      objectType: 'user',
+      objectId: user.id,
+    });
+
+    return genericResponse;
+  }
+
+  async verifyPasswordResetOtp(
+    rawEmail: string,
+    otp: string,
+  ): Promise<{ success: boolean; resetToken: string }> {
+    const email = rawEmail.trim().toLowerCase();
+    const otpKey = `aptiva:otp:${email}`;
+    const raw = await this.redis.client.get(otpKey);
+
+    if (!raw) {
+      throw new BadRequestException({
+        code: 'OTP_EXPIRED',
+        message:
+          'The verification code has expired or was not requested. Please request a new code.',
+      });
+    }
+
+    let record: {
+      userId: string;
+      email: string;
+      otpHashed: string;
+      attempts: number;
+      maxAttempts: number;
+    };
+
+    try {
+      record = JSON.parse(raw);
+    } catch {
+      await this.redis.client.del(otpKey);
+      throw new BadRequestException({
+        code: 'OTP_EXPIRED',
+        message: 'Invalid verification session. Please request a new code.',
+      });
+    }
+
+    if (record.attempts >= record.maxAttempts) {
+      await this.redis.client.del(otpKey);
+      throw new BadRequestException({
+        code: 'MAX_ATTEMPTS_EXCEEDED',
+        message: 'Maximum verification attempts exceeded. Please request a new code.',
+      });
+    }
+
+    const salt = this.env.JWT_ACCESS_SECRET || 'aptiva-otp-salt';
+    const candidateHash = sha256Hex(`${otp}:${salt}:${email}`);
+
+    if (!safeEqual(candidateHash, record.otpHashed)) {
+      record.attempts += 1;
+      const remaining = record.maxAttempts - record.attempts;
+      if (remaining <= 0) {
+        await this.redis.client.del(otpKey);
+        throw new BadRequestException({
+          code: 'MAX_ATTEMPTS_EXCEEDED',
+          message: 'Maximum verification attempts exceeded. Please request a new code.',
+        });
+      }
+      const currentTtl = await this.redis.client.ttl(otpKey);
+      if (currentTtl > 0) {
+        await this.redis.client.setex(otpKey, currentTtl, JSON.stringify(record));
+      }
+      throw new BadRequestException({
+        code: 'INVALID_OTP',
+        message: `Incorrect verification code. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining.`,
+        details: { remainingAttempts: remaining },
+      });
+    }
+
+    // Verification succeeded: immediately invalidate the OTP (single use)
+    await this.redis.client.del(otpKey);
+
+    // Issue a short-lived, single-use password-reset authorization token
+    const resetToken = randomToken(32);
+    const resetTokenHash = sha256Hex(resetToken);
+    const resetKey = `aptiva:reset-token:${resetTokenHash}`;
+
+    await this.redis.client.setex(
+      resetKey,
+      RESET_TOKEN_TTL_SECONDS,
+      JSON.stringify({ userId: record.userId, email }),
+    );
+
+    return {
+      success: true,
+      resetToken,
+    };
+  }
+
+  async confirmPasswordResetWithOtp(resetToken: string, newPassword: string): Promise<void> {
+    try {
+      await this.password.assertAcceptable(newPassword);
+    } catch (err) {
+      if (err instanceof PasswordPolicyError) {
+        throw new BadRequestException({ code: 'VALIDATION_FAILED', message: err.message });
+      }
+      throw err;
+    }
+
+    const resetTokenHash = sha256Hex(resetToken);
+    const resetKey = `aptiva:reset-token:${resetTokenHash}`;
+    const raw = await this.redis.client.get(resetKey);
+
+    if (!raw) {
+      throw new BadRequestException({
+        code: 'INVALID_RESET_TOKEN',
+        message:
+          'Reset authorization has expired or is invalid. Please restart the verification process.',
+      });
+    }
+
+    // Immediately consume the authorization token (single use)
+    await this.redis.client.del(resetKey);
+
+    let data: { userId: string; email: string };
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      throw new BadRequestException({
+        code: 'INVALID_RESET_TOKEN',
+        message: 'Invalid reset authorization.',
+      });
+    }
+
+    const passwordHash = await this.password.hash(newPassword);
+
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: data.userId },
+        data: { passwordHash },
+      }),
+      // Invalidate every existing session and refresh token
+      this.prisma.refreshToken.updateMany({
+        where: { userId: data.userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+      }),
+    ]);
+
+    await this.audit.record({
+      actorId: data.userId,
+      action: 'auth.password_reset_confirmed',
+      objectType: 'user',
+      objectId: data.userId,
+      details: { method: 'otp' },
     });
   }
 

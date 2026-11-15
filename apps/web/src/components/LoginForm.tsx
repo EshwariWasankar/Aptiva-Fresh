@@ -56,6 +56,14 @@ export function LoginForm() {
         Password
         <PasswordInput value={password} onChange={setPassword} />
       </label>
+      <div className="flex justify-end -mt-2">
+        <Link
+          href="/reset-password"
+          className="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition"
+        >
+          Forgot password?
+        </Link>
+      </div>
       {error ? (
         <p
           role="alert"
@@ -71,11 +79,12 @@ export function LoginForm() {
       >
         {pending ? 'Signing in…' : 'Sign in'}
       </button>
-      <div className="flex justify-between text-xs text-slate-600 mt-1">
-        <Link href="/reset-password" className="hover:text-purple-600 transition">
-          Forgot password?
-        </Link>
-        <Link href="/register" className="font-medium hover:text-purple-600 transition">
+      <div className="text-center text-xs text-slate-600 mt-1">
+        Don&apos;t have an account?{' '}
+        <Link
+          href="/register"
+          className="font-semibold text-indigo-600 hover:text-indigo-800 transition"
+        >
           Create account
         </Link>
       </div>
