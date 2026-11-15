@@ -53,7 +53,7 @@ function ResetRequest() {
 
   if (sent) {
     return (
-      <div className="rounded-xl bg-blue-50/80 border border-blue-200/60 p-4 text-xs text-blue-900 leading-relaxed">
+      <div className="rounded-xl bg-purple-50/80 border border-purple-200/60 p-4 text-xs text-purple-950 leading-relaxed">
         If an account exists for that email, a reset link is on its way. Check your inbox and spam
         folder.
       </div>
@@ -62,8 +62,8 @@ function ResetRequest() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-      <h1 className="text-xl font-bold tracking-tight text-stone-900">Reset password</h1>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <h1 className="text-xl font-bold tracking-tight text-slate-900">Reset password</h1>
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         Email
         <input
           type="email"
@@ -91,7 +91,7 @@ function ResetRequest() {
       </button>
       <Link
         href="/login"
-        className="text-xs text-stone-500 hover:text-blue-600 transition text-center"
+        className="text-xs text-slate-500 hover:text-purple-600 transition text-center"
       >
         Back to sign in
       </Link>
@@ -140,7 +140,7 @@ function ResetConfirm({ token }: { token: string }) {
   if (done) {
     return (
       <div className="flex flex-col gap-3 text-center">
-        <p className="text-sm font-medium text-stone-800">Password updated. You can sign in now.</p>
+        <p className="text-sm font-medium text-slate-800">Password updated. You can sign in now.</p>
         <Link href="/login" className="btn-primary py-2.5 px-4 text-sm font-semibold">
           Go to sign in
         </Link>
@@ -150,12 +150,12 @@ function ResetConfirm({ token }: { token: string }) {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-      <h1 className="text-xl font-bold tracking-tight text-stone-900">Choose a new password</h1>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <h1 className="text-xl font-bold tracking-tight text-slate-900">Choose a new password</h1>
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         New password
         <PasswordInput value={password} onChange={setPassword} autoComplete="new-password" />
       </label>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         Confirm password
         <PasswordInput value={confirm} onChange={setConfirm} autoComplete="new-password" />
       </label>
@@ -180,7 +180,7 @@ function ResetConfirm({ token }: { token: string }) {
 
 export function ResetPasswordPanel() {
   return (
-    <Suspense fallback={<p className="text-xs text-stone-400">Loading…</p>}>
+    <Suspense fallback={<p className="text-xs text-slate-400">Loading…</p>}>
       <ResetPasswordInner />
     </Suspense>
   );

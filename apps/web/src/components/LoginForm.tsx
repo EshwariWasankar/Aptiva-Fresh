@@ -40,7 +40,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         Email
         <input
           type="email"
@@ -52,7 +52,7 @@ export function LoginForm() {
           placeholder="you@college.edu"
         />
       </label>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         Password
         <PasswordInput value={password} onChange={setPassword} />
       </label>
@@ -71,19 +71,19 @@ export function LoginForm() {
       >
         {pending ? 'Signing in…' : 'Sign in'}
       </button>
-      <div className="flex justify-between text-xs text-stone-600 mt-1">
-        <Link href="/reset-password" className="hover:text-blue-600 transition">
+      <div className="flex justify-between text-xs text-slate-600 mt-1">
+        <Link href="/reset-password" className="hover:text-purple-600 transition">
           Forgot password?
         </Link>
-        <Link href="/register" className="font-medium hover:text-blue-600 transition">
+        <Link href="/register" className="font-medium hover:text-purple-600 transition">
           Create account
         </Link>
       </div>
       <div className="relative my-2 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-stone-200"></div>
+          <div className="w-full border-t border-purple-100"></div>
         </div>
-        <span className="relative bg-white/70 px-3 text-[11px] text-stone-400">or</span>
+        <span className="relative bg-white/70 px-3 text-[11px] text-slate-400">or</span>
       </div>
       <a
         href="/api/v1/auth/google"

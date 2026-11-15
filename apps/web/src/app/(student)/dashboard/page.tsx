@@ -11,6 +11,8 @@ import {
   type ReadinessResponse,
 } from '../../../lib/content';
 import { ReadinessBand } from '../../../components/ReadinessBand';
+import { StudyHeatmap } from '../../../components/StudyHeatmap';
+import { getCommitmentActivity, type ActivityHistoryResponse } from '../../../lib/commitments';
 import { ApiError } from '../../../lib/apiClient';
 import {
   IconCalendar,
@@ -43,13 +45,15 @@ const BLOCK_LABEL: Record<string, string> = {
   probe: 'Evidence probe',
 };
 
-/** P-13 — dashboard: readiness band, today's plan, priorities, what changed. */
+/** P-13 — dashboard: readiness band, today's plan, priorities, what changed with pastel & purple aesthetics. */
 export default function StudentHomePage() {
   const { user } = useSession();
   const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [noPlan, setNoPlan] = useState(false);
   const [readiness, setReadiness] = useState<ReadinessResponse | null>(null);
   const [changes, setChanges] = useState<ChangeEntry[]>([]);
+  const [activity, setActivity] = useState<ActivityHistoryResponse | null>(null);
+  const [activityLoading, setActivityLoading] = useState(true);
 
   useEffect(() => {
     getCurrentPlan()
@@ -65,6 +69,10 @@ export default function StudentHomePage() {
     getReadiness()
       .then(setReadiness)
       .catch(() => setReadiness(null));
+    getCommitmentActivity(84)
+      .then(setActivity)
+      .catch(() => undefined)
+      .finally(() => setActivityLoading(false));
   }, []);
 
   const today = new Date().toISOString().slice(0, 10);
@@ -100,15 +108,15 @@ export default function StudentHomePage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Overview Header with Date Stamp matching the reference image */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between border-b border-stone-200/50 pb-5">
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between border-b border-purple-100/60 pb-5">
         <div>
-          <span className="text-xs font-medium tracking-wide text-stone-500">
+          <span className="text-xs font-medium tracking-wide text-slate-500">
             Welcome back, {userDisplayName}
           </span>
-          <h1 className="mt-0.5 text-3xl font-bold tracking-tight text-stone-900">Overview</h1>
+          <h1 className="mt-0.5 text-3xl font-bold tracking-tight text-slate-900">Overview</h1>
         </div>
         <div className="flex items-center gap-2">
-          <span className="rounded-full bg-stone-100/80 border border-stone-200/60 px-3.5 py-1 text-xs font-medium text-stone-600 shadow-xs">
+          <span className="rounded-full bg-white/90 border border-purple-200/60 px-3.5 py-1 text-xs font-medium text-purple-900 shadow-2xs">
             {currentMonthYear}
           </span>
         </div>
@@ -118,19 +126,19 @@ export default function StudentHomePage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <ReadinessBand readiness={readiness} />
 
-        {/* Today's Plan Card (Styled to match Cash Flow / Plan Card) */}
+        {/* Today's Plan Card */}
         <section className="glass-card p-6 flex flex-col justify-between gap-5">
           <div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold tracking-wide uppercase text-stone-400">
+                <span className="text-xs font-semibold tracking-wide uppercase text-slate-400">
                   Daily Schedule
                 </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-purple-600"></span>
               </div>
               <Link
                 href="/plan"
-                className="text-xs font-medium text-blue-600 hover:text-blue-700 transition inline-flex items-center gap-1"
+                className="text-xs font-medium text-purple-600 hover:text-purple-700 transition inline-flex items-center gap-1"
               >
                 Full plan
                 <IconArrowUpRight className="w-3.5 h-3.5" />
@@ -138,8 +146,8 @@ export default function StudentHomePage() {
             </div>
 
             <div className="mt-3 flex items-baseline justify-between">
-              <h2 className="text-xl font-bold text-stone-900">Today&apos;s plan</h2>
-              <span className="text-xs text-stone-500 font-medium">
+              <h2 className="text-xl font-bold text-slate-900">Today&apos;s plan</h2>
+              <span className="text-xs text-slate-500 font-medium">
                 {todayItems.length} block{todayItems.length === 1 ? '' : 's'} scheduled
               </span>
             </div>
@@ -147,14 +155,17 @@ export default function StudentHomePage() {
             {noPlan ? (
               <div className="mt-4 rounded-xl bg-amber-50/70 border border-amber-200/60 p-4 text-xs text-amber-900">
                 No active plan yet —{' '}
-                <Link href="/setup/requirements" className="font-semibold text-blue-700 underline">
+                <Link
+                  href="/setup/requirements"
+                  className="font-semibold text-purple-700 underline"
+                >
                   set up requirements
                 </Link>{' '}
                 to generate your personalized blueprint.
               </div>
             ) : todayItems.length === 0 ? (
-              <div className="mt-4 rounded-xl bg-stone-100/60 border border-stone-200/60 p-4 text-xs text-stone-600 flex items-center gap-2.5">
-                <IconCalendar className="w-4 h-4 text-stone-400" />
+              <div className="mt-4 rounded-xl bg-purple-50/50 border border-purple-100/70 p-4 text-xs text-slate-600 flex items-center gap-2.5">
+                <IconCalendar className="w-4 h-4 text-purple-400" />
                 <span>Rest day or no blocks scheduled for today. Great time for a review!</span>
               </div>
             ) : (
@@ -162,17 +173,17 @@ export default function StudentHomePage() {
                 {todayItems.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-stone-100/60 hover:bg-stone-100/90 border border-stone-200/50 p-2.5 px-3 transition-colors text-xs"
+                    className="flex items-center justify-between rounded-xl bg-white/70 hover:bg-white/95 border border-purple-100/60 p-2.5 px-3 transition-colors text-xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <span className="font-semibold text-stone-800">
+                      <span className="h-2 w-2 rounded-full bg-purple-500"></span>
+                      <span className="font-semibold text-slate-800">
                         {BLOCK_LABEL[i.blockType] ?? i.blockType}
                       </span>
-                      <span className="text-stone-400">·</span>
-                      <span className="text-stone-600 font-medium">{i.topic.name}</span>
+                      <span className="text-slate-400">·</span>
+                      <span className="text-slate-600 font-medium">{i.topic.name}</span>
                     </div>
-                    <span className="font-semibold text-stone-700 bg-white px-2 py-0.5 rounded-md shadow-2xs border border-stone-200/40">
+                    <span className="font-semibold text-purple-900 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200/50">
                       {i.minutes}m
                     </span>
                   </li>
@@ -193,40 +204,45 @@ export default function StudentHomePage() {
         </section>
       </div>
 
+      {/* Compact Study Activity & Streak Summary */}
+      <section className="glass-card p-6">
+        <StudyHeatmap activity={activity} loading={activityLoading} compact />
+      </section>
+
       {/* Secondary Row: Priority Topics & Low Priority / Maintenance */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Priority Topics Card (Styled like Recent Activity with refined icons & badges) */}
+        {/* Priority Topics Card with purple badge highlights */}
         <section className="glass-card p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-              <h2 className="text-sm font-semibold text-stone-800 flex items-center gap-2">
-                <IconSparkles className="w-4 h-4 text-blue-600" />
+            <div className="flex items-center justify-between border-b border-purple-50 pb-3">
+              <h2 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+                <IconSparkles className="w-4 h-4 text-purple-600" />
                 Priority topics
               </h2>
-              <span className="text-xs text-stone-400">High leverage</span>
+              <span className="text-xs text-slate-400">High leverage</span>
             </div>
 
             {priorities.length === 0 ? (
-              <p className="mt-4 text-xs text-stone-500">No plan priorities available yet.</p>
+              <p className="mt-4 text-xs text-slate-500">No plan priorities available yet.</p>
             ) : (
               <ol className="mt-3 flex flex-col gap-2.5">
                 {priorities.map((i, idx) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-stone-50/80 hover:bg-stone-100/80 p-2.5 px-3 border border-stone-200/40 transition-colors"
+                    className="flex items-center justify-between rounded-xl bg-white/70 hover:bg-white/95 p-2.5 px-3 border border-purple-100/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-50 text-[11px] font-bold text-blue-700 border border-blue-200/60">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-50 text-[11px] font-bold text-purple-700 border border-purple-200/60">
                         {idx + 1}
                       </span>
                       <div className="flex flex-col">
-                        <span className="text-xs font-semibold text-stone-800">{i.topic.name}</span>
-                        <span className="text-[11px] text-stone-500 capitalize">
+                        <span className="text-xs font-semibold text-slate-800">{i.topic.name}</span>
+                        <span className="text-[11px] text-slate-500 capitalize">
                           {i.blockType.replace(/_/g, ' ')}
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs font-medium text-stone-600 bg-white/80 px-2 py-0.5 rounded-md border border-stone-200/40">
+                    <span className="text-xs font-medium text-slate-600 bg-purple-50/50 px-2 py-0.5 rounded-md border border-purple-100">
                       {i.minutes}m
                     </span>
                   </li>
@@ -236,19 +252,19 @@ export default function StudentHomePage() {
           </div>
         </section>
 
-        {/* Low Priority (Maintenance) Card */}
+        {/* Low Priority (Maintenance) Card with emerald highlights */}
         <section className="glass-card p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-              <h2 className="text-sm font-semibold text-stone-800 flex items-center gap-2">
+            <div className="flex items-center justify-between border-b border-purple-50 pb-3">
+              <h2 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
                 <IconCheck className="w-4 h-4 text-emerald-600" />
                 Low priority (maintenance)
               </h2>
-              <span className="text-xs text-stone-400">Mastered areas</span>
+              <span className="text-xs text-slate-400">Mastered areas</span>
             </div>
 
             {lowPriority.length === 0 ? (
-              <p className="mt-4 text-xs text-stone-500">
+              <p className="mt-4 text-xs text-slate-500">
                 Strong topics appear here once your profile demonstrates consistent mastery.
               </p>
             ) : (
@@ -256,13 +272,13 @@ export default function StudentHomePage() {
                 {lowPriority.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-stone-50/80 hover:bg-stone-100/80 p-2.5 px-3 border border-stone-200/40 transition-colors"
+                    className="flex items-center justify-between rounded-xl bg-white/70 hover:bg-white/95 p-2.5 px-3 border border-purple-100/50 transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                      <span className="text-xs font-medium text-stone-800">{i.topic.name}</span>
+                      <span className="text-xs font-medium text-slate-800">{i.topic.name}</span>
                     </div>
-                    <span className="text-xs font-medium text-stone-500 bg-white/80 px-2 py-0.5 rounded-md border border-stone-200/40">
+                    <span className="text-xs font-medium text-slate-500 bg-purple-50/50 px-2 py-0.5 rounded-md border border-purple-100">
                       {i.minutes}m
                     </span>
                   </li>
@@ -275,17 +291,17 @@ export default function StudentHomePage() {
 
       {/* What Changed Banner (if recalibration occurred) */}
       {latestChange && changeItems.length > 0 && (
-        <section className="rounded-2xl border border-blue-200/80 bg-blue-50/80 backdrop-blur-md p-5 shadow-xs">
+        <section className="rounded-2xl border border-purple-200/80 bg-purple-50/80 backdrop-blur-md p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-blue-900 flex items-center gap-2">
-              <IconSparkles className="w-4 h-4 text-blue-600" />
+            <h2 className="text-sm font-semibold text-purple-950 flex items-center gap-2">
+              <IconSparkles className="w-4 h-4 text-purple-600" />
               What changed in your plan
             </h2>
-            <span className="text-xs text-blue-700 font-medium">
+            <span className="text-xs text-purple-700 font-medium">
               {new Date(latestChange.createdAt).toLocaleDateString()} · {latestChange.trigger}
             </span>
           </div>
-          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-blue-900/90 list-disc list-inside">
+          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-purple-900 list-disc list-inside">
             {changeItems.map((c, idx) => (
               <li key={idx}>{c}</li>
             ))}
@@ -295,7 +311,7 @@ export default function StudentHomePage() {
 
       {/* Quick Launch Cards Hub */}
       <div>
-        <div className="mb-3 text-xs font-semibold tracking-wide uppercase text-stone-400">
+        <div className="mb-3 text-xs font-semibold tracking-wide uppercase text-slate-400">
           Core Workspaces
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -333,16 +349,16 @@ export default function StudentHomePage() {
                 className="glass-card glass-card-interactive p-5 flex flex-col justify-between gap-3 group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100/90 text-stone-700 border border-stone-200/50 group-hover:border-blue-300 group-hover:text-blue-600 transition-colors">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-700 border border-purple-100 group-hover:border-purple-300 group-hover:bg-purple-100/70 transition-colors">
                     <Icon className="w-4 h-4" />
                   </span>
-                  <IconArrowUpRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 transition-colors" />
+                  <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-colors" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-stone-900 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
                     {c.title}
                   </h3>
-                  <p className="mt-1 text-xs text-stone-500 line-clamp-2 leading-relaxed">
+                  <p className="mt-1 text-xs text-slate-500 line-clamp-2 leading-relaxed">
                     {c.body}
                   </p>
                 </div>

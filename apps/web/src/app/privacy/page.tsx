@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           <div className="flex items-center gap-3 border-b border-stone-200/50 pb-4">
             <Link
               href="/"
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-sm shadow-xs"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-sm shadow-md shadow-purple-500/20"
             >
               A
             </Link>

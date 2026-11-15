@@ -9,7 +9,6 @@ import { ApiError } from '../../../lib/apiClient';
 import { IconTarget, IconBook, IconCalendar } from '../../../components/Icons';
 
 function todayIndex(plan: PlanResponse): number {
-  // Day index whose rationale.date is today (UTC).
   const today = new Date().toISOString().slice(0, 10);
   const dates = [...new Set(plan.items.map((i) => i.rationale.date as string | undefined))]
     .filter(Boolean)
@@ -18,7 +17,7 @@ function todayIndex(plan: PlanResponse): number {
   return idx >= 0 ? idx : -1;
 }
 
-/** P-13/P-14 entry — today's plan blocks + custom practice + notebook. */
+/** P-13/P-14 entry — today's plan blocks + custom practice + notebook in pastel & purple styling. */
 export default function PracticePage() {
   const router = useRouter();
   const [plan, setPlan] = useState<PlanResponse | null>(null);
@@ -39,7 +38,6 @@ export default function PracticePage() {
     if (!plan) return [];
     const di = todayIndex(plan);
     if (di < 0) return [];
-    // rationale.date may repeat across dayIndex; group by the date itself.
     const today = new Date().toISOString().slice(0, 10);
     return plan.items
       .filter((i) => i.rationale.date === today)
@@ -60,12 +58,12 @@ export default function PracticePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-purple-100/60 pb-5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Daily Practice Drills
           </h1>
-          <p className="mt-1 text-xs text-stone-500">
+          <p className="mt-1 text-xs text-slate-500">
             Work through today&apos;s adaptive blocks — instant step-by-step explanations, feedback,
             and automatic profile calibration.
           </p>
@@ -74,7 +72,7 @@ export default function PracticePage() {
           href="/notebook"
           className="btn-secondary px-4 py-2 text-xs font-semibold inline-flex items-center gap-1.5"
         >
-          <IconBook className="w-4 h-4 text-stone-600" />
+          <IconBook className="w-4 h-4 text-purple-600" />
           <span>Mistake notebook</span>
         </Link>
       </div>
@@ -87,7 +85,7 @@ export default function PracticePage() {
 
       {missing && (
         <div className="glass-card p-6 flex flex-col gap-3 max-w-md">
-          <p className="text-xs text-stone-600">
+          <p className="text-xs text-slate-600">
             No plan created yet. Configure your requirements first to generate today&apos;s drill
             queue.
           </p>
@@ -102,9 +100,9 @@ export default function PracticePage() {
 
       {todayItems.length === 0 && plan && !missing && (
         <div className="glass-card p-8 text-center flex flex-col items-center gap-2">
-          <IconCalendar className="w-8 h-8 text-stone-400" />
-          <h3 className="text-sm font-bold text-stone-800">No drills scheduled for today</h3>
-          <p className="text-xs text-stone-500 max-w-sm">
+          <IconCalendar className="w-8 h-8 text-purple-300" />
+          <h3 className="text-sm font-bold text-slate-800">No drills scheduled for today</h3>
+          <p className="text-xs text-slate-500 max-w-sm">
             You&apos;ve completed your blocks for today, or today is a scheduled rest day. Review
             your Mistake Notebook or inspect your full plan.
           </p>
@@ -122,13 +120,13 @@ export default function PracticePage() {
           >
             <div className="flex flex-col gap-1">
               <div className="inline-flex items-center gap-2">
-                <span className="rounded-md bg-blue-50/80 text-blue-700 border border-blue-200/50 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider">
+                <span className="rounded-md bg-purple-50 text-purple-700 border border-purple-200/50 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider">
                   {item.blockType.replace(/_/g, ' ')}
                 </span>
-                <span className="text-xs text-stone-400">·</span>
-                <span className="text-xs font-semibold text-stone-600">{item.minutes} minutes</span>
+                <span className="text-xs text-slate-400">·</span>
+                <span className="text-xs font-semibold text-slate-600">{item.minutes} minutes</span>
               </div>
-              <h2 className="text-base font-bold text-stone-900 mt-0.5">{item.topic.name}</h2>
+              <h2 className="text-base font-bold text-slate-900 mt-0.5">{item.topic.name}</h2>
             </div>
             <button
               type="button"

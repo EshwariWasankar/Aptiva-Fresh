@@ -12,8 +12,8 @@ import {
 } from '../../../../../lib/diagnostic';
 
 /**
- * P-09 — mistake review: question, correct answer, worked solution, time
- * vs expected, error-cause tag (E-016) and skip-for-now.
+ * P-09 — mistake review with pastel & purple aesthetics:
+ * question, correct answer, worked solution, time vs expected, error-cause tag and skip-for-now.
  */
 export default function DiagnosticReviewPage() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function DiagnosticReviewPage() {
   }
   if (!data) {
     return (
-      <div className="glass-card p-12 text-center text-xs text-stone-400">
+      <div className="glass-card p-12 text-center text-xs text-slate-400">
         Loading mistake review…
       </div>
     );
@@ -56,8 +56,8 @@ export default function DiagnosticReviewPage() {
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 font-bold text-xl">
           ✓
         </span>
-        <h1 className="text-xl font-bold tracking-tight text-stone-900">Nothing to review</h1>
-        <p className="text-xs text-stone-500">Every answered question was completely correct.</p>
+        <h1 className="text-xl font-bold tracking-tight text-slate-900">Nothing to review</h1>
+        <p className="text-xs text-slate-500">Every answered question was completely correct.</p>
         <button
           type="button"
           onClick={() => router.push('/dashboard')}
@@ -71,11 +71,11 @@ export default function DiagnosticReviewPage() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
-      <div className="border-b border-stone-200/50 pb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+      <div className="border-b border-purple-100/60 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Review Diagnostic Mistakes
         </h1>
-        <p className="mt-1 text-xs text-stone-500">
+        <p className="mt-1 text-xs text-slate-500">
           {misses.length} item{misses.length === 1 ? '' : 's'} to analyze. Tag why each went wrong
           so your adaptive planner can schedule targeted concept repairs.
         </p>
@@ -84,8 +84,8 @@ export default function DiagnosticReviewPage() {
       <div className="flex flex-col gap-5">
         {misses.map((item) => (
           <article key={item.attemptId} className="glass-card p-6 flex flex-col gap-4">
-            <div className="flex items-center justify-between text-xs border-b border-stone-100 pb-3">
-              <span className="font-semibold text-stone-600">
+            <div className="flex items-center justify-between text-xs border-b border-purple-50 pb-3">
+              <span className="font-semibold text-slate-600">
                 Q{item.sequenceNo} · {item.topicName} ·{' '}
                 {item.timeMs != null && item.expectedTimeMs > 0
                   ? `${(item.timeMs / item.expectedTimeMs).toFixed(2)}× expected pace`
@@ -96,7 +96,7 @@ export default function DiagnosticReviewPage() {
                   item.isCorrect
                     ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/50'
                     : item.skipped
-                      ? 'bg-stone-100 text-stone-700'
+                      ? 'bg-slate-100 text-slate-700'
                       : 'bg-rose-50 text-rose-800 border border-rose-200/50'
                 }`}
               >
@@ -104,7 +104,7 @@ export default function DiagnosticReviewPage() {
               </span>
             </div>
 
-            <div className="text-sm font-medium text-stone-900 leading-relaxed">
+            <div className="text-sm font-medium text-slate-900 leading-relaxed">
               <Katex text={item.stem} className="text-sm leading-6" />
             </div>
 
@@ -118,7 +118,7 @@ export default function DiagnosticReviewPage() {
                         ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 font-semibold'
                         : o.id === item.selectedOptionId
                           ? 'bg-rose-50/90 border-rose-300 text-rose-950 font-semibold'
-                          : 'bg-stone-50/50 border-stone-200/50 text-stone-600'
+                          : 'bg-white/60 border-purple-100/60 text-slate-600'
                     }`}
                   >
                     {o.isCorrect ? '✓ ' : o.id === item.selectedOptionId ? '✗ ' : ''}
@@ -129,16 +129,16 @@ export default function DiagnosticReviewPage() {
             )}
 
             {item.format === 'numerical' && (
-              <div className="rounded-xl bg-stone-50/80 p-3.5 border border-stone-200/40 text-xs flex items-center gap-4">
+              <div className="rounded-xl bg-purple-50/40 p-3.5 border border-purple-100/60 text-xs flex items-center gap-4">
                 <div>
-                  <span className="text-stone-400 font-medium">Correct answer: </span>
+                  <span className="text-slate-400 font-medium">Correct answer: </span>
                   <span className="font-mono font-bold text-emerald-800">
                     {item.numericAnswer}
                     {item.answerFormat === 'integer' ? '' : ` (${item.answerFormat})`}
                   </span>
                 </div>
                 <div>
-                  <span className="text-stone-400 font-medium">Your answer: </span>
+                  <span className="text-slate-400 font-medium">Your answer: </span>
                   <span className="font-mono font-bold text-rose-800">
                     {item.numericInput ?? '—'}
                   </span>
@@ -147,23 +147,23 @@ export default function DiagnosticReviewPage() {
             )}
 
             {item.solution && (
-              <details className="rounded-xl bg-stone-50/80 border border-stone-200/50 p-4 group">
-                <summary className="cursor-pointer text-xs font-bold text-blue-700 flex items-center justify-between">
+              <details className="rounded-xl bg-purple-50/40 border border-purple-100/60 p-4 group">
+                <summary className="cursor-pointer text-xs font-bold text-purple-700 flex items-center justify-between">
                   <span>Worked step-by-step solution</span>
-                  <span className="text-stone-400 group-open:rotate-180 transition-transform">
+                  <span className="text-slate-400 group-open:rotate-180 transition-transform">
                     ▼
                   </span>
                 </summary>
-                <div className="mt-3 rounded-lg bg-white/80 p-3 text-xs text-stone-800 leading-relaxed border border-stone-200/40">
+                <div className="mt-3 rounded-lg bg-white/90 p-3 text-xs text-slate-800 leading-relaxed border border-purple-100/60">
                   <Katex text={item.solution} />
                 </div>
               </details>
             )}
 
             {item.feedback && (
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-slate-500">
                 Tagged cause:{' '}
-                <strong className="text-stone-800">{item.feedback.errorTypeLabel}</strong>
+                <strong className="text-slate-800">{item.feedback.errorTypeLabel}</strong>
                 {item.feedback.freeText ? ` — ${item.feedback.freeText}` : ''}
               </p>
             )}
@@ -183,7 +183,7 @@ export default function DiagnosticReviewPage() {
             )}
 
             {!item.feedback && !item.inference?.conflict && (
-              <div className="mt-1 rounded-xl bg-stone-50/70 p-3.5 border border-stone-200/40">
+              <div className="mt-1 rounded-xl bg-purple-50/40 p-3.5 border border-purple-100/60">
                 <ErrorCausePicker
                   attemptId={item.attemptId}
                   onSaved={(r) => {
@@ -198,7 +198,7 @@ export default function DiagnosticReviewPage() {
               <button
                 type="button"
                 onClick={() => skip(item)}
-                className="text-xs text-stone-400 hover:text-stone-600 underline transition w-fit"
+                className="text-xs text-slate-400 hover:text-slate-600 underline transition w-fit"
               >
                 Skip for now
               </button>
@@ -207,7 +207,7 @@ export default function DiagnosticReviewPage() {
         ))}
       </div>
 
-      <div className="flex gap-3 pt-3 border-t border-stone-200/50">
+      <div className="flex gap-3 pt-3 border-t border-purple-100/60">
         <button
           type="button"
           onClick={() => router.push(`/diagnostic/${id}/result`)}

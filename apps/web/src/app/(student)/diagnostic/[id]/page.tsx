@@ -24,9 +24,8 @@ interface Item {
 }
 
 /**
- * P-07 — diagnostic runner: stem with KaTeX, MCQ options or numeric
- * entry, display-only timer, skip, next, progress, single pause.
- * Answers are marked server-side; feedback is shown only after submit.
+ * P-07 — diagnostic runner with pastel & purple styling:
+ * stem with KaTeX, MCQ options or numeric entry, display timer, skip, next, progress, single pause.
  */
 export default function DiagnosticRunnerPage() {
   const { id } = useParams<{ id: string }>();
@@ -117,7 +116,6 @@ export default function DiagnosticRunnerPage() {
   async function next() {
     if (!item) return;
     if (!item.answered) {
-      // Answer if possible, otherwise record an honest skip.
       const ok = await answer(!canAnswer);
       if (!ok) return;
     }
@@ -159,8 +157,8 @@ export default function DiagnosticRunnerPage() {
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-800 font-bold text-xl">
           ⏸
         </span>
-        <h1 className="text-xl font-bold tracking-tight text-stone-900">Diagnostic Paused</h1>
-        <p className="text-xs text-stone-600 leading-relaxed">
+        <h1 className="text-xl font-bold tracking-tight text-slate-900">Diagnostic Paused</h1>
+        <p className="text-xs text-slate-600 leading-relaxed">
           Your progress has been safely saved. Each student can pause once during the baseline cycle
           — resume whenever you&apos;re ready.
         </p>
@@ -184,8 +182,8 @@ export default function DiagnosticRunnerPage() {
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 font-bold text-xl">
           ✓
         </span>
-        <h1 className="text-2xl font-bold tracking-tight text-stone-900">All questions answered</h1>
-        <p className="text-xs text-stone-600 leading-relaxed">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">All questions answered</h1>
+        <p className="text-xs text-slate-600 leading-relaxed">
           {done.answered} of {done.total} questions recorded. Submit to generate your baseline
           profile and precision study plan.
         </p>
@@ -203,7 +201,7 @@ export default function DiagnosticRunnerPage() {
   }
 
   if (!item) {
-    return <p className="text-xs text-stone-400 text-center">{error ?? 'Loading question…'}</p>;
+    return <p className="text-xs text-slate-400 text-center">{error ?? 'Loading question…'}</p>;
   }
 
   const q = item.question;
@@ -212,30 +210,30 @@ export default function DiagnosticRunnerPage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       {/* Header with question count and timer */}
-      <div className="glass-header flex items-center justify-between px-5 py-3">
-        <span className="text-xs font-bold text-stone-800 uppercase tracking-wider">
+      <div className="glass-card flex items-center justify-between px-5 py-3">
+        <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
           Question {item.position} of {item.total}
         </span>
-        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-stone-700 bg-stone-100/90 px-3 py-1 rounded-full border border-stone-200/50 shadow-2xs">
-          <IconClock className="w-3.5 h-3.5 text-blue-600" />
+        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-100 shadow-2xs">
+          <IconClock className="w-3.5 h-3.5 text-purple-600" />
           <span>{fmtElapsed(elapsed)}</span>
-          <span className="text-stone-400 font-normal">
+          <span className="text-slate-400 font-normal">
             · target ~{Math.round(q.expectedTimeMs / 1000)}s
           </span>
         </div>
       </div>
 
-      {/* Progress Bar in Royal Blue */}
-      <div className="h-1.5 w-full rounded-full bg-stone-200/60 overflow-hidden">
+      {/* Progress Bar in Vibrant Purple */}
+      <div className="h-1.5 w-full rounded-full bg-purple-100/70 overflow-hidden">
         <div
-          className="h-1.5 rounded-full bg-blue-600 transition-all duration-300"
+          className="h-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 transition-all duration-300"
           style={{ width: `${(item.position / item.total) * 100}%` }}
         />
       </div>
 
       {/* Question Card */}
       <div className="glass-card p-6 sm:p-8 flex flex-col gap-6">
-        <div className="text-sm sm:text-base font-medium text-stone-900 leading-relaxed">
+        <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed">
           <Katex text={q.stem} />
         </div>
 
@@ -246,8 +244,8 @@ export default function DiagnosticRunnerPage() {
                 key={o.id}
                 className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 px-4 text-xs sm:text-sm font-medium transition-all ${
                   selected === o.id
-                    ? 'border-blue-600 bg-blue-50/90 text-blue-900 shadow-xs ring-1 ring-blue-500'
-                    : 'border-stone-200/70 bg-stone-50/60 hover:bg-white text-stone-800'
+                    ? 'border-purple-600 bg-purple-50/90 text-purple-950 shadow-xs ring-1 ring-purple-500'
+                    : 'border-purple-100/70 bg-white/70 hover:bg-white text-slate-800'
                 }`}
               >
                 <input
@@ -256,7 +254,7 @@ export default function DiagnosticRunnerPage() {
                   value={o.id}
                   checked={selected === o.id}
                   onChange={() => setSelected(o.id)}
-                  className="accent-blue-600"
+                  className="accent-purple-600"
                 />
                 <Katex text={o.text} />
               </label>
@@ -264,7 +262,7 @@ export default function DiagnosticRunnerPage() {
           </div>
         ) : (
           <div className="mt-2 flex flex-col gap-1.5">
-            <label htmlFor="numeric-answer" className="text-xs font-semibold text-stone-700">
+            <label htmlFor="numeric-answer" className="text-xs font-semibold text-slate-700">
               Your answer
             </label>
             <input
@@ -277,7 +275,7 @@ export default function DiagnosticRunnerPage() {
               className="glass-input w-48 px-3.5 py-2.5 text-sm font-mono"
             />
             {q.answerFormat === 'integer' && (
-              <p className="text-[11px] text-stone-400">Whole integer expected.</p>
+              <p className="text-[11px] text-slate-400">Whole integer expected.</p>
             )}
           </div>
         )}
@@ -295,7 +293,7 @@ export default function DiagnosticRunnerPage() {
           type="button"
           onClick={() => void doPause()}
           disabled={submitting}
-          className="text-xs text-stone-500 hover:text-stone-800 underline transition disabled:opacity-50"
+          className="text-xs text-slate-500 hover:text-slate-800 underline transition disabled:opacity-50"
         >
           Pause test (once)
         </button>
@@ -310,7 +308,7 @@ export default function DiagnosticRunnerPage() {
           </button>
         </div>
       </div>
-      <p className="text-[11px] text-stone-400 text-center">
+      <p className="text-[11px] text-slate-400 text-center">
         Answers are marked and timed on the server; accuracy breakdown is revealed upon final
         submission.
       </p>

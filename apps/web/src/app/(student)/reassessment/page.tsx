@@ -28,7 +28,7 @@ const KINDS = [
   },
 ];
 
-/** P-18 — start a reassessment; results compare against baseline. */
+/** P-18 — start a reassessment in pastel & purple aesthetics. */
 export default function ReassessmentPage() {
   const router = useRouter();
   const [topics, setTopics] = useState<{ topicId: string; name: string }[]>([]);
@@ -74,11 +74,11 @@ export default function ReassessmentPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="border-b border-stone-200/50 pb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+      <div className="border-b border-purple-100/60 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Targeted Reassessments
         </h1>
-        <p className="mt-1 text-xs text-stone-500">
+        <p className="mt-1 text-xs text-slate-500">
           Reassessments strictly serve unseen questions to verify real skill acquisition against
           your initial diagnostic baseline.
         </p>
@@ -96,7 +96,7 @@ export default function ReassessmentPage() {
       )}
 
       {topics.length > 0 && (
-        <label className="flex max-w-sm flex-col gap-1.5 text-xs font-semibold text-stone-700">
+        <label className="flex max-w-sm flex-col gap-1.5 text-xs font-semibold text-slate-700">
           Select Topic (for Topic Test)
           <select
             value={topicId}
@@ -121,13 +121,13 @@ export default function ReassessmentPage() {
           >
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-stone-100 text-stone-700 font-bold text-xs group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-50 text-purple-700 border border-purple-100 font-bold text-xs group-hover:bg-purple-100/70 transition-colors">
                   <IconActivity className="w-4 h-4" />
                 </span>
-                <span className="text-[11px] font-semibold text-stone-400">~{k.minutes} min</span>
+                <span className="text-[11px] font-semibold text-slate-400">~{k.minutes} min</span>
               </div>
-              <h2 className="text-base font-bold text-stone-900">{k.title}</h2>
-              <p className="mt-2 text-xs text-stone-600 leading-relaxed">{k.body}</p>
+              <h2 className="text-base font-bold text-slate-900">{k.title}</h2>
+              <p className="mt-2 text-xs text-slate-600 leading-relaxed">{k.body}</p>
             </div>
             <button
               type="button"

@@ -14,7 +14,7 @@ import { ApiError } from '../../../../lib/apiClient';
 
 const STATUS_STYLE: Record<string, string> = {
   draft: 'bg-stone-100 text-stone-700 border border-stone-200/50',
-  reviewed: 'bg-blue-50 text-blue-700 border border-blue-200/50',
+  reviewed: 'bg-purple-50 text-purple-700 border border-purple-200/50',
   published: 'bg-emerald-50 text-emerald-700 border border-emerald-200/50',
   retired: 'bg-stone-100 text-stone-400 line-through',
 };
@@ -187,7 +187,7 @@ export default function QuestionsPage() {
                     <td className="max-w-md px-5 py-3">
                       <Link
                         href={`/admin/questions/${q.id}`}
-                        className="font-medium text-stone-900 hover:text-blue-600 transition"
+                        className="font-medium text-stone-900 hover:text-purple-600 transition"
                       >
                         <Katex text={q.stem.slice(0, 120) + (q.stem.length > 120 ? '…' : '')} />
                       </Link>

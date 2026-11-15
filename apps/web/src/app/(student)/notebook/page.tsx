@@ -7,7 +7,7 @@ import { IconBook, IconClock, IconCheck } from '../../../components/Icons';
 
 const LADDER = [1, 3, 7, 14];
 
-/** P-17 — mistake notebook with the fixed retry ladder. */
+/** P-17 — mistake notebook with the fixed retry ladder and pastel & purple aesthetics. */
 export default function NotebookPage() {
   const [entries, setEntries] = useState<NotebookEntry[]>([]);
   const [filter, setFilter] = useState<'open' | 'resolved' | 'all'>('open');
@@ -21,12 +21,12 @@ export default function NotebookPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-purple-100/60 pb-5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Spaced Mistake Notebook
           </h1>
-          <p className="mt-1 text-xs text-stone-500">
+          <p className="mt-1 text-xs text-slate-500">
             Missed questions are queued using an Ebbinghaus spaced interval ladder: 1d → 3d → 7d →
             14d.
           </p>
@@ -38,9 +38,7 @@ export default function NotebookPage() {
               type="button"
               onClick={() => setFilter(f)}
               className={`rounded-full px-3.5 py-1 text-xs font-semibold transition-all ${
-                filter === f
-                  ? 'glass-pill-active text-stone-900'
-                  : 'text-stone-500 hover:text-stone-800'
+                filter === f ? 'glass-pill-active' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               {f[0]!.toUpperCase() + f.slice(1)}
@@ -57,9 +55,9 @@ export default function NotebookPage() {
 
       {entries.length === 0 && !error && (
         <div className="glass-card p-12 text-center flex flex-col items-center gap-2">
-          <IconBook className="w-8 h-8 text-stone-300" />
-          <h3 className="text-sm font-bold text-stone-800">No entries in this view</h3>
-          <p className="text-xs text-stone-500 max-w-sm">
+          <IconBook className="w-8 h-8 text-purple-300" />
+          <h3 className="text-sm font-bold text-slate-800">No entries in this view</h3>
+          <p className="text-xs text-slate-500 max-w-sm">
             Mistakes and wrong answers from practice drills will be catalogued here for scheduled
             spaced review.
           </p>
@@ -71,11 +69,11 @@ export default function NotebookPage() {
           <article key={e.id} className="glass-card glass-card-interactive p-5 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium text-stone-900 leading-relaxed">
+                <div className="text-sm font-medium text-slate-900 leading-relaxed">
                   <Katex text={e.stem} />
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-[11px] text-stone-500 flex-wrap">
-                  <span className="font-semibold text-stone-700 bg-stone-100/90 px-2 py-0.5 rounded-md">
+                <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-500 flex-wrap">
+                  <span className="font-semibold text-purple-900 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100/60">
                     {e.topic.name}
                   </span>
                   <span>·</span>

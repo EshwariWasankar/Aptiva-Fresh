@@ -22,17 +22,15 @@ function AdminNav() {
 
   return (
     <header className="sticky top-4 z-40 mx-auto max-w-7xl px-4 sm:px-6">
-      <div className="glass-header flex items-center justify-between px-5 py-3">
+      <div className="navy-glass-header flex items-center justify-between px-5 py-3">
         <div className="flex items-center gap-3">
           <Link href="/admin" className="flex items-center gap-2.5 group">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-xs">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-sm font-semibold text-white shadow-xs transition-transform group-hover:scale-105">
               A
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-base font-bold tracking-tight text-stone-900">
-                Aptiva Admin
-              </span>
-              <span className="rounded-full bg-stone-200/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-stone-700">
+              <span className="text-base font-bold tracking-tight text-white">Aptiva Admin</span>
+              <span className="rounded-full bg-purple-900/60 border border-purple-700/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-purple-200">
                 {user?.role}
               </span>
             </div>
@@ -50,8 +48,8 @@ function AdminNav() {
                 href={item.href}
                 className={`rounded-full px-3 py-1.5 transition-all ${
                   active
-                    ? 'bg-stone-900 text-white shadow-xs'
-                    : 'text-stone-600 hover:bg-stone-200/60 hover:text-stone-900'
+                    ? 'bg-purple-200 text-purple-950 font-semibold shadow-xs'
+                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                 }`}
               >
                 {item.label}
@@ -61,14 +59,14 @@ function AdminNav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <span className="hidden text-xs text-stone-500 md:inline font-medium">{user?.email}</span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-200/80 border border-stone-300/60 text-xs font-semibold text-stone-700">
+          <span className="hidden text-xs text-slate-300 md:inline font-medium">{user?.email}</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-xs font-semibold text-white shadow-inner">
             {userInitial}
           </div>
           <button
             type="button"
             onClick={() => void signOut().then(() => (window.location.href = '/login'))}
-            className="rounded-lg px-2.5 py-1 text-xs font-medium text-stone-500 hover:text-stone-800 transition"
+            className="rounded-lg px-2.5 py-1 text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition"
           >
             Sign out
           </button>

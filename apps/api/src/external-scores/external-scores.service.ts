@@ -5,6 +5,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../common/prisma/prisma.service';
 
 export interface CreateExternalScoreDto {
@@ -55,21 +56,23 @@ export class ExternalScoresService {
       throw new UnprocessableEntityException('Invalid takenAt date format');
     }
 
+    const createData: Prisma.ExternalScoreUncheckedCreateInput = {
+      userId,
+      source: dto.source.trim(),
+      assessmentName: dto.assessmentName.trim(),
+      takenAt: takenAtDate,
+      totalScore: Number(dto.totalScore),
+      maxScore: Number(dto.maxScore),
+      percentile: dto.percentile != null ? Number(dto.percentile) : null,
+      reliability: dto.reliability != null ? Number(dto.reliability) : 0.8,
+      notes: dto.notes ? dto.notes.trim() : null,
+    };
+    if (dto.sectionScores) {
+      createData.sectionScores = dto.sectionScores as unknown as Prisma.InputJsonValue;
+    }
+
     return this.prisma.externalScore.create({
-      data: {
-        userId,
-        source: dto.source.trim(),
-        assessmentName: dto.assessmentName.trim(),
-        takenAt: takenAtDate,
-        totalScore: Number(dto.totalScore),
-        maxScore: Number(dto.maxScore),
-        percentile: dto.percentile != null ? Number(dto.percentile) : null,
-        sectionScores: dto.sectionScores
-          ? (dto.sectionScores as Record<string, number>)
-          : undefined,
-        reliability: dto.reliability != null ? Number(dto.reliability) : 0.8,
-        notes: dto.notes ? dto.notes.trim() : null,
-      },
+      data: createData,
     });
   }
 

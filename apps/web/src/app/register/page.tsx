@@ -11,12 +11,12 @@ export default function RegisterPage() {
           <div className="flex flex-col items-center text-center gap-2">
             <Link
               href="/"
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white font-bold text-base shadow-sm mb-1"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-base shadow-md shadow-purple-500/20 mb-1"
             >
               A
             </Link>
-            <h1 className="text-2xl font-bold tracking-tight text-stone-900">Create account</h1>
-            <p className="text-xs text-stone-500">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Create account</h1>
+            <p className="text-xs text-slate-500">
               Start your placement aptitude preparation today.
             </p>
           </div>

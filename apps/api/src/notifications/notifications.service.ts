@@ -116,4 +116,79 @@ export class NotificationsService {
       message,
     };
   }
+
+  async getNotifications(userId: string) {
+    const [prefs, weeklySummary, user] = await Promise.all([
+      this.getPreferences(userId),
+      this.getWeeklySummary(userId),
+      this.prisma.user.findUnique({ where: { id: userId }, include: { profile: true } }),
+    ]);
+
+    const notifications: Array<{
+      id: string;
+      title: string;
+      message: string;
+      type: 'weekly_summary' | 'reminder' | 'streak' | 'system' | 'diagnostic';
+      read: boolean;
+      createdAt: string;
+      link?: string;
+    }> = [];
+
+    // 1. Weekly summary notification
+    if (weeklySummary.totalQuestions > 0 || prefs.optInWeeklySummary) {
+      notifications.push({
+        id: `weekly-${weeklySummary.periodEnd}`,
+        title: 'Weekly Study Performance Summary',
+        message: weeklySummary.message,
+        type: 'weekly_summary',
+        read: false,
+        createdAt: new Date().toISOString(),
+        link: '/profile',
+      });
+    }
+
+    // 2. Reminder notification if opted in
+    if (prefs.optInReminders) {
+      notifications.push({
+        id: `reminder-${new Date().toISOString().slice(0, 10)}`,
+        title: 'Daily Study Commitment',
+        message: 'Your personalized adaptive drill blocks are ready for today.',
+        type: 'reminder',
+        read: false,
+        createdAt: new Date().toISOString(),
+        link: '/practice',
+      });
+    }
+
+    // 3. Email verification notification if unverified
+    if (user && !user.emailVerifiedAt) {
+      notifications.push({
+        id: 'verify-email-alert',
+        title: 'Verify Your Email Address',
+        message: 'Please verify your email address to secure your account and recover data.',
+        type: 'system',
+        read: false,
+        createdAt: user.createdAt.toISOString(),
+        link: '/verify-email',
+      });
+    }
+
+    // 4. Welcome to Aptiva system message
+    notifications.push({
+      id: 'welcome-aptiva',
+      title: 'Welcome to Aptiva Placement Workspace',
+      message: 'Complete your diagnostic to calibrate your Bayesian mastery profile.',
+      type: 'diagnostic',
+      read: true,
+      createdAt: user?.createdAt.toISOString() ?? new Date().toISOString(),
+      link: '/onboarding/diagnostic',
+    });
+
+    const unreadCount = notifications.filter((n) => !n.read).length;
+
+    return {
+      unreadCount,
+      notifications,
+    };
+  }
 }

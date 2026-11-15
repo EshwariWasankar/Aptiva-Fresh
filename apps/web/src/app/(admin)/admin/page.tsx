@@ -39,11 +39,11 @@ export default function AdminPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="border-b border-stone-200/50 pb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+      <div className="border-b border-purple-100/60 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Admin Control Center
         </h1>
-        <p className="mt-1 text-xs text-stone-500">
+        <p className="mt-1 text-xs text-slate-500">
           Curate question banks, manage assessment blueprints, review contributor submissions, and
           run imports.
         </p>
@@ -59,16 +59,16 @@ export default function AdminPage() {
               className="glass-card glass-card-interactive p-6 flex flex-col justify-between gap-4 group"
             >
               <div className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-stone-700 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-700 border border-purple-100 group-hover:bg-purple-100/70 transition-colors">
                   <Icon className="w-4 h-4" />
                 </span>
-                <IconArrowUpRight className="w-4 h-4 text-stone-400 group-hover:text-blue-600 transition-colors" />
+                <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-colors" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-stone-900 group-hover:text-blue-600 transition-colors">
+                <h2 className="text-base font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
                   {t.title}
                 </h2>
-                <p className="mt-1 text-xs text-stone-500 leading-relaxed">{t.desc}</p>
+                <p className="mt-1 text-xs text-slate-500 leading-relaxed">{t.desc}</p>
               </div>
             </Link>
           );

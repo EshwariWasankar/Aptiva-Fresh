@@ -103,7 +103,7 @@ export default function ReviewPage() {
                 <div className="min-w-0 flex-1 flex flex-col gap-2">
                   <Link
                     href={`/admin/questions/${q.id}`}
-                    className="font-semibold text-sm text-stone-900 hover:text-blue-600 transition"
+                    className="font-semibold text-sm text-stone-900 hover:text-purple-600 transition"
                   >
                     <Katex text={q.stem.slice(0, 280) + (q.stem.length > 280 ? '…' : '')} />
                   </Link>
