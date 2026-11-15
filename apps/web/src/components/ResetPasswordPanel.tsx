@@ -188,8 +188,12 @@ function StepEmail({
     } catch (err) {
       if (err instanceof ApiError && err.code === 'COOLDOWN_ACTIVE') {
         setError(err.message);
+      } else if (err instanceof ApiError && err.code === 'EMAIL_DELIVERY_FAILED') {
+        setError(err.message);
       } else if (err instanceof ApiError && err.status === 429) {
         setError('Too many requests. Please wait a minute and try again.');
+      } else if (err instanceof ApiError) {
+        setError(err.message);
       } else {
         setError('Unable to send code right now. Please check your connection and try again.');
       }

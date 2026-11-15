@@ -265,6 +265,20 @@ export class AuthService {
     rawEmail: string,
   ): Promise<{ success: boolean; message: string; cooldownSeconds: number }> {
     const email = rawEmail.trim().toLowerCase();
+
+    // Verify email service configuration upfront so we never return a fake success when unconfigured
+    if (
+      !this.mailer.isConfigured() &&
+      this.env.NODE_ENV !== 'test' &&
+      process.env.ALLOW_CONSOLE_MAIL !== 'true'
+    ) {
+      throw new BadRequestException({
+        code: 'EMAIL_DELIVERY_FAILED',
+        message:
+          'Email delivery service is not configured on the server. Please configure SMTP credentials (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_FROM) or EMAIL_API_KEY in apps/api/.env.',
+      });
+    }
+
     const cooldownKey = `aptiva:otp:cooldown:${email}`;
     const ttlRemaining = await this.redis.client.ttl(cooldownKey);
     if (ttlRemaining > 0) {
@@ -315,12 +329,26 @@ export class AuthService {
     // Set 60-second cooldown
     await this.redis.client.setex(cooldownKey, OTP_COOLDOWN_SECONDS, '1');
 
-    // Deliver OTP via MailerService (console logger in dev, transactional provider in prod)
-    await this.mailer.send({
-      to: email,
-      subject: 'Your Aptiva Password Reset Code',
-      text: `Your 6-digit verification code is: ${otp}\n\nThis code expires in 5 minutes. If you did not request this, please ignore this email.`,
-    });
+    // Deliver OTP via MailerService
+    try {
+      await this.mailer.send({
+        to: email,
+        subject: 'Your Aptiva Password Reset Code',
+        text: `Your 6-digit verification code is: ${otp}\n\nThis code expires in 5 minutes. If you did not request this, please ignore this email.`,
+      });
+    } catch (err: unknown) {
+      // Wipe OTP and cooldown from Redis so an undelivered OTP cannot be guessed or block the user
+      await this.redis.client.del(otpKey);
+      await this.redis.client.del(cooldownKey);
+      const messageText = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Failed to deliver OTP email to ${email}: ${messageText}`);
+      throw new BadRequestException({
+        code: 'EMAIL_DELIVERY_FAILED',
+        message: messageText.includes('EMAIL_SERVICE_NOT_CONFIGURED')
+          ? 'Email delivery service is not configured on the server. Please configure SMTP credentials (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_FROM) or EMAIL_API_KEY in apps/api/.env.'
+          : `Email delivery failed: ${messageText}`,
+      });
+    }
 
     await this.audit.record({
       actorId: user.id,
