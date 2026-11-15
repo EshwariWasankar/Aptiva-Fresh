@@ -270,6 +270,29 @@ function StudentNav() {
             )}
           </div>
 
+          {/* Admin Switcher for Admins & Reviewers */}
+          {(user?.role === 'admin' || user?.role === 'reviewer') && (
+            <Link
+              href="/admin/questions"
+              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-950/40 border border-purple-400/40 transition hover:scale-105 hover:shadow-purple-500/30 shrink-0"
+              title="Open Admin Portal & Question Bank"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <span>Admin Portal</span>
+            </Link>
+          )}
+
           {/* Profile Avatar & Email */}
           <Link
             href="/profile"
@@ -312,6 +335,27 @@ function StudentNav() {
           className="lg:hidden mt-2 rounded-2xl navy-glass-header p-3 shadow-2xl border border-slate-700/60 animate-in fade-in slide-in-from-top-2 flex flex-col gap-1 text-xs"
         >
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 pb-2 border-b border-slate-800">
+            {(user?.role === 'admin' || user?.role === 'reviewer') && (
+              <Link
+                href="/admin/questions"
+                onClick={() => setMobileMenuOpen(false)}
+                className="col-span-2 sm:col-span-3 flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md border border-purple-400/40"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span>Open Admin Portal</span>
+              </Link>
+            )}
             {NAV.map((item) => {
               const active =
                 pathname === item.href ||

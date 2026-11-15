@@ -59,6 +59,13 @@ function AdminNav() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-slate-700/60"
+            title="Return to Student Workspace"
+          >
+            <span>← Student View</span>
+          </Link>
           <span className="hidden text-xs text-slate-300 md:inline font-medium">{user?.email}</span>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-xs font-semibold text-white shadow-inner">
             {userInitial}
