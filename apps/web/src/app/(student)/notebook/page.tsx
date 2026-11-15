@@ -21,9 +21,9 @@ export default function NotebookPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-purple-100/60 pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/70 pb-5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             Spaced Mistake Notebook
           </h1>
           <p className="mt-1 text-xs text-slate-500">
@@ -55,7 +55,7 @@ export default function NotebookPage() {
 
       {entries.length === 0 && !error && (
         <div className="glass-card p-12 text-center flex flex-col items-center gap-2">
-          <IconBook className="w-8 h-8 text-purple-300" />
+          <IconBook className="w-8 h-8 text-slate-300" />
           <h3 className="text-sm font-bold text-slate-800">No entries in this view</h3>
           <p className="text-xs text-slate-500 max-w-sm">
             Mistakes and wrong answers from practice drills will be catalogued here for scheduled
@@ -72,8 +72,8 @@ export default function NotebookPage() {
                 <div className="text-sm font-medium text-slate-900 leading-relaxed">
                   <Katex text={e.stem} />
                 </div>
-                <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-500 flex-wrap">
-                  <span className="font-semibold text-purple-900 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100/60">
+                <div className="mt-2.5 flex items-center gap-2 text-[11px] text-slate-500 flex-wrap">
+                  <span className="font-semibold text-slate-800 bg-stone-100/90 px-2 py-0.5 rounded-md border border-stone-200/70 font-mono">
                     {e.topic.name}
                   </span>
                   <span>·</span>
@@ -81,7 +81,9 @@ export default function NotebookPage() {
                   {e.errorType && (
                     <>
                       <span>·</span>
-                      <span className="text-rose-700 font-medium">Cause: {e.errorType.label}</span>
+                      <span className="rounded-md bg-rose-50 border border-rose-200/60 px-2 py-0.5 text-rose-800 font-semibold font-mono">
+                        Cause: {e.errorType.label}
+                      </span>
                     </>
                   )}
                 </div>
@@ -94,11 +96,11 @@ export default function NotebookPage() {
                     Resolved
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/60 px-3 py-1 text-[11px] font-semibold text-amber-800">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/60 px-3 py-1 text-[11px] font-semibold text-amber-800 font-mono">
                     <IconClock className="w-3.5 h-3.5 text-amber-600" />
                     <span>Retry {e.retryAt ? new Date(e.retryAt).toLocaleDateString() : '—'}</span>
                     {e.retryCount < LADDER.length && (
-                      <span className="text-amber-600 font-normal">
+                      <span className="text-amber-700 font-medium">
                         (stage {e.retryCount + 1}/{LADDER.length})
                       </span>
                     )}

@@ -146,24 +146,26 @@ export default function PlanPage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Top Action Bar */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-purple-100/60 pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/70 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Link
               href="/dashboard"
-              className="text-xs font-medium text-slate-400 hover:text-slate-700 transition"
+              className="text-xs font-semibold text-slate-500 hover:text-slate-800 transition"
             >
               ← Overview
             </Link>
-            <span className="text-purple-300">·</span>
+            <span className="text-stone-300">·</span>
             <Link
               href="/plan/history"
-              className="text-xs font-semibold text-purple-600 hover:underline"
+              className="text-xs font-semibold text-blue-700 hover:text-blue-900 hover:underline"
             >
               Plan History
             </Link>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Your Adaptive Plan</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+            Your Adaptive Plan
+          </h1>
           {plan && (
             <p className="mt-1 text-xs text-slate-500">
               <span className="capitalize font-semibold text-slate-700">
@@ -176,7 +178,10 @@ export default function PlanPage() {
           )}
         </div>
         <div className="flex items-center gap-2.5">
-          <Link href="/setup/requirements" className="btn-secondary px-4 py-2 text-xs font-medium">
+          <Link
+            href="/setup/requirements"
+            className="btn-secondary px-4 py-2 text-xs font-semibold"
+          >
             Edit requirements
           </Link>
           <button
@@ -204,19 +209,19 @@ export default function PlanPage() {
         <details className="glass-card p-5 group">
           <summary className="cursor-pointer text-xs font-bold text-slate-800 flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <IconSparkles className="w-4 h-4 text-purple-600" />
+              <IconSparkles className="w-4 h-4 text-blue-600" />
               Recalibration History ({changes.length} revisions)
             </span>
             <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
-          <ul className="mt-3 flex flex-col gap-2 text-xs text-slate-600 border-t border-purple-50 pt-3">
+          <ul className="mt-3 flex flex-col gap-2 text-xs text-slate-600 border-t border-stone-100 pt-3">
             {changes.slice(0, 5).map((c) => (
               <li key={c.id} className="flex items-center justify-between">
                 <span>
                   {new Date(c.createdAt).toLocaleDateString()} —{' '}
                   <strong className="text-slate-800">{c.trigger}</strong>
                 </span>
-                <span className="text-slate-400 text-[11px]">
+                <span className="text-slate-400 text-[11px] font-mono">
                   {String((c.summary as { itemCount?: number }).itemCount ?? '?')} blocks updated
                 </span>
               </li>
@@ -229,10 +234,10 @@ export default function PlanPage() {
       <div className="flex flex-col gap-6">
         {days.map((day) => (
           <section key={day.dayIndex} className="glass-card p-6 flex flex-col gap-4">
-            <header className="flex items-center justify-between border-b border-purple-50 pb-3">
+            <header className="flex items-center justify-between border-b border-stone-200/70 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-50 text-purple-700 font-bold text-xs border border-purple-100">
-                  <IconCalendar className="w-4 h-4 text-purple-600" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-700 font-bold text-xs border border-blue-100/70">
+                  <IconCalendar className="w-4 h-4 text-blue-600" />
                 </span>
                 <h2 className="text-base font-bold text-slate-900">
                   {day.date
@@ -244,7 +249,7 @@ export default function PlanPage() {
                     : `Day ${day.dayIndex + 1}`}
                 </h2>
               </div>
-              <span className="rounded-full bg-purple-50 px-3 py-0.5 text-xs font-semibold text-purple-900 border border-purple-100">
+              <span className="rounded-full bg-stone-100/80 px-3 py-0.5 text-xs font-semibold text-slate-800 border border-stone-200/60 font-mono">
                 {day.total} min total
               </span>
             </header>
@@ -255,11 +260,11 @@ export default function PlanPage() {
                 return (
                   <li
                     key={item.id}
-                    className="rounded-2xl bg-white/70 hover:bg-white/95 border border-purple-100/60 p-4 transition-all shadow-2xs"
+                    className="rounded-2xl bg-white/80 hover:bg-white border border-stone-200/70 p-4 transition-all shadow-2xs"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <span className="rounded-lg bg-purple-50 text-purple-700 border border-purple-200/60 px-2.5 py-1 text-xs font-bold">
+                        <span className="rounded-lg bg-blue-50 text-blue-700 border border-blue-200/60 px-2.5 py-1 text-xs font-bold font-mono">
                           {BLOCK_LABEL[item.blockType] ?? item.blockType}
                         </span>
                         <span className="font-bold text-sm text-slate-900">{item.topic.name}</span>
@@ -271,7 +276,7 @@ export default function PlanPage() {
                       </div>
 
                       <div className="flex items-center gap-3 text-xs">
-                        <span className="font-semibold text-purple-900 bg-purple-50 px-2.5 py-1 rounded-md border border-purple-100/60">
+                        <span className="font-semibold text-slate-800 bg-stone-100/80 px-2.5 py-1 rounded-md border border-stone-200/60 font-mono">
                           {item.minutes} min
                         </span>
                         {item.rationale.date === today && (
@@ -296,7 +301,7 @@ export default function PlanPage() {
                               return n;
                             })
                           }
-                          className="font-medium text-purple-600 hover:text-purple-700 underline transition"
+                          className="font-semibold text-blue-700 hover:text-blue-900 underline transition"
                         >
                           Why this?
                         </button>
@@ -305,8 +310,8 @@ export default function PlanPage() {
 
                     {whyOpen && <WhyThisPanel rationale={item.rationale} />}
 
-                    <div className="mt-3 flex items-center gap-2 border-t border-purple-50 pt-2.5 text-xs text-slate-500 flex-wrap">
-                      <span className="text-[11px] font-medium text-slate-400">Feedback:</span>
+                    <div className="mt-3 flex items-center gap-2 border-t border-stone-100 pt-2.5 text-xs text-slate-500 flex-wrap">
+                      <span className="text-[11px] font-semibold text-slate-400">Feedback:</span>
                       {(['already_know', 'too_easy', 'not_relevant'] as const).map((r) => {
                         const key = `${item.id}:${r}`;
                         const label =
@@ -324,7 +329,7 @@ export default function PlanPage() {
                             className={`rounded-full border px-2.5 py-0.5 text-[11px] transition-colors ${
                               feedbackSent.has(key)
                                 ? 'border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold'
-                                : 'border-purple-100 bg-white/70 text-slate-600 hover:bg-white'
+                                : 'border-stone-200 bg-white/80 text-slate-600 hover:bg-white'
                             } disabled:opacity-50`}
                           >
                             {feedbackSent.has(key) ? '✓ ' : ''}

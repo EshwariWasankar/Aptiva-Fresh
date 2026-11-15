@@ -1,25 +1,46 @@
 @import 'tailwindcss';
 
-/* Aptiva Modern Pastel & Dark Navy Glassmorphism Tokens */
+/* ==========================================================================
+   APTIVA DESIGN SYSTEM: EDITORIAL SAAS × ACADEMIC INTELLIGENCE
+   Color System: Deep Oxford Ink, Warm Alabaster, Academic Royal Indigo, 
+                 Burnished Gold, Forest Emerald, Crimson Gap
+   ========================================================================== */
+
 :root {
-  --bg-pastel: #faf6f8;
-  --surface-glass-sheet: rgba(255, 255, 255, 0.76);
-  --surface-glass-card: rgba(255, 255, 255, 0.88);
-  --surface-navy-header: rgba(15, 23, 42, 0.88);
-  --surface-navy-dock: rgba(15, 23, 42, 0.94);
+  --bg-canvas: #fbfaf8;
+  --bg-surface: #ffffff;
+  --bg-surface-warm: #fcfbf9;
+  --bg-subtle: #f4f3ef;
+
   --text-primary: #0f172a;
   --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --accent-purple: #7c3aed;
-  --accent-purple-hover: #6d28d9;
-  --accent-purple-light: #f3e8ff;
-  --accent-lavender: #e9d5ff;
-  --accent-green: #10b981;
-  --accent-rose: #f43f5e;
-  --accent-orange: #ea580c;
-  --radius-card: 1.25rem;
-  --radius-sheet: 2rem;
-  --glass-blur: 28px;
+  --text-muted: #78716c;
+  --text-dim: #a8a29e;
+
+  --border-subtle: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --border-accent: #c7d2fe;
+
+  --ink-primary: #0a0f1d;
+  --ink-card: #0f172a;
+  --academic-indigo: #3730a3;
+  --academic-indigo-hover: #312e81;
+  --academic-indigo-light: #e0e7ff;
+
+  --amber-gold: #b45309;
+  --amber-gold-bg: #fef3c7;
+
+  --forest-emerald: #059669;
+  --forest-emerald-bg: #ecfdf5;
+
+  --crimson-rose: #be123c;
+  --crimson-rose-bg: #fff1f2;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.5rem;
 }
 
 html {
@@ -34,191 +55,211 @@ html {
     Arial,
     sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
 body {
   min-height: 100vh;
   color: var(--text-primary);
-  background-color: #faf6f8;
-  /* Pastel mesh background (peach, lavender, pink, subtle blue) + subtle dotted overlay texture */
+  background-color: #f7f4ed;
+  /* Ambient atmospheric lighting with architectural drafting grid */
   background-image:
-    radial-gradient(rgba(139, 92, 246, 0.12) 1.2px, transparent 1.2px),
-    radial-gradient(ellipse at 8% 12%, rgba(254, 215, 215, 0.52) 0%, transparent 40%),
-    radial-gradient(ellipse at 92% 10%, rgba(233, 213, 255, 0.62) 0%, transparent 45%),
-    radial-gradient(ellipse at 15% 85%, rgba(255, 237, 213, 0.55) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 85%, rgba(219, 234, 254, 0.55) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 50%, rgba(245, 243, 255, 0.7) 0%, transparent 60%),
-    linear-gradient(135deg, #fdf8f6 0%, #faf5ff 50%, #f4f7fe 100%);
+    radial-gradient(at 15% 10%, rgba(245, 237, 226, 0.85) 0px, transparent 60%),
+    radial-gradient(at 85% 15%, rgba(238, 230, 218, 0.75) 0px, transparent 55%),
+    radial-gradient(at 50% 90%, rgba(235, 225, 210, 0.65) 0px, transparent 65%),
+    radial-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px);
   background-size:
-    24px 24px,
     auto,
     auto,
     auto,
-    auto,
-    auto,
-    auto;
+    24px 24px;
   background-attachment: fixed;
 }
 
 ::selection {
-  background: #e9d5ff;
-  color: #4c1d95;
+  background: #e0e7ff;
+  color: #312e81;
 }
 
-/* Crisp focus rings with accessible purple contrast */
+/* Accessible focus rings */
 :focus-visible {
-  outline: 2px solid var(--accent-purple);
+  outline: 2px solid var(--academic-indigo);
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-/* Subtle, refined glass scrollbars */
+/* Crisp minimal scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(168, 140, 200, 0.35) transparent;
+  scrollbar-color: rgba(120, 113, 108, 0.3) transparent;
 }
 
-/* Glassmorphism Surface Utility Classes */
+/* ==========================================================================
+   SURFACE CARDS & PANELS (WARM GLASSMORPHISM ARCHITECTURE)
+   ========================================================================== */
+
 .glass-sheet {
-  background: rgba(255, 255, 255, 0.74);
-  backdrop-filter: blur(28px) saturate(140%);
-  -webkit-backdrop-filter: blur(28px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow:
-    0 20px 50px -12px rgba(90, 50, 140, 0.06),
-    0 4px 14px 0 rgba(90, 50, 140, 0.02),
-    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
-  border-radius: 2rem;
+    0 1px 2px 0 rgba(15, 23, 42, 0.02),
+    0 20px 48px -12px rgba(15, 23, 42, 0.05);
+  border-radius: var(--radius-2xl);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow:
-    0 10px 30px -4px rgba(90, 50, 140, 0.05),
-    0 2px 8px -1px rgba(0, 0, 0, 0.02);
-  border-radius: 1.25rem;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    0 1px 2px 0 rgba(15, 23, 42, 0.02),
+    0 6px 18px -2px rgba(15, 23, 42, 0.03);
+  border-radius: var(--radius-xl);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card-interactive:hover {
   transform: translateY(-1.5px);
+  border-color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow:
-    0 18px 36px -6px rgba(90, 50, 140, 0.09),
-    0 6px 14px -2px rgba(90, 50, 140, 0.03);
-  border-color: rgba(255, 255, 255, 1);
+    0 4px 8px -1px rgba(15, 23, 42, 0.04),
+    0 14px 30px -4px rgba(15, 23, 42, 0.06);
 }
 
-/* Dark Navy Floating Header */
+/* Dark Navy Floating Masthead */
 .navy-glass-header {
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0a0f1d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    0 16px 40px -10px rgba(15, 23, 42, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-  border-radius: 1.25rem;
+    0 12px 36px -8px rgba(10, 15, 29, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  border-radius: var(--radius-xl);
   color: #ffffff;
 }
 
-/* Dark Navy Floating Bottom Navigation Dock */
-.navy-glass-dock {
-  background: rgba(15, 23, 42, 0.94);
-  backdrop-filter: blur(28px) saturate(140%);
-  -webkit-backdrop-filter: blur(28px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow:
-    0 24px 55px -10px rgba(15, 23, 42, 0.5),
-    0 4px 16px 0 rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-  border-radius: 9999px;
-}
-
-/* Light lavender pill for active navigation item in the bottom dock */
+/* Active navigation pill */
 .navy-dock-active {
-  background: #e9d5ff !important;
-  color: #4c1d95 !important;
-  font-weight: 600 !important;
-  box-shadow:
-    0 4px 14px -1px rgba(168, 85, 247, 0.35),
-    0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background: #e0e7ff !important;
+  color: #312e81 !important;
+  font-weight: 700 !important;
 }
 
 .glass-pill {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    0 6px 18px -4px rgba(90, 50, 140, 0.05),
-    0 2px 6px 0 rgba(0, 0, 0, 0.02);
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
   border-radius: 9999px;
 }
 
 .glass-pill-active {
-  background: #e9d5ff;
-  color: #4c1d95;
+  background: #e0e7ff;
+  color: #312e81;
   font-weight: 600;
-  box-shadow:
-    0 4px 12px -2px rgba(147, 51, 234, 0.25),
-    0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  border-color: #c7d2fe;
 }
 
+/* High-Precision Input Controls */
 .glass-input {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  color: #0f172a;
-  border-radius: 0.75rem;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
   transition: all 0.15s ease;
 }
 
 .glass-input:focus {
-  background: rgba(255, 255, 255, 0.98);
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  border-color: var(--academic-indigo);
+  box-shadow: 0 0 0 3px rgba(55, 48, 163, 0.12);
   outline: none;
 }
 
-/* Primary Button with Purple/Violet Gradient */
+/* ==========================================================================
+   BUTTONS (AUTHORITATIVE, HIGH ACCURACY)
+   ========================================================================== */
+
 .btn-primary {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  background: #0f172a;
   color: #ffffff;
-  border-radius: 0.75rem;
-  font-weight: 500;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  border: 1px solid #0f172a;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 14px -2px rgba(124, 58, 237, 0.35);
+  box-shadow:
+    0 1px 2px 0 rgba(15, 23, 42, 0.1),
+    0 2px 6px -1px rgba(15, 23, 42, 0.08);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
-  box-shadow: 0 6px 20px -2px rgba(124, 58, 237, 0.45);
+  background: #1e293b;
+  border-color: #1e293b;
   transform: translateY(-0.5px);
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.15);
 }
 
-/* Secondary Button with Clean Glass styling */
+.btn-primary-indigo {
+  background: linear-gradient(135deg, #3730a3 0%, #312e81 100%);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  border: 1px solid #3730a3;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px -1px rgba(55, 48, 163, 0.25);
+}
+
+.btn-primary-indigo:hover {
+  background: #312e81;
+  transform: translateY(-0.5px);
+  box-shadow: 0 4px 14px -1px rgba(55, 48, 163, 0.35);
+}
+
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
   color: #1e293b;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   font-weight: 500;
   transition: all 0.15s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
 }
 
 .btn-secondary:hover {
-  background: #ffffff;
-  border-color: rgba(196, 181, 253, 0.9);
-  color: #4c1d95;
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.08);
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
 }
 
-/* Question Container Overflow Prevention & KaTeX math rendering */
+/* ==========================================================================
+   METRIC & TELEMETRY TYPOGRAPHY
+   ========================================================================== */
+
+.stat-num {
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+.academic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   QUESTION OVERFLOW & KATEX MATH RENDERING
+   ========================================================================== */
+
 .question-container {
   max-width: 100%;
   overflow-x: hidden;

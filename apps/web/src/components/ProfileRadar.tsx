@@ -67,10 +67,12 @@ export function ProfileRadar({ values }: Props) {
           </g>
         );
       })}
-      <polygon points={poly} fill="rgba(124,58,237,0.18)" stroke="#7c3aed" strokeWidth="2" />
+      <polygon points={poly} fill="rgba(55, 48, 163, 0.16)" stroke="#3730a3" strokeWidth="2.2" />
       {sections.map((s, i) => {
         const [x, y] = point(i, values[s] ?? 1500);
-        return <circle key={s} cx={x} cy={y} r="3.5" fill="#7c3aed" />;
+        return (
+          <circle key={s} cx={x} cy={y} r="3.5" fill="#3730a3" stroke="#ffffff" strokeWidth="1.5" />
+        );
       })}
     </svg>
   );

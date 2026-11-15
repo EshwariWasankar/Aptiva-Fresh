@@ -91,13 +91,13 @@ function StudentNav() {
   };
 
   return (
-    <header className="sticky top-3 z-40 mx-auto max-w-7xl px-3 sm:px-6">
-      {/* Single Unified Floating Dark Navy Header */}
-      <div className="navy-glass-header flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 shadow-xl">
+    <header className="sticky top-3 z-40 mx-auto max-w-[1440px] px-3 sm:px-6">
+      {/* Single Unified Academic Masthead in Deep Oxford Ink */}
+      <div className="navy-glass-header flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 shadow-xl">
         {/* Left: Brand Logo & Assessment Target Selector */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3.5">
           <Link href="/dashboard" className="flex items-center gap-2.5 group shrink-0">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-sm font-semibold text-white shadow-md shadow-purple-500/20 transition-transform group-hover:scale-105">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30 transition-transform group-hover:scale-105">
               <svg
                 width="18"
                 height="18"
@@ -113,24 +113,31 @@ function StudentNav() {
                 <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
               </svg>
             </span>
-            <span className="text-base font-bold tracking-tight text-white">Aptiva</span>
+            <div className="flex flex-col">
+              <span className="text-base font-bold tracking-tight text-white leading-tight">
+                Aptiva
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-indigo-300/80 font-mono -mt-0.5">
+                Adaptive Prep
+              </span>
+            </div>
           </Link>
 
-          <span className="hidden text-xs text-slate-600 sm:inline">|</span>
+          <span className="hidden text-xs text-slate-700 sm:inline">|</span>
 
           {/* Assessment Target Selector */}
           <Link
             href="/setup/requirements"
-            className="hidden sm:flex items-center gap-1.5 rounded-full bg-slate-800/90 px-2.5 py-1 text-[11px] font-medium text-slate-200 border border-slate-700/70 hover:bg-slate-700/80 hover:text-white transition-colors"
+            className="hidden sm:flex items-center gap-2 rounded-full bg-slate-900/90 px-3 py-1 text-[11px] font-medium text-slate-200 border border-slate-700/80 hover:border-indigo-400/60 hover:text-white transition-all shadow-xs"
             title="Assessment Target & Requirements"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-purple-400"></span>
-            <span className="truncate max-w-[140px]">GMAT Focus</span>
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 ring-2 ring-amber-400/30 animate-pulse"></span>
+            <span className="truncate max-w-[150px] font-medium">Target: GMAT Focus</span>
             <IconChevronDown className="w-3 h-3 text-slate-400" />
           </Link>
         </div>
 
-        {/* Center: Desktop Navigation Bar (Single Consolidated Navigation) */}
+        {/* Center: Desktop Navigation Bar */}
         <nav className="hidden lg:flex items-center gap-1 text-xs font-medium">
           {NAV.map((item) => {
             const active =
@@ -140,9 +147,9 @@ function StudentNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-full px-2.5 py-1.5 transition-all text-xs ${
+                className={`rounded-full px-3 py-1.5 transition-all text-xs ${
                   active
-                    ? 'bg-purple-200 text-purple-950 font-bold shadow-sm'
+                    ? 'bg-indigo-100 text-indigo-950 font-bold shadow-xs'
                     : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                 }`}
               >
@@ -343,8 +350,8 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
     <RequireAuth>
       <div className="min-h-screen pb-12 pt-1">
         <StudentNav />
-        <main className="mx-auto max-w-7xl px-3 sm:px-6 py-4 sm:py-6">
-          <div className="glass-sheet p-4 sm:p-7 md:p-9">{children}</div>
+        <main className="mx-auto max-w-[1440px] px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="glass-sheet p-5 sm:p-8 lg:p-10">{children}</div>
         </main>
       </div>
     </RequireAuth>

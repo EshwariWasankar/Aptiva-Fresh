@@ -52,9 +52,9 @@ export default async function LandingPage() {
     <div className="min-h-screen py-6 px-4 sm:px-6">
       <div className="mx-auto max-w-5xl flex flex-col gap-8">
         {/* Dark Navy Floating Top Header */}
-        <header className="navy-glass-header flex items-center justify-between px-6 py-3.5">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-sm font-semibold text-white shadow-md shadow-purple-500/20">
+        <header className="navy-glass-header flex items-center justify-between px-6 py-3.5 shadow-xl">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30">
               <svg
                 width="18"
                 height="18"
@@ -72,7 +72,7 @@ export default async function LandingPage() {
             </span>
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold tracking-tight text-white">Aptiva</span>
-              <span className="hidden sm:inline text-slate-600">|</span>
+              <span className="hidden sm:inline text-slate-700">|</span>
               <span className="hidden sm:inline text-xs text-slate-300 font-medium">
                 Adaptive Placement Workspace
               </span>
@@ -87,8 +87,8 @@ export default async function LandingPage() {
         <div className="glass-sheet p-8 sm:p-12 flex flex-col gap-12">
           {/* Hero Section */}
           <section className="flex flex-col gap-5 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-purple-50/90 border border-purple-200/80 px-3.5 py-1 text-xs font-semibold text-purple-700 w-fit shadow-2xs">
-              <span className="h-1.5 w-1.5 rounded-full bg-purple-600 animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50/90 border border-blue-200/80 px-3.5 py-1 text-xs font-bold text-blue-700 w-fit shadow-2xs font-mono">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
               Diagnostic-Driven Placement Engine
             </div>
             <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
@@ -111,14 +111,14 @@ export default async function LandingPage() {
               return (
                 <div
                   key={s.title}
-                  className="glass-card p-6 flex flex-col justify-between gap-4 group"
+                  className="glass-card glass-card-interactive p-6 flex flex-col justify-between gap-4 group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-50 text-purple-700 font-bold text-xs border border-purple-100 group-hover:bg-purple-100/70 transition-colors">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-700 font-bold text-xs border border-blue-100 group-hover:bg-blue-100/70 transition-colors font-mono">
                         <Icon className="w-4 h-4" />
                       </span>
-                      <span className="text-[11px] font-semibold tracking-wider uppercase text-slate-400">
+                      <span className="text-[11px] font-bold tracking-wider uppercase text-slate-400 font-mono">
                         Step {s.step}
                       </span>
                     </div>
@@ -133,7 +133,7 @@ export default async function LandingPage() {
           {/* Blueprints Section */}
           <section
             id="blueprints"
-            className="flex flex-col gap-5 pt-4 border-t border-purple-100/60"
+            className="flex flex-col gap-5 pt-4 border-t border-stone-200/70"
           >
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-1">
               <div>

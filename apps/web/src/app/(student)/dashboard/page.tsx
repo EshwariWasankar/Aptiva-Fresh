@@ -108,15 +108,29 @@ export default function StudentHomePage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Overview Header with Date Stamp matching the reference image */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between border-b border-purple-100/60 pb-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between border-b border-stone-200/70 pb-5">
         <div>
-          <span className="text-xs font-medium tracking-wide text-slate-500">
+          <span className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
             Welcome back, {userDisplayName}
           </span>
-          <h1 className="mt-0.5 text-3xl font-bold tracking-tight text-slate-900">Overview</h1>
+          <h1 className="mt-0.5 text-3xl font-extrabold tracking-tight text-slate-900">Overview</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-white/90 border border-purple-200/60 px-3.5 py-1 text-xs font-medium text-purple-900 shadow-2xs">
+        <div className="flex items-center gap-2 flex-wrap">
+          {activity && (
+            <>
+              <span className="rounded-full bg-white/90 border border-stone-200/80 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-amber-500 ring-2 ring-amber-400/30"></span>
+                <span className="stat-num">{activity.currentStreak}</span>
+                <span className="text-slate-500 font-medium">day streak</span>
+              </span>
+              <span className="rounded-full bg-white/90 border border-stone-200/80 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                <span className="stat-num">{Math.round(activity.totalStudyHours)}</span>
+                <span className="text-slate-500 font-medium">hrs total</span>
+              </span>
+            </>
+          )}
+          <span className="rounded-full bg-white/90 border border-stone-200/80 px-3.5 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
             {currentMonthYear}
           </span>
         </div>
@@ -131,14 +145,14 @@ export default function StudentHomePage() {
           <div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold tracking-wide uppercase text-slate-400">
+                <span className="text-xs font-bold tracking-wider uppercase text-slate-400">
                   Daily Schedule
                 </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-purple-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
               </div>
               <Link
                 href="/plan"
-                className="text-xs font-medium text-purple-600 hover:text-purple-700 transition inline-flex items-center gap-1"
+                className="text-xs font-semibold text-blue-700 hover:text-blue-900 transition inline-flex items-center gap-1"
               >
                 Full plan
                 <IconArrowUpRight className="w-3.5 h-3.5" />
@@ -146,26 +160,23 @@ export default function StudentHomePage() {
             </div>
 
             <div className="mt-3 flex items-baseline justify-between">
-              <h2 className="text-xl font-bold text-slate-900">Today&apos;s plan</h2>
+              <h2 className="text-xl font-extrabold text-slate-900">Today&apos;s plan</h2>
               <span className="text-xs text-slate-500 font-medium">
                 {todayItems.length} block{todayItems.length === 1 ? '' : 's'} scheduled
               </span>
             </div>
 
             {noPlan ? (
-              <div className="mt-4 rounded-xl bg-amber-50/70 border border-amber-200/60 p-4 text-xs text-amber-900">
+              <div className="mt-4 rounded-xl bg-amber-50/80 border border-amber-200/70 p-4 text-xs text-amber-900">
                 No active plan yet —{' '}
-                <Link
-                  href="/setup/requirements"
-                  className="font-semibold text-purple-700 underline"
-                >
+                <Link href="/setup/requirements" className="font-bold text-blue-800 underline">
                   set up requirements
                 </Link>{' '}
                 to generate your personalized blueprint.
               </div>
             ) : todayItems.length === 0 ? (
-              <div className="mt-4 rounded-xl bg-purple-50/50 border border-purple-100/70 p-4 text-xs text-slate-600 flex items-center gap-2.5">
-                <IconCalendar className="w-4 h-4 text-purple-400" />
+              <div className="mt-4 rounded-xl bg-slate-50/70 border border-stone-200/70 p-4 text-xs text-slate-600 flex items-center gap-2.5">
+                <IconCalendar className="w-4 h-4 text-slate-400" />
                 <span>Rest day or no blocks scheduled for today. Great time for a review!</span>
               </div>
             ) : (
@@ -173,17 +184,17 @@ export default function StudentHomePage() {
                 {todayItems.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-white/70 hover:bg-white/95 border border-purple-100/60 p-2.5 px-3 transition-colors text-xs"
+                    className="flex items-center justify-between rounded-xl bg-white/80 hover:bg-white border border-stone-200/70 p-2.5 px-3 transition-colors text-xs shadow-2xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="h-2 w-2 rounded-full bg-purple-500"></span>
+                      <span className="h-2 w-2 rounded-full bg-blue-600"></span>
                       <span className="font-semibold text-slate-800">
                         {BLOCK_LABEL[i.blockType] ?? i.blockType}
                       </span>
                       <span className="text-slate-400">·</span>
                       <span className="text-slate-600 font-medium">{i.topic.name}</span>
                     </div>
-                    <span className="font-semibold text-purple-900 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200/50">
+                    <span className="font-semibold text-slate-800 bg-stone-100/80 px-2 py-0.5 rounded-md border border-stone-200/60 font-mono">
                       {i.minutes}m
                     </span>
                   </li>
@@ -211,15 +222,15 @@ export default function StudentHomePage() {
 
       {/* Secondary Row: Priority Topics & Low Priority / Maintenance */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Priority Topics Card with purple badge highlights */}
+        {/* Priority Topics Card with blue badge highlights */}
         <section className="glass-card p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-purple-50 pb-3">
-              <h2 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
-                <IconSparkles className="w-4 h-4 text-purple-600" />
+            <div className="flex items-center justify-between border-b border-stone-200/70 pb-3">
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <IconSparkles className="w-4 h-4 text-blue-600" />
                 Priority topics
               </h2>
-              <span className="text-xs text-slate-400">High leverage</span>
+              <span className="text-xs text-slate-400 font-medium">High leverage</span>
             </div>
 
             {priorities.length === 0 ? (
@@ -229,20 +240,20 @@ export default function StudentHomePage() {
                 {priorities.map((i, idx) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-white/70 hover:bg-white/95 p-2.5 px-3 border border-purple-100/50 transition-colors"
+                    className="flex items-center justify-between rounded-xl bg-white/80 hover:bg-white p-2.5 px-3 border border-stone-200/70 transition-colors shadow-2xs"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-50 text-[11px] font-bold text-purple-700 border border-purple-200/60">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-50 text-[11px] font-bold text-blue-700 border border-blue-200/60 font-mono">
                         {idx + 1}
                       </span>
                       <div className="flex flex-col">
-                        <span className="text-xs font-semibold text-slate-800">{i.topic.name}</span>
+                        <span className="text-xs font-bold text-slate-900">{i.topic.name}</span>
                         <span className="text-[11px] text-slate-500 capitalize">
                           {i.blockType.replace(/_/g, ' ')}
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs font-medium text-slate-600 bg-purple-50/50 px-2 py-0.5 rounded-md border border-purple-100">
+                    <span className="text-xs font-semibold text-slate-700 bg-stone-100/80 px-2 py-0.5 rounded-md border border-stone-200/60 font-mono">
                       {i.minutes}m
                     </span>
                   </li>
@@ -255,12 +266,12 @@ export default function StudentHomePage() {
         {/* Low Priority (Maintenance) Card with emerald highlights */}
         <section className="glass-card p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between border-b border-purple-50 pb-3">
-              <h2 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+            <div className="flex items-center justify-between border-b border-stone-200/70 pb-3">
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <IconCheck className="w-4 h-4 text-emerald-600" />
                 Low priority (maintenance)
               </h2>
-              <span className="text-xs text-slate-400">Mastered areas</span>
+              <span className="text-xs text-slate-400 font-medium">Mastered areas</span>
             </div>
 
             {lowPriority.length === 0 ? (
@@ -272,13 +283,13 @@ export default function StudentHomePage() {
                 {lowPriority.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-white/70 hover:bg-white/95 p-2.5 px-3 border border-purple-100/50 transition-colors"
+                    className="flex items-center justify-between rounded-xl bg-white/80 hover:bg-white p-2.5 px-3 border border-stone-200/70 transition-colors shadow-2xs"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-                      <span className="text-xs font-medium text-slate-800">{i.topic.name}</span>
+                      <span className="text-xs font-semibold text-slate-800">{i.topic.name}</span>
                     </div>
-                    <span className="text-xs font-medium text-slate-500 bg-purple-50/50 px-2 py-0.5 rounded-md border border-purple-100">
+                    <span className="text-xs font-semibold text-slate-600 bg-stone-100/80 px-2 py-0.5 rounded-md border border-stone-200/60 font-mono">
                       {i.minutes}m
                     </span>
                   </li>
@@ -291,17 +302,17 @@ export default function StudentHomePage() {
 
       {/* What Changed Banner (if recalibration occurred) */}
       {latestChange && changeItems.length > 0 && (
-        <section className="rounded-2xl border border-purple-200/80 bg-purple-50/80 backdrop-blur-md p-5 shadow-xs">
+        <section className="rounded-2xl border border-blue-200/80 bg-blue-50/70 backdrop-blur-md p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-purple-950 flex items-center gap-2">
-              <IconSparkles className="w-4 h-4 text-purple-600" />
+            <h2 className="text-sm font-bold text-blue-950 flex items-center gap-2">
+              <IconSparkles className="w-4 h-4 text-blue-600" />
               What changed in your plan
             </h2>
-            <span className="text-xs text-purple-700 font-medium">
+            <span className="text-xs text-blue-700 font-semibold font-mono">
               {new Date(latestChange.createdAt).toLocaleDateString()} · {latestChange.trigger}
             </span>
           </div>
-          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-purple-900 list-disc list-inside">
+          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-blue-900 list-disc list-inside">
             {changeItems.map((c, idx) => (
               <li key={idx}>{c}</li>
             ))}
@@ -311,7 +322,7 @@ export default function StudentHomePage() {
 
       {/* Quick Launch Cards Hub */}
       <div>
-        <div className="mb-3 text-xs font-semibold tracking-wide uppercase text-slate-400">
+        <div className="mb-3 text-xs font-bold tracking-wider uppercase text-slate-400">
           Core Workspaces
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -349,13 +360,13 @@ export default function StudentHomePage() {
                 className="glass-card glass-card-interactive p-5 flex flex-col justify-between gap-3 group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-700 border border-purple-100 group-hover:border-purple-300 group-hover:bg-purple-100/70 transition-colors">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-700 border border-blue-100/70 group-hover:border-blue-200 group-hover:bg-blue-100/70 transition-colors">
                     <Icon className="w-4 h-4" />
                   </span>
-                  <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-colors" />
+                  <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                     {c.title}
                   </h3>
                   <p className="mt-1 text-xs text-slate-500 line-clamp-2 leading-relaxed">
