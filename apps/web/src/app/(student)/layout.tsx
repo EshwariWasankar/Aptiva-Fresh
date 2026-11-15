@@ -93,9 +93,9 @@ function StudentNav() {
   return (
     <header className="sticky top-3 z-40 mx-auto max-w-[1440px] px-3 sm:px-6">
       {/* Single Unified Academic Masthead in Deep Oxford Ink */}
-      <div className="navy-glass-header flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 shadow-xl">
+      <div className="navy-glass-header flex items-center justify-between gap-4 lg:gap-8 px-4 sm:px-6 py-2.5 sm:py-3 shadow-xl">
         {/* Left: Brand Logo & Assessment Target Selector */}
-        <div className="flex items-center gap-3.5">
+        <div className="flex items-center gap-3 sm:gap-3.5 shrink-0">
           <Link href="/dashboard" className="flex items-center gap-2.5 group shrink-0">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30 transition-transform group-hover:scale-105">
               <svg
@@ -128,17 +128,23 @@ function StudentNav() {
           {/* Assessment Target Selector */}
           <Link
             href="/setup/requirements"
-            className="hidden sm:flex items-center gap-2 rounded-full bg-slate-900/90 px-3 py-1 text-[11px] font-medium text-slate-200 border border-slate-700/80 hover:border-indigo-400/60 hover:text-white transition-all shadow-xs"
+            className="hidden sm:flex items-center gap-2 rounded-full bg-slate-900/90 px-3 py-1 text-[11px] font-medium text-slate-200 border border-slate-700/80 hover:border-indigo-400/60 hover:text-white transition-all shadow-xs shrink-0"
             title="Assessment Target & Requirements"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-amber-400 ring-2 ring-amber-400/30 animate-pulse"></span>
             <span className="truncate max-w-[150px] font-medium">Target: GMAT Focus</span>
             <IconChevronDown className="w-3 h-3 text-slate-400" />
           </Link>
+
+          {/* Distinct structural divider separating Target Selector from Navigation */}
+          <span
+            className="hidden lg:inline-block h-4 w-px bg-slate-800 shrink-0 ml-1"
+            aria-hidden="true"
+          />
         </div>
 
-        {/* Center: Desktop Navigation Bar */}
-        <nav className="hidden lg:flex items-center gap-1 text-xs font-medium">
+        {/* Center: Desktop Navigation Bar with guaranteed horizontal safety */}
+        <nav className="hidden lg:flex items-center gap-1 text-xs font-medium shrink min-w-0 overflow-x-auto no-scrollbar">
           {NAV.map((item) => {
             const active =
               pathname === item.href ||
@@ -147,7 +153,7 @@ function StudentNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-full px-3 py-1.5 transition-all text-xs ${
+                className={`rounded-full px-2.5 xl:px-3 py-1.5 transition-all text-xs whitespace-nowrap shrink-0 ${
                   active
                     ? 'bg-indigo-100 text-indigo-950 font-bold shadow-xs'
                     : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
@@ -160,7 +166,7 @@ function StudentNav() {
         </nav>
 
         {/* Right Controls: Notifications, Profile, Sign Out & Mobile Menu Toggle */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Notification Bell with Live Unread Dropdown */}
           <div className="relative">
             <button
