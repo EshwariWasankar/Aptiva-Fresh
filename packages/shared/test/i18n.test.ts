@@ -2,22 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { en, hi, mr, t } from '../src/i18n/index.js';
 
 describe('i18n vocabulary and translations (PH13-T08)', () => {
-  function verifyKeyParity(
-    base: Record<string, unknown>,
-    target: Record<string, unknown>,
-    path = '',
-  ) {
-    for (const key of Object.keys(base)) {
+  function verifyKeyParity(base: object, target: object, path = '') {
+    const baseRec = base as Record<string, unknown>;
+    const targetRec = target as Record<string, unknown>;
+    for (const key of Object.keys(baseRec)) {
       const currentPath = path ? `${path}.${key}` : key;
-      expect(target).toHaveProperty(key);
-      const baseVal = base[key];
-      const targetVal = target[key];
+      expect(targetRec).toHaveProperty(key);
+      const baseVal = baseRec[key];
+      const targetVal = targetRec[key];
       if (typeof baseVal === 'object' && baseVal !== null) {
-        verifyKeyParity(
-          baseVal as Record<string, unknown>,
-          targetVal as Record<string, unknown>,
-          currentPath,
-        );
+        verifyKeyParity(baseVal, targetVal as object, currentPath);
       } else {
         expect(typeof targetVal).toBe('string');
         expect((targetVal as string).length).toBeGreaterThan(0);

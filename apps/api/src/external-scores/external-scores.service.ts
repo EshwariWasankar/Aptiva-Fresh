@@ -64,9 +64,9 @@ export class ExternalScoresService {
         totalScore: Number(dto.totalScore),
         maxScore: Number(dto.maxScore),
         percentile: dto.percentile != null ? Number(dto.percentile) : null,
-        sectionScores: dto.sectionScores
-          ? (dto.sectionScores as Record<string, number>)
-          : undefined,
+        ...(dto.sectionScores
+          ? { sectionScores: dto.sectionScores as Record<string, number> }
+          : {}),
         reliability: dto.reliability != null ? Number(dto.reliability) : 0.8,
         notes: dto.notes ? dto.notes.trim() : null,
       },
