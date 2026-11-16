@@ -45,7 +45,7 @@ const BLOCK_LABEL: Record<string, string> = {
   probe: 'Evidence probe',
 };
 
-/** P-13 — dashboard: readiness band, today's plan, priorities, what changed with pastel & purple aesthetics. */
+/** P-13 — dashboard: readiness band, today's plan, priorities, what changed with modern EdTech Bento aesthetic. */
 export default function StudentHomePage() {
   const { user } = useSession();
   const [plan, setPlan] = useState<PlanResponse | null>(null);
@@ -106,53 +106,100 @@ export default function StudentHomePage() {
   const userDisplayName = user?.email ? user.email.split('@')[0] : 'Scholar';
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* Overview Header with Date Stamp matching the reference image */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between border-b border-stone-200/70 pb-5">
+    <div className="flex flex-col gap-8 w-full">
+      {/* Overview Header with Live Telemetry Badges */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-stone-200/70 pb-5">
         <div>
-          <span className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
+              Adaptive Workspace
+            </span>
+            <span className="h-1 w-1 rounded-full bg-slate-300" />
+            <span className="text-xs font-semibold text-indigo-700">Campus Drive 2026</span>
+          </div>
+          <h1 className="mt-1 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
             Welcome back, {userDisplayName}
-          </span>
-          <h1 className="mt-0.5 text-3xl font-extrabold tracking-tight text-slate-900">Overview</h1>
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-500">
+            Here is your daily aptitude trajectory and adaptive Knapsack blocks.
+          </p>
         </div>
+
         <div className="flex items-center gap-2 flex-wrap">
           {activity && (
             <>
-              <span className="rounded-full bg-white/90 border border-stone-200/80 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-amber-500 ring-2 ring-amber-400/30"></span>
+              <span className="rounded-full bg-white border border-stone-200/90 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-amber-500 ring-2 ring-amber-400/30" />
                 <span className="stat-num">{activity.currentStreak}</span>
                 <span className="text-slate-500 font-medium">day streak</span>
               </span>
-              <span className="rounded-full bg-white/90 border border-stone-200/80 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+              <span className="rounded-full bg-white border border-stone-200/90 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-indigo-500" />
                 <span className="stat-num">{Math.round(activity.totalStudyHours)}</span>
                 <span className="text-slate-500 font-medium">hrs total</span>
               </span>
             </>
           )}
-          <span className="rounded-full bg-white/90 border border-stone-200/80 px-3.5 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
+          <span className="rounded-full bg-white border border-stone-200/90 px-3.5 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
             {currentMonthYear}
           </span>
         </div>
       </div>
 
-      {/* Primary Top Row: Readiness Band & Today's Plan */}
+      {/* First Time / Onboarding Banner (if no plan active) */}
+      {noPlan && (
+        <div className="bento-card p-6 sm:p-8 bg-gradient-to-br from-indigo-50/90 via-white to-amber-50/50 border border-indigo-100 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div className="flex flex-col gap-2 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100/80 px-2.5 py-0.5 text-[11px] font-bold text-indigo-900 w-fit font-mono">
+              <IconSparkles className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Get Started in 3 Steps</span>
+            </div>
+            <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
+              Calibrate your profile to generate today&apos;s adaptive schedule.
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Take the baseline diagnostic to measure your precision across Quant, Logical, Verbal,
+              and DI. Next, configure your target assessment date and daily study budget to unlock
+              your personalized Knapsack plan.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0">
+            <Link
+              href="/onboarding/diagnostic"
+              className="btn-primary py-2.5 px-5 text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm"
+            >
+              <IconCompass className="w-4 h-4" />
+              <span>Take Diagnostic</span>
+            </Link>
+            <Link
+              href="/setup/requirements"
+              className="btn-secondary py-2.5 px-4 text-xs font-semibold inline-flex items-center gap-1.5"
+            >
+              <IconSettings className="w-4 h-4 text-slate-400" />
+              <span>Configure Target</span>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Primary Top Bento Row: Readiness Band & Today's Plan */}
       <div className="grid gap-6 lg:grid-cols-2">
         <ReadinessBand readiness={readiness} />
 
         {/* Today's Plan Card */}
-        <section className="glass-card p-6 flex flex-col justify-between gap-5">
+        <section className="bento-card p-6 sm:p-7 flex flex-col justify-between gap-5 bg-white">
           <div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold tracking-wider uppercase text-slate-400">
+                <span className="text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
                   Daily Schedule
                 </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
               </div>
               <Link
                 href="/plan"
-                className="text-xs font-semibold text-blue-700 hover:text-blue-900 transition inline-flex items-center gap-1"
+                className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 transition inline-flex items-center gap-1"
               >
                 Full plan
                 <IconArrowUpRight className="w-3.5 h-3.5" />
@@ -169,14 +216,14 @@ export default function StudentHomePage() {
             {noPlan ? (
               <div className="mt-4 rounded-xl bg-amber-50/80 border border-amber-200/70 p-4 text-xs text-amber-900">
                 No active plan yet —{' '}
-                <Link href="/setup/requirements" className="font-bold text-blue-800 underline">
+                <Link href="/setup/requirements" className="font-bold text-indigo-800 underline">
                   set up requirements
                 </Link>{' '}
                 to generate your personalized blueprint.
               </div>
             ) : todayItems.length === 0 ? (
-              <div className="mt-4 rounded-xl bg-slate-50/70 border border-stone-200/70 p-4 text-xs text-slate-600 flex items-center gap-2.5">
-                <IconCalendar className="w-4 h-4 text-slate-400" />
+              <div className="mt-4 rounded-xl bg-slate-50 border border-stone-200/70 p-4 text-xs text-slate-600 flex items-center gap-2.5">
+                <IconCalendar className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>Rest day or no blocks scheduled for today. Great time for a review!</span>
               </div>
             ) : (
@@ -184,17 +231,17 @@ export default function StudentHomePage() {
                 {todayItems.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-white/80 hover:bg-white border border-stone-200/70 p-2.5 px-3 transition-colors text-xs shadow-2xs"
+                    className="flex items-center justify-between rounded-xl bg-stone-50/80 hover:bg-stone-100/80 border border-stone-200/70 p-2.5 px-3 transition-colors text-xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-600"></span>
+                      <span className="h-2 w-2 rounded-full bg-indigo-600" />
                       <span className="font-semibold text-slate-800">
                         {BLOCK_LABEL[i.blockType] ?? i.blockType}
                       </span>
                       <span className="text-slate-400">·</span>
                       <span className="text-slate-600 font-medium">{i.topic.name}</span>
                     </div>
-                    <span className="font-semibold text-slate-800 bg-stone-100/80 px-2 py-0.5 rounded-md border border-stone-200/60 font-mono">
+                    <span className="font-semibold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-stone-200/60 font-mono shadow-2xs">
                       {i.minutes}m
                     </span>
                   </li>
@@ -206,7 +253,7 @@ export default function StudentHomePage() {
           <div className="pt-2">
             <Link
               href="/practice"
-              className="btn-primary flex items-center justify-center gap-2 w-full py-2.5 px-4 text-sm font-semibold"
+              className="btn-primary flex items-center justify-center gap-2 w-full py-2.5 px-4 text-sm font-semibold shadow-sm"
             >
               <IconTarget className="w-4 h-4" />
               <span>Start practising</span>
@@ -216,21 +263,21 @@ export default function StudentHomePage() {
       </div>
 
       {/* Compact Study Activity & Streak Summary */}
-      <section className="glass-card p-6">
+      <section className="bento-card p-6 bg-white">
         <StudyHeatmap activity={activity} loading={activityLoading} compact />
       </section>
 
       {/* Secondary Row: Priority Topics & Low Priority / Maintenance */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Priority Topics Card with blue badge highlights */}
-        <section className="glass-card p-6 flex flex-col justify-between">
+        {/* Priority Topics Card */}
+        <section className="bento-card p-6 sm:p-7 flex flex-col justify-between bg-white">
           <div>
-            <div className="flex items-center justify-between border-b border-stone-200/70 pb-3">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <IconSparkles className="w-4 h-4 text-blue-600" />
+                <IconSparkles className="w-4 h-4 text-indigo-600" />
                 Priority topics
               </h2>
-              <span className="text-xs text-slate-400 font-medium">High leverage</span>
+              <span className="text-xs text-slate-400 font-medium font-mono">High leverage</span>
             </div>
 
             {priorities.length === 0 ? (
@@ -240,10 +287,10 @@ export default function StudentHomePage() {
                 {priorities.map((i, idx) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-white/80 hover:bg-white p-2.5 px-3 border border-stone-200/70 transition-colors shadow-2xs"
+                    className="flex items-center justify-between rounded-xl bg-stone-50/70 hover:bg-stone-100/70 p-2.5 px-3 border border-stone-200/70 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-50 text-[11px] font-bold text-blue-700 border border-blue-200/60 font-mono">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-50 text-[11px] font-bold text-indigo-700 border border-indigo-200/60 font-mono">
                         {idx + 1}
                       </span>
                       <div className="flex flex-col">
@@ -253,7 +300,7 @@ export default function StudentHomePage() {
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs font-semibold text-slate-700 bg-stone-100/80 px-2 py-0.5 rounded-md border border-stone-200/60 font-mono">
+                    <span className="text-xs font-semibold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-stone-200/60 font-mono shadow-2xs">
                       {i.minutes}m
                     </span>
                   </li>
@@ -263,15 +310,15 @@ export default function StudentHomePage() {
           </div>
         </section>
 
-        {/* Low Priority (Maintenance) Card with emerald highlights */}
-        <section className="glass-card p-6 flex flex-col justify-between">
+        {/* Low Priority (Maintenance) Card */}
+        <section className="bento-card p-6 sm:p-7 flex flex-col justify-between bg-white">
           <div>
-            <div className="flex items-center justify-between border-b border-stone-200/70 pb-3">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <IconCheck className="w-4 h-4 text-emerald-600" />
                 Low priority (maintenance)
               </h2>
-              <span className="text-xs text-slate-400 font-medium">Mastered areas</span>
+              <span className="text-xs text-slate-400 font-medium font-mono">Mastered areas</span>
             </div>
 
             {lowPriority.length === 0 ? (
@@ -283,13 +330,13 @@ export default function StudentHomePage() {
                 {lowPriority.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-white/80 hover:bg-white p-2.5 px-3 border border-stone-200/70 transition-colors shadow-2xs"
+                    className="flex items-center justify-between rounded-xl bg-stone-50/70 hover:bg-stone-100/70 p-2.5 px-3 border border-stone-200/70 transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
                       <span className="text-xs font-semibold text-slate-800">{i.topic.name}</span>
                     </div>
-                    <span className="text-xs font-semibold text-slate-600 bg-stone-100/80 px-2 py-0.5 rounded-md border border-stone-200/60 font-mono">
+                    <span className="text-xs font-semibold text-slate-600 bg-white px-2 py-0.5 rounded-md border border-stone-200/60 font-mono shadow-2xs">
                       {i.minutes}m
                     </span>
                   </li>
@@ -302,17 +349,17 @@ export default function StudentHomePage() {
 
       {/* What Changed Banner (if recalibration occurred) */}
       {latestChange && changeItems.length > 0 && (
-        <section className="rounded-2xl border border-blue-200/80 bg-blue-50/70 backdrop-blur-md p-5 shadow-xs">
+        <section className="bento-card border border-indigo-200 bg-indigo-50/70 p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-blue-950 flex items-center gap-2">
-              <IconSparkles className="w-4 h-4 text-blue-600" />
+            <h2 className="text-sm font-bold text-indigo-950 flex items-center gap-2">
+              <IconSparkles className="w-4 h-4 text-indigo-600" />
               What changed in your plan
             </h2>
-            <span className="text-xs text-blue-700 font-semibold font-mono">
+            <span className="text-xs text-indigo-700 font-semibold font-mono">
               {new Date(latestChange.createdAt).toLocaleDateString()} · {latestChange.trigger}
             </span>
           </div>
-          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-blue-900 list-disc list-inside">
+          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-indigo-900 list-disc list-inside">
             {changeItems.map((c, idx) => (
               <li key={idx}>{c}</li>
             ))}
@@ -320,9 +367,9 @@ export default function StudentHomePage() {
         </section>
       )}
 
-      {/* Quick Launch Cards Hub */}
+      {/* Quick Launch Cards Hub (Bento Layout) */}
       <div>
-        <div className="mb-3 text-xs font-bold tracking-wider uppercase text-slate-400">
+        <div className="mb-3 text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
           Core Workspaces
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -357,16 +404,16 @@ export default function StudentHomePage() {
               <Link
                 key={c.href}
                 href={c.href}
-                className="glass-card glass-card-interactive p-5 flex flex-col justify-between gap-3 group"
+                className="bento-card bento-card-hover p-5 flex flex-col justify-between gap-3 group bg-white"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-700 border border-blue-100/70 group-hover:border-blue-200 group-hover:bg-blue-100/70 transition-colors">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 group-hover:border-indigo-200 group-hover:bg-indigo-100 transition-colors">
                     <Icon className="w-4 h-4" />
                   </span>
-                  <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                  <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">
                     {c.title}
                   </h3>
                   <p className="mt-1 text-xs text-slate-500 line-clamp-2 leading-relaxed">

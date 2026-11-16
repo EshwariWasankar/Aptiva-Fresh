@@ -117,14 +117,14 @@ export default function ReassessmentPage() {
         {KINDS.map((k) => (
           <section
             key={k.kind}
-            className="glass-card glass-card-interactive p-6 flex flex-col justify-between gap-4 group"
+            className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 group bg-white"
           >
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-700 border border-blue-100/70 font-bold text-xs group-hover:bg-blue-100/70 transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 font-bold text-xs group-hover:bg-indigo-100 transition-colors">
                   <IconActivity className="w-4 h-4" />
                 </span>
-                <span className="text-[11px] font-semibold text-slate-500 font-mono">
+                <span className="text-[11px] font-semibold text-slate-500 font-mono bg-stone-100 px-2 py-0.5 rounded-full">
                   ~{k.minutes} min
                 </span>
               </div>
@@ -135,7 +135,7 @@ export default function ReassessmentPage() {
               type="button"
               disabled={pending !== null || (k.kind === 'topic' && !topicId)}
               onClick={() => void start(k.kind)}
-              className="btn-primary w-full py-2.5 px-4 text-xs font-semibold disabled:opacity-40"
+              className="btn-primary w-full py-2.5 px-4 text-xs font-semibold disabled:opacity-40 shadow-sm"
             >
               {pending === k.kind ? 'Preparing session…' : `Start (${k.minutes} min)`}
             </button>

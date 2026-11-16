@@ -177,7 +177,7 @@ function StudentNav() {
             >
               <IconBell className="w-4 h-4" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-purple-500 px-1 text-[10px] font-bold text-white ring-2 ring-slate-900">
+                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-slate-950 ring-2 ring-slate-900 font-mono">
                   {unreadCount}
                 </span>
               )}
@@ -186,11 +186,11 @@ function StudentNav() {
             {/* Notification Dropdown */}
             {notificationMenuOpen && (
               <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl glass-card p-4 shadow-2xl border border-white z-50 flex flex-col gap-3 text-xs animate-in fade-in zoom-in-95">
-                <div className="flex items-center justify-between border-b border-purple-50 pb-2">
+                <div className="flex items-center justify-between border-b border-stone-100 pb-2">
                   <div className="flex items-center gap-1.5 font-bold text-slate-900">
                     <span>Notifications</span>
                     {unreadCount > 0 && (
-                      <span className="rounded-full bg-purple-100 text-purple-900 px-2 py-0.5 text-[10px]">
+                      <span className="rounded-full bg-amber-100 text-amber-900 border border-amber-200 px-2 py-0.5 text-[10px] font-mono">
                         {unreadCount} new
                       </span>
                     )}
@@ -199,7 +199,7 @@ function StudentNav() {
                     <button
                       type="button"
                       onClick={() => void handleMarkAllRead()}
-                      className="text-[11px] font-medium text-purple-700 hover:text-purple-900"
+                      className="text-[11px] font-medium text-indigo-700 hover:text-indigo-900"
                     >
                       Mark all as read
                     </button>
@@ -217,8 +217,8 @@ function StudentNav() {
                         key={n.id}
                         className={`p-2.5 rounded-xl border transition ${
                           n.read
-                            ? 'bg-white/40 border-slate-100 text-slate-600'
-                            : 'bg-purple-50/70 border-purple-100 text-slate-900 font-medium'
+                            ? 'bg-white/40 border-stone-100 text-slate-600'
+                            : 'bg-indigo-50/70 border-indigo-100 text-slate-900 font-medium'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -227,7 +227,7 @@ function StudentNav() {
                             <button
                               type="button"
                               onClick={(e) => void handleMarkRead(n.id, e)}
-                              className="text-[10px] text-purple-700 hover:text-purple-900 shrink-0"
+                              className="text-[10px] text-indigo-700 hover:text-indigo-900 shrink-0"
                             >
                               Mark read
                             </button>
@@ -240,7 +240,7 @@ function StudentNav() {
                           <Link
                             href={n.link}
                             onClick={() => setNotificationMenuOpen(false)}
-                            className="mt-1.5 inline-block text-[11px] font-semibold text-purple-700 hover:underline"
+                            className="mt-1.5 inline-block text-[11px] font-semibold text-indigo-700 hover:underline"
                           >
                             Go to page →
                           </Link>
@@ -250,11 +250,11 @@ function StudentNav() {
                   </div>
                 )}
 
-                <div className="border-t border-purple-50 pt-2 flex items-center justify-between">
+                <div className="border-t border-stone-100 pt-2 flex items-center justify-between">
                   <Link
                     href="/notifications"
                     onClick={() => setNotificationMenuOpen(false)}
-                    className="text-xs font-semibold text-purple-700 hover:text-purple-900"
+                    className="text-xs font-semibold text-indigo-700 hover:text-indigo-900"
                   >
                     View all alerts &amp; settings →
                   </Link>
@@ -274,7 +274,7 @@ function StudentNav() {
           {(user?.role === 'admin' || user?.role === 'reviewer') && (
             <Link
               href="/admin/questions"
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-950/40 border border-purple-400/40 transition hover:scale-105 hover:shadow-purple-500/30 shrink-0"
+              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-slate-900 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/40 transition hover:scale-105 shrink-0"
               title="Open Admin Portal & Question Bank"
             >
               <svg
@@ -299,7 +299,7 @@ function StudentNav() {
             className="flex items-center gap-2 group"
             title="View Mastery Profile"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-xs font-semibold text-white shadow-sm ring-1 ring-white/20 transition-transform group-hover:scale-105">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-xs font-semibold text-white shadow-sm ring-1 ring-white/20 transition-transform group-hover:scale-105">
               {userInitial}
             </div>
             <span className="hidden text-xs text-slate-300 xl:inline font-medium group-hover:text-white transition-colors truncate max-w-[120px]">

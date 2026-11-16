@@ -210,12 +210,12 @@ export default function DiagnosticRunnerPage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6 w-full overflow-hidden question-container">
       {/* Header with question count and timer */}
-      <div className="glass-card flex items-center justify-between px-5 py-3">
-        <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+      <div className="bento-card flex items-center justify-between px-5 py-3 bg-white">
+        <span className="text-xs font-bold text-slate-800 uppercase tracking-wider font-mono">
           Question {item.position} of {item.total}
         </span>
-        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-100 shadow-2xs">
-          <IconClock className="w-3.5 h-3.5 text-purple-600" />
+        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-stone-100 px-3 py-1 rounded-full border border-stone-200/60 font-mono">
+          <IconClock className="w-3.5 h-3.5 text-indigo-600" />
           <span>{fmtElapsed(elapsed)}</span>
           <span className="text-slate-400 font-normal">
             · target ~{Math.round(q.expectedTimeMs / 1000)}s
@@ -223,16 +223,16 @@ export default function DiagnosticRunnerPage() {
         </div>
       </div>
 
-      {/* Progress Bar in Vibrant Purple */}
-      <div className="h-1.5 w-full rounded-full bg-purple-100/70 overflow-hidden">
+      {/* Progress Bar in Indigo */}
+      <div className="h-1.5 w-full rounded-full bg-stone-200 overflow-hidden">
         <div
-          className="h-1.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 transition-all duration-300"
+          className="h-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all duration-300"
           style={{ width: `${(item.position / item.total) * 100}%` }}
         />
       </div>
 
       {/* Question Card */}
-      <div className="glass-card p-6 sm:p-8 flex flex-col gap-6 overflow-hidden max-w-full">
+      <div className="bento-card p-6 sm:p-8 flex flex-col gap-6 overflow-hidden max-w-full bg-white">
         <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed max-w-full break-words [overflow-wrap:anywhere] overflow-x-auto">
           <Katex text={q.stem} />
         </div>
@@ -248,8 +248,8 @@ export default function DiagnosticRunnerPage() {
                 key={o.id}
                 className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 px-4 text-xs sm:text-sm font-medium transition-all max-w-full break-words [overflow-wrap:anywhere] ${
                   selected === o.id
-                    ? 'border-purple-600 bg-purple-50/90 text-purple-950 shadow-xs ring-1 ring-purple-500'
-                    : 'border-purple-100/70 bg-white/70 hover:bg-white text-slate-800'
+                    ? 'border-indigo-600 bg-indigo-50/90 text-indigo-950 shadow-xs ring-1 ring-indigo-500'
+                    : 'border-stone-200/70 bg-stone-50/50 hover:bg-white text-slate-800'
                 }`}
               >
                 <input
@@ -258,7 +258,7 @@ export default function DiagnosticRunnerPage() {
                   value={o.id}
                   checked={selected === o.id}
                   onChange={() => setSelected(o.id)}
-                  className="accent-purple-600 mt-0.5 shrink-0"
+                  className="accent-indigo-600 mt-0.5 shrink-0"
                 />
                 <Katex text={o.text} className="max-w-full break-words" />
               </label>

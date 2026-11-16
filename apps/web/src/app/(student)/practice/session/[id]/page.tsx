@@ -133,12 +133,12 @@ export default function PracticeRunnerPage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6 w-full overflow-hidden question-container">
       {/* Top Session Progress Bar */}
-      <div className="glass-card flex items-center justify-between px-5 py-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+      <div className="bento-card flex items-center justify-between px-5 py-3 bg-white">
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
           {next?.lesson ? 'Concept review' : 'Active Practice Drill'}
         </span>
-        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-100 shadow-2xs">
-          <IconClock className="w-3.5 h-3.5 text-purple-600" />
+        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-stone-100 px-3 py-1 rounded-full border border-stone-200/60 font-mono">
+          <IconClock className="w-3.5 h-3.5 text-indigo-600" />
           <span>
             {mm}:{String(ss).padStart(2, '0')}
           </span>
@@ -160,20 +160,20 @@ export default function PracticeRunnerPage() {
       )}
 
       {phase === 'loading' && (
-        <div className="glass-card p-10 text-center text-xs text-slate-400">
+        <div className="bento-card p-10 text-center text-xs text-slate-400 bg-white">
           Loading next question…
         </div>
       )}
 
       {/* Lesson View */}
       {phase === 'lesson' && next?.lesson && (
-        <section className="glass-card p-6 sm:p-8 flex flex-col gap-4 overflow-hidden max-w-full">
-          <div className="flex items-center gap-2 text-xs font-bold text-purple-700 uppercase tracking-wider">
+        <section className="bento-card p-6 sm:p-8 flex flex-col gap-4 overflow-hidden max-w-full bg-white">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-700 uppercase tracking-wider font-mono">
             <IconSparkles className="w-4 h-4" />
             <span>Key Concept</span>
           </div>
           <h2 className="text-xl font-bold text-slate-900 break-words">{next.lesson.title}</h2>
-          <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 bg-purple-50/50 p-4 rounded-xl border border-purple-100/60 break-words [overflow-wrap:anywhere] overflow-x-auto">
+          <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100/60 break-words [overflow-wrap:anywhere] overflow-x-auto">
             {next.lesson.content}
           </div>
           <button
@@ -188,7 +188,7 @@ export default function PracticeRunnerPage() {
 
       {/* Question View */}
       {phase === 'question' && q && (
-        <section className="glass-card p-6 sm:p-8 flex flex-col gap-6 overflow-hidden max-w-full">
+        <section className="bento-card p-6 sm:p-8 flex flex-col gap-6 overflow-hidden max-w-full bg-white">
           <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed max-w-full break-words [overflow-wrap:anywhere] overflow-x-auto">
             <Katex text={q.stem} />
           </div>
@@ -202,8 +202,8 @@ export default function PracticeRunnerPage() {
                   onClick={() => setSelected(o.id)}
                   className={`rounded-xl border p-3.5 px-4 text-left text-xs sm:text-sm font-medium transition-all max-w-full break-words [overflow-wrap:anywhere] flex items-start ${
                     selected === o.id
-                      ? 'border-purple-600 bg-purple-50/90 text-purple-950 shadow-xs ring-1 ring-purple-500'
-                      : 'border-purple-100/70 bg-white/70 hover:bg-white text-slate-800'
+                      ? 'border-indigo-600 bg-indigo-50/90 text-indigo-950 shadow-xs ring-1 ring-indigo-500'
+                      : 'border-stone-200/70 bg-stone-50/50 hover:bg-white text-slate-800'
                   }`}
                 >
                   <Katex text={o.text} className="max-w-full break-words" />
@@ -227,7 +227,7 @@ export default function PracticeRunnerPage() {
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-purple-50 max-w-full">
+          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-stone-100 max-w-full">
             <button
               type="button"
               disabled={q.format === 'mcq' ? !selected : !numeric.trim()}
@@ -259,15 +259,15 @@ export default function PracticeRunnerPage() {
       {phase === 'feedback' && feedback && (
         <div className="flex flex-col gap-4">
           {reveal && (
-            <div className="rounded-2xl border border-purple-200/80 bg-purple-50/90 p-4 text-xs text-purple-950 flex items-center justify-between">
+            <div className="rounded-2xl border border-indigo-200/80 bg-indigo-50/90 p-4 text-xs text-indigo-950 flex items-center justify-between">
               <span>Correct answer:</span>
-              <strong className="text-sm font-bold text-purple-900">
+              <strong className="text-sm font-bold text-indigo-900">
                 {reveal.correctOption ? reveal.correctOption.text : (reveal.numericAnswer ?? '—')}
               </strong>
             </div>
           )}
 
-          <section className="glass-card p-6 sm:p-8 flex flex-col gap-5">
+          <section className="bento-card p-6 sm:p-8 flex flex-col gap-5 bg-white">
             <div className="flex items-center gap-3">
               <span
                 className={`flex h-8 w-8 items-center justify-center rounded-xl font-bold text-sm ${
@@ -299,20 +299,20 @@ export default function PracticeRunnerPage() {
             </div>
 
             {!feedback.isCorrect && feedback.promptErrorCause && feedback.attemptId && (
-              <div className="rounded-xl bg-purple-50/40 p-4 border border-purple-100/60">
+              <div className="rounded-xl bg-stone-50 p-4 border border-stone-200/60">
                 <ErrorCausePicker attemptId={feedback.attemptId} onSaved={() => undefined} />
               </div>
             )}
 
             {reveal?.solution && (
-              <details className="rounded-xl bg-purple-50/40 border border-purple-100/60 p-4 group">
-                <summary className="cursor-pointer text-xs font-bold text-purple-700 flex items-center justify-between">
+              <details className="rounded-xl bg-indigo-50/40 border border-indigo-100/60 p-4 group">
+                <summary className="cursor-pointer text-xs font-bold text-indigo-700 flex items-center justify-between">
                   <span>Worked Step-by-Step Solution</span>
                   <span className="text-slate-400 group-open:rotate-180 transition-transform">
                     ▼
                   </span>
                 </summary>
-                <div className="mt-3 whitespace-pre-wrap text-xs text-slate-700 leading-relaxed border-t border-purple-100/60 pt-3">
+                <div className="mt-3 whitespace-pre-wrap text-xs text-slate-700 leading-relaxed border-t border-indigo-100/60 pt-3">
                   {reveal.solution}
                 </div>
               </details>

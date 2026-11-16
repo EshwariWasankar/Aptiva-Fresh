@@ -158,7 +158,7 @@ export default function PlanPage() {
             <span className="text-stone-300">·</span>
             <Link
               href="/plan/history"
-              className="text-xs font-semibold text-blue-700 hover:text-blue-900 hover:underline"
+              className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 hover:underline"
             >
               Plan History
             </Link>
@@ -206,10 +206,10 @@ export default function PlanPage() {
 
       {/* Plan Changes Accordion */}
       {changes.length > 0 && (
-        <details className="glass-card p-5 group">
+        <details className="bento-card p-5 group bg-white">
           <summary className="cursor-pointer text-xs font-bold text-slate-800 flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <IconSparkles className="w-4 h-4 text-blue-600" />
+              <IconSparkles className="w-4 h-4 text-indigo-600" />
               Recalibration History ({changes.length} revisions)
             </span>
             <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
@@ -233,11 +233,11 @@ export default function PlanPage() {
       {/* Day Groups */}
       <div className="flex flex-col gap-6">
         {days.map((day) => (
-          <section key={day.dayIndex} className="glass-card p-6 flex flex-col gap-4">
-            <header className="flex items-center justify-between border-b border-stone-200/70 pb-3">
+          <section key={day.dayIndex} className="bento-card p-6 flex flex-col gap-4 bg-white">
+            <header className="flex items-center justify-between border-b border-stone-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-700 font-bold text-xs border border-blue-100/70">
-                  <IconCalendar className="w-4 h-4 text-blue-600" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700 font-bold text-xs border border-indigo-100/70">
+                  <IconCalendar className="w-4 h-4 text-indigo-600" />
                 </span>
                 <h2 className="text-base font-bold text-slate-900">
                   {day.date
@@ -249,7 +249,7 @@ export default function PlanPage() {
                     : `Day ${day.dayIndex + 1}`}
                 </h2>
               </div>
-              <span className="rounded-full bg-stone-100/80 px-3 py-0.5 text-xs font-semibold text-slate-800 border border-stone-200/60 font-mono">
+              <span className="rounded-full bg-stone-100 px-3 py-0.5 text-xs font-semibold text-slate-800 border border-stone-200/60 font-mono">
                 {day.total} min total
               </span>
             </header>
@@ -260,11 +260,11 @@ export default function PlanPage() {
                 return (
                   <li
                     key={item.id}
-                    className="rounded-2xl bg-white/80 hover:bg-white border border-stone-200/70 p-4 transition-all shadow-2xs"
+                    className="rounded-2xl bg-stone-50/70 hover:bg-stone-100/70 border border-stone-200/70 p-4 transition-all"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <span className="rounded-lg bg-blue-50 text-blue-700 border border-blue-200/60 px-2.5 py-1 text-xs font-bold font-mono">
+                        <span className="rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-2.5 py-1 text-xs font-bold font-mono">
                           {BLOCK_LABEL[item.blockType] ?? item.blockType}
                         </span>
                         <span className="font-bold text-sm text-slate-900">{item.topic.name}</span>
@@ -276,7 +276,7 @@ export default function PlanPage() {
                       </div>
 
                       <div className="flex items-center gap-3 text-xs">
-                        <span className="font-semibold text-slate-800 bg-stone-100/80 px-2.5 py-1 rounded-md border border-stone-200/60 font-mono">
+                        <span className="font-semibold text-slate-800 bg-white px-2.5 py-1 rounded-md border border-stone-200/60 font-mono shadow-2xs">
                           {item.minutes} min
                         </span>
                         {item.rationale.date === today && (
@@ -284,7 +284,7 @@ export default function PlanPage() {
                             type="button"
                             disabled={starting !== null}
                             onClick={() => void startBlock(item.id)}
-                            className="btn-primary py-1 px-3 text-xs font-semibold disabled:opacity-50 inline-flex items-center gap-1"
+                            className="btn-primary py-1 px-3 text-xs font-semibold disabled:opacity-50 inline-flex items-center gap-1 shadow-2xs"
                           >
                             <IconTarget className="w-3.5 h-3.5" />
                             <span>{starting === item.id ? '…' : 'Start'}</span>
@@ -301,7 +301,7 @@ export default function PlanPage() {
                               return n;
                             })
                           }
-                          className="font-semibold text-blue-700 hover:text-blue-900 underline transition"
+                          className="font-semibold text-indigo-700 hover:text-indigo-900 underline transition"
                         >
                           Why this?
                         </button>

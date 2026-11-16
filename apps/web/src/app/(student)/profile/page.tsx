@@ -98,9 +98,9 @@ export default function ProfilePage() {
 
       {profile && profile.topics.length > 0 && (
         <>
-          <div className="grid gap-6 md:grid-cols-[320px_1fr]">
-            <div className="glass-card p-6 flex flex-col justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+          <div className="grid gap-6 md:grid-cols-[340px_1fr]">
+            <div className="bento-card p-6 flex flex-col justify-between bg-white">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 font-mono">
                 Section Mastery Radar
               </h2>
               <div className="flex justify-center items-center py-2">
@@ -108,13 +108,13 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="glass-card p-6 flex flex-col justify-between gap-4">
+            <div className="bento-card p-6 sm:p-7 flex flex-col justify-between gap-4 bg-white">
               <div>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 font-mono">
                   Baseline Profile Snapshot
                 </h2>
                 {profile.baseline ? (
-                  <div className="rounded-xl bg-stone-50/80 p-4 border border-stone-200/70 text-xs flex flex-col gap-1.5">
+                  <div className="rounded-xl bg-stone-50 p-4 border border-stone-200/70 text-xs flex flex-col gap-1.5">
                     <span className="font-semibold text-slate-800">
                       Calibrated: {new Date(profile.baseline.takenAt).toLocaleDateString()}
                     </span>
@@ -134,7 +134,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Interactive GitHub-style Study Activity Heatmap */}
-          <section className="glass-card p-6">
+          <section className="bento-card p-6 bg-white">
             <StudyHeatmap
               activity={activity}
               loading={activityLoading}
@@ -143,9 +143,9 @@ export default function ProfilePage() {
             />
           </section>
 
-          <div className="glass-card overflow-hidden">
-            <div className="border-b border-stone-200/70 p-4 px-6 flex items-center justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+          <div className="bento-card overflow-hidden bg-white">
+            <div className="border-b border-stone-100 p-4 px-6 flex items-center justify-between">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700 font-mono">
                 Topic-by-Topic Estimates ({profile.topics.length} topics)
               </h2>
               <span className="text-[11px] text-slate-400 font-medium">
@@ -156,8 +156,8 @@ export default function ProfilePage() {
           </div>
 
           {snapshots.length > 0 && (
-            <div className="glass-card p-6 flex flex-col gap-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="bento-card p-6 flex flex-col gap-3 bg-white">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                 Historical Calibration Snapshots
               </h2>
               <ul className="divide-y divide-stone-100 text-xs">
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                   <li key={s.id} className="flex items-center justify-between py-2.5">
                     <span className="flex items-center gap-2">
                       {s.isBaseline && (
-                        <span className="rounded-full bg-blue-50 border border-blue-200/60 px-2 py-0.5 text-[11px] font-bold text-blue-700 font-mono">
+                        <span className="rounded-full bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 text-[11px] font-bold text-indigo-700 font-mono">
                           baseline
                         </span>
                       )}

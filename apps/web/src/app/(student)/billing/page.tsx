@@ -30,9 +30,9 @@ export default function BillingPage() {
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto w-full">
       {/* Header */}
-      <div className="border-b border-purple-100/60 pb-5">
+      <div className="border-b border-stone-200/70 pb-5">
         <div className="flex items-center gap-2.5">
-          <span className="p-1.5 rounded-lg bg-purple-100 text-purple-700">
+          <span className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
             <IconCreditCard className="w-5 h-5" />
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
@@ -46,17 +46,17 @@ export default function BillingPage() {
       </div>
 
       {/* Current Active Plan Card */}
-      <section className="glass-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <section className="bento-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
               Your Current Status
             </span>
             <span
-              className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+              className={`rounded-full px-2.5 py-0.5 text-xs font-bold font-mono ${
                 sub?.isPassActive
-                  ? 'bg-purple-100 text-purple-900 border border-purple-200'
-                  : 'bg-slate-100 text-slate-700 border border-slate-200'
+                  ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+                  : 'bg-stone-100 text-slate-700 border border-stone-200'
               }`}
             >
               {loading ? 'Checking…' : sub?.tierName || 'Free Starter'}
@@ -71,7 +71,7 @@ export default function BillingPage() {
 
           {sub?.validUntil && (
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <IconClock className="w-3.5 h-3.5 text-purple-600" />
+              <IconClock className="w-3.5 h-3.5 text-indigo-600" />
               <span>
                 Valid through{' '}
                 {new Date(sub.validUntil).toLocaleDateString('en-US', {
@@ -85,8 +85,8 @@ export default function BillingPage() {
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          <div className="rounded-xl bg-purple-50/70 px-4 py-2.5 border border-purple-100/70 flex items-center gap-2">
-            <IconCheckCircle className="w-4 h-4 text-purple-600 shrink-0" />
+          <div className="rounded-xl bg-stone-50 px-4 py-2.5 border border-stone-200/70 flex items-center gap-2">
+            <IconCheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
             <span className="font-semibold text-slate-800">
               {sub?.features.practicePlanCount === 'unlimited'
                 ? 'Unlimited Adaptive Plans'
@@ -112,12 +112,12 @@ export default function BillingPage() {
             return (
               <div
                 key={tier.tier}
-                className={`glass-card p-6 flex flex-col justify-between gap-5 relative transition-all ${
-                  tier.popular ? 'ring-2 ring-purple-600/80 shadow-md sm:-translate-y-1' : ''
+                className={`bento-card bento-card-hover p-6 flex flex-col justify-between gap-5 relative transition-all bg-white ${
+                  tier.popular ? 'ring-2 ring-indigo-600 shadow-md sm:-translate-y-1' : ''
                 }`}
               >
                 {tier.badge && (
-                  <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-3 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider shadow-sm">
+                  <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-indigo-600 to-slate-900 px-3 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider shadow-sm font-mono">
                     {tier.badge}
                   </span>
                 )}
@@ -125,11 +125,11 @@ export default function BillingPage() {
                 <div className="flex flex-col gap-3">
                   <div>
                     <h3 className="text-base font-bold text-slate-900">{tier.name}</h3>
-                    <span className="text-xs text-slate-500">{tier.durationLabel}</span>
+                    <span className="text-xs text-slate-500 font-mono">{tier.durationLabel}</span>
                   </div>
 
                   <div className="flex items-baseline gap-1.5 my-1">
-                    <span className="text-3xl font-extrabold tracking-tight text-slate-900">
+                    <span className="text-3xl font-extrabold tracking-tight text-slate-900 stat-num">
                       {tier.priceFormatted}
                     </span>
                     {tier.priceInr > 0 && (
@@ -141,12 +141,12 @@ export default function BillingPage() {
                     {tier.description}
                   </p>
 
-                  <ul className="border-t border-purple-50 pt-3 flex flex-col gap-2">
+                  <ul className="border-t border-stone-100 pt-3 flex flex-col gap-2">
                     {tier.features.slice(0, 4).map((f, i) => (
                       <li key={i} className="flex items-start gap-2 text-xs">
                         <span
                           className={`mt-0.5 shrink-0 font-bold ${
-                            f.included ? 'text-purple-600' : 'text-slate-300'
+                            f.included ? 'text-indigo-600' : 'text-slate-300'
                           }`}
                         >
                           {f.included ? '✓' : '—'}
@@ -171,7 +171,7 @@ export default function BillingPage() {
                   disabled={isCurrent}
                   className={`w-full py-2.5 px-4 text-xs font-semibold rounded-xl transition-all ${
                     isCurrent
-                      ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-default'
+                      ? 'bg-stone-100 text-slate-400 border border-stone-200 cursor-default'
                       : tier.popular
                         ? 'btn-primary'
                         : 'btn-secondary'

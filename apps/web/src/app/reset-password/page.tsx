@@ -11,7 +11,7 @@ export default function ResetPasswordPage() {
           <div className="flex flex-col items-center text-center gap-2">
             <Link
               href="/"
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-base shadow-md shadow-purple-500/20 mb-1"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-white font-bold text-base shadow-md shadow-indigo-950/40 border border-indigo-400/30 mb-1"
             >
               A
             </Link>

@@ -53,7 +53,7 @@ export default function OnboardingDiagnosticPage() {
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
       <div className="border-b border-stone-200/70 pb-5">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200/60 px-3 py-0.5 text-xs font-bold text-blue-700 mb-2">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 border border-indigo-200/60 px-3 py-0.5 text-xs font-bold text-indigo-700 mb-2 font-mono">
           <IconCompass className="w-3.5 h-3.5" />
           <span>Baseline Assessment</span>
         </div>
@@ -68,17 +68,17 @@ export default function OnboardingDiagnosticPage() {
       </div>
 
       {active && (
-        <div className="rounded-2xl border border-blue-200/80 bg-blue-50/80 p-5 shadow-xs flex flex-col gap-3">
+        <div className="rounded-2xl border border-indigo-200 bg-indigo-50/80 p-5 shadow-xs flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-blue-950 uppercase tracking-wider">
+            <span className="text-xs font-bold text-indigo-950 uppercase tracking-wider font-mono">
               In-Progress Session Detected
             </span>
-            <span className="text-xs text-blue-800 font-semibold font-mono">
+            <span className="text-xs text-indigo-800 font-semibold font-mono">
               {active.answeredCount}/{active.questionCount} answered{' '}
               {active.status === 'paused' ? '(paused)' : ''}
             </span>
           </div>
-          <p className="text-xs text-blue-900 leading-relaxed">
+          <p className="text-xs text-indigo-900 leading-relaxed">
             You have an active {active.mode} diagnostic in progress. You can resume right where you
             left off.
           </p>
@@ -94,13 +94,13 @@ export default function OnboardingDiagnosticPage() {
 
       <div className="grid gap-6 sm:grid-cols-2">
         {/* Core Mode */}
-        <div className="glass-card glass-card-interactive p-6 sm:p-7 flex flex-col justify-between gap-5">
+        <div className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 bg-white">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="rounded-md bg-blue-50 text-blue-700 border border-blue-200/60 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
+              <span className="rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
                 Full Scope
               </span>
-              <IconSparkles className="w-4 h-4 text-blue-600" />
+              <IconSparkles className="w-4 h-4 text-indigo-600" />
             </div>
             <h2 className="text-lg font-bold text-slate-900">Core diagnostic</h2>
             <p className="mt-2 text-xs text-slate-600 leading-relaxed">
@@ -112,14 +112,14 @@ export default function OnboardingDiagnosticPage() {
             type="button"
             disabled={busy !== null}
             onClick={() => void start('standard')}
-            className="btn-primary w-full py-2.5 px-4 text-xs font-semibold disabled:opacity-50"
+            className="btn-primary w-full py-2.5 px-4 text-xs font-semibold disabled:opacity-50 shadow-sm"
           >
             {busy === 'standard' ? 'Starting…' : 'Start core diagnostic'}
           </button>
         </div>
 
         {/* Express Mode */}
-        <div className="glass-card glass-card-interactive p-6 sm:p-7 flex flex-col justify-between gap-5">
+        <div className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 bg-white">
           <div>
             <div className="flex items-center justify-between mb-3">
               <span className="rounded-md bg-amber-50 text-amber-800 border border-amber-200/60 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">

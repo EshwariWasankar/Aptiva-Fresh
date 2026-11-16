@@ -2,10 +2,18 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { AuthHeroCta, AuthNavCta } from '../../components/AuthCta';
 import type { PublicAssessment } from '../../lib/content';
-import { IconArrowUpRight, IconCompass, IconTarget, IconActivity } from '../../components/Icons';
+import {
+  IconArrowUpRight,
+  IconCompass,
+  IconTarget,
+  IconActivity,
+  IconSparkles,
+  IconClock,
+  IconCheck,
+} from '../../components/Icons';
 
 export const metadata: Metadata = {
-  title: 'Aptiva — placement aptitude preparation that adapts to you',
+  title: 'Aptiva — Placement Aptitude Preparation That Adapts to You',
   description:
     'A diagnostic-driven study planner for campus placement aptitude tests. Know your weak topics, get a time-boxed daily plan, and practise what matters.',
 };
@@ -23,186 +31,439 @@ async function fetchAssessments(): Promise<PublicAssessment[]> {
   }
 }
 
+const TOPIC_SHELF = [
+  { label: 'Quantitative Aptitude', badge: 'Math' },
+  { label: 'Logical Reasoning', badge: 'Logic' },
+  { label: 'Data Interpretation', badge: 'Graphs' },
+  { label: 'Verbal Ability', badge: 'English' },
+  { label: 'TCS NQT', badge: 'Pattern 2026' },
+  { label: 'Infosys SP/DSE', badge: 'Aptitude' },
+  { label: 'Cognizant GenC', badge: 'Automata' },
+  { label: 'Accenture', badge: 'Cognitive' },
+  { label: 'Wipro Turbo', badge: 'Elite' },
+];
+
 const STEPS = [
   {
-    step: '1',
-    title: 'Take the diagnostic',
-    body: 'A timed, mixed-format baseline across Quant, Logical Reasoning, Data Interpretation and Verbal — about 30 minutes, pausable once.',
+    step: '01',
+    title: 'Calibrated Diagnostic Baseline',
+    tag: 'Bayesian Profile',
+    body: 'A timed, mixed-format baseline across Quantitative, Logical, Data Interpretation, and Verbal. Measures precision and speed without penalizing your standing.',
     icon: IconCompass,
+    detail: '27 calibrated items · 30 min duration · 1 pause allowed',
   },
   {
-    step: '2',
-    title: 'Get your plan',
-    body: 'A time-boxed daily schedule built from your profile and your target assessment blueprint — with the reasoning behind every block.',
+    step: '02',
+    title: 'Knapsack Daily Study Schedule',
+    tag: 'Adaptive Engine',
+    body: 'A time-boxed daily schedule mathematically generated from your target exam date, daily study budgets, and topic weightings. Every single block includes the exact rationale.',
     icon: IconTarget,
+    detail: 'Dynamic pacing · Rest-day protection · Priority rankings',
   },
   {
-    step: '3',
-    title: 'Practise and recalibrate',
-    body: 'Session feedback updates your profile continuously; the plan adapts as your readiness changes.',
+    step: '03',
+    title: 'Continuous Practice & Recalibration',
+    tag: 'Spaced Mastery',
+    body: 'Drill sessions automatically update your topic estimates in real time. Wrong answers enter an Ebbinghaus spaced interval notebook (1d → 3d → 7d → 14d) for mastery retention.',
     icon: IconActivity,
+    detail: 'Instant KaTeX solutions · Error classification · Live radar',
   },
+];
+
+const TRUST_COMPANIES = [
+  'TCS NQT',
+  'Infosys',
+  'Cognizant',
+  'Wipro',
+  'Accenture',
+  'Capgemini',
+  'Deloitte',
+  'Amazon',
 ];
 
 export default async function LandingPage() {
   const assessments = await fetchAssessments();
-  const featured = assessments.filter((a) => a.slug !== 'generic').slice(0, 4);
+  const featured = assessments.filter((a) => a.slug !== 'generic').slice(0, 6);
 
   return (
-    <div className="min-h-screen py-6 px-4 sm:px-6">
-      <div className="mx-auto max-w-5xl flex flex-col gap-8">
-        {/* Dark Navy Floating Top Header */}
+    <div className="min-h-screen flex flex-col">
+      {/* Top Banner Ticker (Udemy / Codecademy inspiration) */}
+      <div className="banner-ticker py-2 px-4 text-center">
+        <div className="mx-auto max-w-7xl flex items-center justify-center gap-2">
+          <span className="inline-block h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+          <span>
+            <strong>2026 Campus Placement Cycle:</strong> TCS NQT, Cognizant GenC, Infosys, and
+            Accenture assessment blueprints updated.
+          </span>
+          <a href="#blueprints" className="underline font-bold hover:text-amber-950 ml-1">
+            Explore blueprints →
+          </a>
+        </div>
+      </div>
+
+      <div className="mx-auto w-full max-w-[1360px] px-4 sm:px-6 lg:px-8 py-5 flex flex-col gap-10 flex-1">
+        {/* Dark Oxford Ink Floating Masthead */}
         <header className="navy-glass-header flex items-center justify-between px-6 py-3.5 shadow-xl">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
-                <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
-                <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
-              </svg>
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold tracking-tight text-white">Aptiva</span>
-              <span className="hidden sm:inline text-slate-700">|</span>
-              <span className="hidden sm:inline text-xs text-slate-300 font-medium">
-                Adaptive Placement Workspace
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30 transition-transform group-hover:scale-105">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                  <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                  <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                </svg>
               </span>
-            </div>
+              <div className="flex flex-col">
+                <span className="text-base font-bold tracking-tight text-white leading-tight">
+                  Aptiva
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-indigo-300/80 font-mono -mt-0.5">
+                  Adaptive EdTech
+                </span>
+              </div>
+            </Link>
+
+            <span className="hidden sm:inline text-slate-700">|</span>
+
+            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-slate-800/80 px-2.5 py-0.5 text-[11px] font-medium text-slate-300 border border-slate-700/60 font-mono">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              Diagnostic Engine Live
+            </span>
           </div>
+
           <nav className="flex items-center gap-4 text-sm">
+            <a
+              href="#how-it-works"
+              className="hidden md:inline text-xs font-semibold text-slate-300 hover:text-white transition"
+            >
+              How it works
+            </a>
+            <a
+              href="#blueprints"
+              className="hidden md:inline text-xs font-semibold text-slate-300 hover:text-white transition"
+            >
+              Company Blueprints
+            </a>
             <AuthNavCta />
           </nav>
         </header>
 
-        {/* Hero & Content Inside Glass Sheet */}
-        <div className="glass-sheet p-8 sm:p-12 flex flex-col gap-12">
-          {/* Hero Section */}
-          <section className="flex flex-col gap-5 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50/90 border border-blue-200/80 px-3.5 py-1 text-xs font-bold text-blue-700 w-fit shadow-2xs font-mono">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-              Diagnostic-Driven Placement Engine
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
-              Placement prep that starts with what you don&apos;t know.
-            </h1>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-              Aptiva runs a calibrated setup diagnostic, maps your precision baseline across
-              aptitude topics, and generates a time-boxed practice plan mathematically tuned to the
-              company assessment you&apos;re targeting.
-            </p>
-            <div className="pt-2">
-              <AuthHeroCta />
-            </div>
-          </section>
+        {/* Hero Banner Section (SuperHi & Google for Education inspiration) */}
+        <div className="glass-sheet p-8 sm:p-12 lg:p-16 flex flex-col gap-12 relative overflow-hidden">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
+            <div className="flex flex-col gap-6 max-w-3xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 border border-indigo-200/80 px-4 py-1.5 text-xs font-bold text-indigo-800 w-fit shadow-2xs font-mono">
+                <span className="h-2 w-2 rounded-full bg-indigo-600 animate-pulse" />
+                <span>Placement Preparation × Bayesian Intelligence</span>
+              </div>
 
-          {/* 3 Step Cards */}
-          <section className="grid gap-5 sm:grid-cols-3">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.12]">
+                Placement aptitude prep that starts with{' '}
+                <span className="editorial-mark">what you don&apos;t know</span>.
+              </h1>
+
+              <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
+                Aptiva replaces static 1,000-question PDF dumps with a precision diagnostic engine.
+                We map your baseline across every aptitude section, construct a mathematically
+                calibrated daily schedule, and dynamically recalibrate your plan as you practice.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <AuthHeroCta />
+                <a
+                  href="#blueprints"
+                  className="btn-secondary py-3 px-6 text-sm font-semibold inline-flex items-center gap-1.5"
+                >
+                  <span>Explore Blueprints</span>
+                  <IconArrowUpRight className="w-4 h-4 text-slate-400" />
+                </a>
+              </div>
+            </div>
+
+            {/* Hero Visual Telemetry Card (Coursera / Kajabi stats card) */}
+            <div className="w-full lg:w-96 flex flex-col gap-4 shrink-0">
+              <div className="bento-card p-6 bg-gradient-to-br from-white to-stone-50/80 shadow-md border border-stone-200/80">
+                <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+                  <span className="text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
+                    Adaptive Engine Telemetry
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                    <IconSparkles className="w-3 h-3 text-emerald-600" />
+                    Live 2026
+                  </span>
+                </div>
+
+                <div className="mt-4 flex flex-col gap-3">
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-xs font-medium text-slate-600">
+                      Average Target Readiness
+                    </span>
+                    <span className="stat-num text-2xl font-black text-slate-900">88–94%</span>
+                  </div>
+                  <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
+                    <div className="bg-gradient-to-r from-indigo-500 to-emerald-500 h-full w-[91%] rounded-full" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
+                    <div className="rounded-xl bg-white p-3 border border-stone-200/60 shadow-2xs">
+                      <div className="stat-num text-lg font-bold text-slate-900">12,000+</div>
+                      <div className="text-[11px] text-slate-500 font-medium">Questions Solved</div>
+                    </div>
+                    <div className="rounded-xl bg-white p-3 border border-stone-200/60 shadow-2xs">
+                      <div className="stat-num text-lg font-bold text-slate-900">4 Stages</div>
+                      <div className="text-[11px] text-slate-500 font-medium">Spaced Retry</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <IconClock className="w-3.5 h-3.5 text-slate-400" />
+                    30-min setup diagnostic
+                  </span>
+                  <span className="font-semibold text-indigo-700">Pausable once</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Topic & Assessment Discovery Shelf (SuperHi style pills) */}
+          <div className="border-t border-stone-200/70 pt-6 flex flex-col gap-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                Explore Syllabi &amp; Assessment Patterns
+              </span>
+              <span className="text-xs text-slate-500">
+                Calibrated against official placement drives
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {TOPIC_SHELF.map((t) => (
+                <span key={t.label} className="topic-filter-pill">
+                  <span>{t.label}</span>
+                  <span className="text-[10px] text-slate-400 font-mono bg-stone-100 px-1.5 py-0.5 rounded">
+                    {t.badge}
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 3 Step Interactive Workflow (Bento Layout) */}
+        <section id="how-it-works" className="flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-stone-200/70 pb-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-indigo-700 font-mono">
+                <span>The Diagnostic Loop</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-1">
+                How Aptiva gets you placement-ready.
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-md">
+              No generic question playlists. Every student follows an adaptive loop calibrated by
+              actual accuracy and speed.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
             {STEPS.map((s) => {
               const Icon = s.icon;
               return (
                 <div
                   key={s.title}
-                  className="glass-card glass-card-interactive p-6 flex flex-col justify-between gap-4 group"
+                  className="bento-card bento-card-hover p-7 flex flex-col justify-between gap-6 group"
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-700 font-bold text-xs border border-blue-100 group-hover:bg-blue-100/70 transition-colors font-mono">
-                        <Icon className="w-4 h-4" />
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 font-bold border border-indigo-100 group-hover:bg-indigo-100 transition-colors font-mono">
+                        <Icon className="w-5 h-5" />
                       </span>
-                      <span className="text-[11px] font-bold tracking-wider uppercase text-slate-400 font-mono">
-                        Step {s.step}
+                      <span className="text-xs font-bold tracking-wider text-slate-400 font-mono bg-stone-100 px-2 py-0.5 rounded-full">
+                        {s.step}
                       </span>
                     </div>
-                    <h2 className="text-base font-bold text-slate-900 mb-2">{s.title}</h2>
-                    <p className="text-xs text-slate-600 leading-relaxed">{s.body}</p>
+
+                    <div className="inline-block text-[11px] font-bold uppercase tracking-wider text-indigo-600 font-mono mb-1">
+                      {s.tag}
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 leading-snug">{s.title}</h3>
+                    <p className="mt-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {s.body}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-stone-100 text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
+                    <IconCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>{s.detail}</span>
                   </div>
                 </div>
               );
             })}
-          </section>
+          </div>
+        </section>
 
-          {/* Blueprints Section */}
-          <section
-            id="blueprints"
-            className="flex flex-col gap-5 pt-4 border-t border-stone-200/70"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-1">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-                  Supported Assessment Blueprints
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                  Every blueprint lists tested sections, exact timings, topic weightings, and real
-                  verification dates.
-                </p>
+        {/* Supported Assessment Blueprints Grid */}
+        <section id="blueprints" className="flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-stone-200/70 pb-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-indigo-700 font-mono">
+                <span>Verified Exam Specifications</span>
               </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-1">
+                Supported Company Blueprints
+              </h2>
             </div>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-md">
+              Every blueprint includes verified test timings, topic weightings, difficulty bands,
+              and negative marking rules.
+            </p>
+          </div>
 
-            {featured.length === 0 ? (
-              <div className="glass-card p-6 text-center text-xs text-slate-500">
-                Blueprints are being prepared — check back soon.
-              </div>
-            ) : (
-              <ul className="grid gap-4 sm:grid-cols-2">
-                {featured.map((a) => (
-                  <li key={a.id}>
-                    <Link
-                      href={`/assessments/${a.slug}`}
-                      className="glass-card glass-card-interactive p-5 flex items-center justify-between group block"
-                    >
-                      <div className="flex flex-col gap-1">
-                        <div className="text-sm font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
-                          {a.name}
-                        </div>
-                        <div className="text-xs text-slate-500 flex items-center gap-1.5 flex-wrap">
-                          <span className="font-medium text-slate-700">{a.company}</span>
-                          <span>·</span>
-                          <span>v{a.currentVersion?.version ?? '?'}</span>
-                          <span>·</span>
-                          <span className="inline-flex items-center gap-1 text-[11px]">
-                            {a.currentVersion?.lastVerifiedAt ? (
-                              <span className="text-emerald-700 font-medium">
-                                ✓ verified{' '}
-                                {new Date(a.currentVersion.lastVerifiedAt).toLocaleDateString()}
-                              </span>
-                            ) : (
-                              <span className="text-slate-400">unverified</span>
-                            )}
+          {featured.length === 0 ? (
+            <div className="bento-card p-8 text-center text-xs text-slate-500">
+              Blueprints are being prepared — check back soon.
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {featured.map((a) => (
+                <Link
+                  key={a.id}
+                  href={`/assessments/${a.slug}`}
+                  className="bento-card bento-card-hover p-6 flex flex-col justify-between gap-5 group"
+                >
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="rounded-lg bg-indigo-50 border border-indigo-100 px-2.5 py-1 text-xs font-bold text-indigo-900 font-mono">
+                        {a.company}
+                      </span>
+                      <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                    </div>
+
+                    <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors mt-1">
+                      {a.name}
+                    </h3>
+
+                    <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap">
+                      <span>v{a.currentVersion?.version ?? '1.0'}</span>
+                      <span>·</span>
+                      <span className="inline-flex items-center gap-1 text-[11px]">
+                        {a.currentVersion?.lastVerifiedAt ? (
+                          <span className="text-emerald-700 font-medium">
+                            ✓ Verified{' '}
+                            {new Date(a.currentVersion.lastVerifiedAt).toLocaleDateString()}
                           </span>
-                        </div>
-                      </div>
-                      <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-colors shrink-0 ml-3" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
+                        ) : (
+                          <span className="text-slate-400">Specification ready</span>
+                        )}
+                      </span>
+                    </div>
+                  </div>
 
-          <footer className="border-t border-purple-100/60 pt-6 text-[11px] text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+                  <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
+                    <span className="text-slate-500">View test pattern</span>
+                    <span className="font-semibold text-indigo-700 group-hover:underline">
+                      Launch prep →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Company Placement Trust Bar */}
+        <section className="glass-card p-8 flex flex-col items-center gap-4 text-center">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+            Calibrated for India&apos;s Top Campus Placement Drives
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 pt-2 opacity-85">
+            {TRUST_COMPANIES.map((company) => (
+              <span key={company} className="text-sm font-bold tracking-tight text-slate-800">
+                {company}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* Comprehensive EdTech Footer */}
+        <footer className="glass-sheet p-8 sm:p-10 border border-white/80 shadow-lg mt-4 flex flex-col gap-8 text-xs text-slate-500">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-slate-900">Aptiva Learning</span>
+              <p className="text-[11px] leading-relaxed">
+                Adaptive diagnostic, study planning, and spaced retention workspace for competitive
+                placement assessments.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-slate-900">Student Tools</span>
+              <Link href="/login" className="hover:text-slate-900">
+                Sign in to Dashboard
+              </Link>
+              <Link href="/register" className="hover:text-slate-900">
+                Create Free Account
+              </Link>
+              <Link href="/onboarding/diagnostic" className="hover:text-slate-900">
+                Setup Diagnostic
+              </Link>
+              <Link href="/reset-password" className="hover:text-slate-900">
+                Forgot Password
+              </Link>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-slate-900">Workspaces</span>
+              <Link href="/practice" className="hover:text-slate-900">
+                Practice Drills
+              </Link>
+              <Link href="/plan" className="hover:text-slate-900">
+                Daily Knapsack Plan
+              </Link>
+              <Link href="/notebook" className="hover:text-slate-900">
+                Spaced Mistake Notebook
+              </Link>
+              <Link href="/billing" className="hover:text-slate-900">
+                Placement Passes
+              </Link>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="font-bold text-slate-900">Legal &amp; Policy</span>
+              <Link href="/privacy" className="hover:text-slate-900">
+                Privacy Policy &amp; Data Rights
+              </Link>
+              <span>Independent EdTech SaaS</span>
+              <span>Not affiliated with assessment providers</span>
+            </div>
+          </div>
+
+          <div className="border-t border-stone-200/60 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
             <span>
-              Aptiva is an independent adaptive study system. Not affiliated with or endorsed by any
-              assessment provider.
+              &copy; {new Date().getFullYear()} Aptiva Adaptive Learning System. All rights
+              reserved.
             </span>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
               <Link href="/privacy" className="hover:underline">
                 Privacy
               </Link>
               <Link href="/login" className="hover:underline">
-                Sign in
+                Student Login
+              </Link>
+              <Link href="/admin" className="hover:underline font-semibold text-slate-700">
+                Admin Portal
               </Link>
             </div>
-          </footer>
-        </div>
+          </div>
+        </footer>
       </div>
     </div>
   );

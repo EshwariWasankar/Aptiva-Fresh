@@ -33,13 +33,31 @@ export function ReadinessBand({ readiness }: { readiness: ReadinessResponse | nu
           <span className="stat-num text-4xl font-extrabold tracking-tight text-slate-900">
             {low}–{high}%
           </span>
+          <span className="text-xs font-semibold text-slate-500">estimated pass probability</span>
+        </div>
+
+        {/* Visual Target Range Meter */}
+        <div className="mt-3 relative w-full bg-stone-100 h-2.5 rounded-full overflow-hidden border border-stone-200/60">
+          <div
+            className="absolute top-0 bottom-0 bg-gradient-to-r from-indigo-500 via-indigo-600 to-emerald-500 rounded-full transition-all duration-500"
+            style={{
+              left: `${Math.max(0, low - 5)}%`,
+              width: `${Math.min(100, Math.max(12, high - low + 10))}%`,
+            }}
+          />
+        </div>
+
+        <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+          <span>0%</span>
+          <span>Target: 75%+</span>
+          <span>100%</span>
         </div>
 
         <div className="mt-2.5 flex items-center gap-2">
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold border ${confBadge}`}
           >
-            <IconSparkles className="w-3 h-3 text-blue-600" />
+            <IconSparkles className="w-3 h-3 text-indigo-600" />
             <span className="capitalize">{readiness.confidence} confidence</span>
           </span>
           <span className="text-xs text-slate-400">calibrated from Bayesian priors</span>

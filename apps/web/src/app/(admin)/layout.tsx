@@ -25,12 +25,12 @@ function AdminNav() {
       <div className="navy-glass-header flex items-center justify-between px-5 py-3">
         <div className="flex items-center gap-3">
           <Link href="/admin" className="flex items-center gap-2.5 group">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-sm font-semibold text-white shadow-xs transition-transform group-hover:scale-105">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-xs border border-indigo-400/30 transition-transform group-hover:scale-105">
               A
             </span>
             <div className="flex items-center gap-2">
               <span className="text-base font-bold tracking-tight text-white">Aptiva Admin</span>
-              <span className="rounded-full bg-purple-900/60 border border-purple-700/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-purple-200">
+              <span className="rounded-full bg-indigo-900/60 border border-indigo-700/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-indigo-200 font-mono">
                 {user?.role}
               </span>
             </div>
@@ -48,7 +48,7 @@ function AdminNav() {
                 href={item.href}
                 className={`rounded-full px-3 py-1.5 transition-all ${
                   active
-                    ? 'bg-purple-200 text-purple-950 font-semibold shadow-xs'
+                    ? 'bg-indigo-100 text-indigo-950 font-bold shadow-xs'
                     : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                 }`}
               >
@@ -67,7 +67,7 @@ function AdminNav() {
             <span>← Student View</span>
           </Link>
           <span className="hidden text-xs text-slate-300 md:inline font-medium">{user?.email}</span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-xs font-semibold text-white shadow-inner">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-xs font-semibold text-white shadow-inner border border-indigo-400/30">
             {userInitial}
           </div>
           <button

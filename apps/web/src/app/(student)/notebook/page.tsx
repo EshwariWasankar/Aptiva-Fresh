@@ -54,8 +54,8 @@ export default function NotebookPage() {
       )}
 
       {entries.length === 0 && !error && (
-        <div className="glass-card p-12 text-center flex flex-col items-center gap-2">
-          <IconBook className="w-8 h-8 text-slate-300" />
+        <div className="bento-card p-12 text-center flex flex-col items-center gap-2 bg-white">
+          <IconBook className="w-8 h-8 text-indigo-300" />
           <h3 className="text-sm font-bold text-slate-800">No entries in this view</h3>
           <p className="text-xs text-slate-500 max-w-sm">
             Mistakes and wrong answers from practice drills will be catalogued here for scheduled
@@ -66,14 +66,17 @@ export default function NotebookPage() {
 
       <div className="flex flex-col gap-3">
         {entries.map((e) => (
-          <article key={e.id} className="glass-card glass-card-interactive p-5 flex flex-col gap-3">
+          <article
+            key={e.id}
+            className="bento-card bento-card-hover p-5 flex flex-col gap-3 bg-white"
+          >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-medium text-slate-900 leading-relaxed">
                   <Katex text={e.stem} />
                 </div>
                 <div className="mt-2.5 flex items-center gap-2 text-[11px] text-slate-500 flex-wrap">
-                  <span className="font-semibold text-slate-800 bg-stone-100/90 px-2 py-0.5 rounded-md border border-stone-200/70 font-mono">
+                  <span className="font-semibold text-slate-800 bg-stone-100 px-2 py-0.5 rounded-md border border-stone-200/70 font-mono">
                     {e.topic.name}
                   </span>
                   <span>·</span>

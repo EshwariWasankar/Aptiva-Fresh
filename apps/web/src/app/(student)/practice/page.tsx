@@ -57,8 +57,8 @@ export default function PracticePage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-purple-100/60 pb-5">
+    <div className="flex flex-col gap-6 w-full">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/70 pb-5">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Daily Practice Drills
@@ -70,9 +70,9 @@ export default function PracticePage() {
         </div>
         <Link
           href="/notebook"
-          className="btn-secondary px-4 py-2 text-xs font-semibold inline-flex items-center gap-1.5"
+          className="btn-secondary px-4 py-2 text-xs font-semibold inline-flex items-center gap-1.5 shadow-2xs"
         >
-          <IconBook className="w-4 h-4 text-purple-600" />
+          <IconBook className="w-4 h-4 text-indigo-600" />
           <span>Mistake notebook</span>
         </Link>
       </div>
@@ -84,7 +84,7 @@ export default function PracticePage() {
       )}
 
       {missing && (
-        <div className="glass-card p-6 flex flex-col gap-3 max-w-md">
+        <div className="bento-card p-6 flex flex-col gap-3 max-w-md bg-white">
           <p className="text-xs text-slate-600">
             No plan created yet. Configure your requirements first to generate today&apos;s drill
             queue.
@@ -99,8 +99,8 @@ export default function PracticePage() {
       )}
 
       {todayItems.length === 0 && plan && !missing && (
-        <div className="glass-card p-8 text-center flex flex-col items-center gap-2">
-          <IconCalendar className="w-8 h-8 text-purple-300" />
+        <div className="bento-card p-8 text-center flex flex-col items-center gap-2 bg-white">
+          <IconCalendar className="w-8 h-8 text-indigo-300" />
           <h3 className="text-sm font-bold text-slate-800">No drills scheduled for today</h3>
           <p className="text-xs text-slate-500 max-w-sm">
             You&apos;ve completed your blocks for today, or today is a scheduled rest day. Review
@@ -116,11 +116,11 @@ export default function PracticePage() {
         {todayItems.map((item) => (
           <div
             key={item.id}
-            className="glass-card glass-card-interactive p-5 flex items-center justify-between gap-4"
+            className="bento-card bento-card-hover p-5 flex items-center justify-between gap-4 bg-white"
           >
             <div className="flex flex-col gap-1">
               <div className="inline-flex items-center gap-2">
-                <span className="rounded-md bg-purple-50 text-purple-700 border border-purple-200/50 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider">
+                <span className="rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
                   {item.blockType.replace(/_/g, ' ')}
                 </span>
                 <span className="text-xs text-slate-400">·</span>
@@ -132,7 +132,7 @@ export default function PracticePage() {
               type="button"
               disabled={starting !== null}
               onClick={() => void start(item.id)}
-              className="btn-primary py-2 px-5 text-xs font-semibold disabled:opacity-50 shrink-0 inline-flex items-center gap-1.5"
+              className="btn-primary py-2 px-5 text-xs font-semibold disabled:opacity-50 shrink-0 inline-flex items-center gap-1.5 shadow-sm"
             >
               <IconTarget className="w-4 h-4" />
               <span>{starting === item.id ? 'Starting…' : 'Start drill'}</span>

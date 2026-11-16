@@ -197,10 +197,10 @@ export default function SettingsPage() {
         {/* Column 1: Daily Study Habit & Adaptive Settings */}
         <div className="flex flex-col gap-6">
           {/* Study Commitments & Streak Goals (PH13-T04) */}
-          <section className="glass-card p-6 flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-purple-50 pb-2">
+          <section className="bento-card p-6 flex flex-col gap-4 bg-white">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-2">
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded-lg bg-purple-100 text-purple-700">
+                <span className="p-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
                   <IconTarget className="w-4 h-4" />
                 </span>
                 <h2 className="text-sm font-bold text-slate-900">
@@ -208,7 +208,7 @@ export default function SettingsPage() {
                 </h2>
               </div>
               {commitmentData?.commitment && (
-                <span className="rounded-full bg-purple-100 text-purple-900 px-2.5 py-0.5 text-[11px] font-semibold">
+                <span className="rounded-full bg-indigo-50 text-indigo-900 border border-indigo-200 px-2.5 py-0.5 text-[11px] font-semibold font-mono">
                   Status: {commitmentData.commitment.status}
                 </span>
               )}
@@ -220,7 +220,7 @@ export default function SettingsPage() {
             </p>
 
             {commitmentData?.evaluation && (
-              <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/70 text-xs text-purple-950 font-medium">
+              <div className="rounded-xl bg-indigo-50/60 p-3.5 border border-indigo-100/70 text-xs text-indigo-950 font-medium">
                 {commitmentData.evaluation.text}
               </div>
             )}
@@ -278,9 +278,9 @@ export default function SettingsPage() {
           </section>
 
           {/* Notification & Reminder Preferences (FR-028) */}
-          <section className="glass-card p-6 flex flex-col gap-4">
-            <div className="flex items-center gap-2 border-b border-purple-50 pb-2">
-              <span className="p-1 rounded-lg bg-purple-100 text-purple-700">
+          <section className="bento-card p-6 flex flex-col gap-4 bg-white">
+            <div className="flex items-center gap-2 border-b border-stone-100 pb-2">
+              <span className="p-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
                 <IconBell className="w-4 h-4" />
               </span>
               <h2 className="text-sm font-bold text-slate-900">
@@ -296,7 +296,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setNotifPrefs({ ...notifPrefs, optInReminders: e.target.checked })
                   }
-                  className="mt-0.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                  className="mt-0.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <div>
                   <span className="font-semibold text-slate-900">Study Drill Reminders</span>
@@ -313,7 +313,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setNotifPrefs({ ...notifPrefs, optInWeeklySummary: e.target.checked })
                   }
-                  className="mt-0.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                  className="mt-0.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <div>
                   <span className="font-semibold text-slate-900">Weekly Progress Recap</span>
@@ -377,14 +377,14 @@ export default function SettingsPage() {
           </section>
 
           {/* Plan Settings Card */}
-          <section className="glass-card p-6 flex flex-col gap-3">
+          <section className="bento-card p-6 flex flex-col gap-3 bg-white">
             <h2 className="text-sm font-bold text-slate-900">Adaptive Planner Behavior</h2>
-            <label className="flex items-start gap-2.5 text-xs text-slate-700">
+            <label className="flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={keepMyPlan}
                 onChange={(e) => setKeepMyPlan(e.target.checked)}
-                className="mt-0.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                className="mt-0.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
               />
               <div>
                 <span className="font-semibold text-slate-900">Keep my plan locked</span>
@@ -408,16 +408,19 @@ export default function SettingsPage() {
         {/* Column 2: Privacy, Data Controls & Account Lifecycle */}
         <div className="flex flex-col gap-6">
           {/* Consents Card */}
-          <section className="glass-card p-6 flex flex-col gap-3">
+          <section className="bento-card p-6 flex flex-col gap-3 bg-white">
             <h2 className="text-sm font-bold text-slate-900">Privacy &amp; Data Consents</h2>
             <div className="flex flex-col gap-2.5">
               {PURPOSES.map((p) => (
-                <label key={p.id} className="flex items-center gap-2.5 text-xs text-slate-700">
+                <label
+                  key={p.id}
+                  className="flex items-center gap-2.5 text-xs text-slate-700 cursor-pointer"
+                >
                   <input
                     type="checkbox"
                     checked={consents[p.id] ?? false}
                     onChange={(e) => void toggleConsent(p.id, e.target.checked)}
-                    className="rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                   />
                   <span className="font-medium text-slate-800">{p.label}</span>
                 </label>
@@ -430,7 +433,7 @@ export default function SettingsPage() {
           </section>
 
           {/* Export Data Card */}
-          <section className="glass-card p-6 flex flex-col gap-3">
+          <section className="bento-card p-6 flex flex-col gap-3 bg-white">
             <h2 className="text-sm font-bold text-slate-900">Your Data Export</h2>
             <p className="text-xs text-slate-600 leading-relaxed">
               Export everything Aptiva stores about you: complete attempt logs, session histories,

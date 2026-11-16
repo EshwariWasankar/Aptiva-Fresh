@@ -14,7 +14,7 @@ import { ApiError } from '../../../../lib/apiClient';
 
 const STATUS_STYLE: Record<string, string> = {
   draft: 'bg-stone-100 text-stone-700 border border-stone-200/50',
-  reviewed: 'bg-purple-50 text-purple-700 border border-purple-200/50',
+  reviewed: 'bg-indigo-50 text-indigo-700 border border-indigo-200/50',
   published: 'bg-emerald-50 text-emerald-700 border border-emerald-200/50',
   retired: 'bg-stone-100 text-stone-400 line-through',
 };
@@ -84,7 +84,7 @@ export default function QuestionsPage() {
       </div>
 
       {/* Filter Row */}
-      <div className="glass-card p-4 flex flex-wrap gap-2.5">
+      <div className="bento-card p-4 flex flex-wrap gap-2.5 bg-white">
         <input
           type="search"
           placeholder="Search stems…"
@@ -161,16 +161,18 @@ export default function QuestionsPage() {
       )}
 
       {loading ? (
-        <div className="glass-card p-10 text-center text-xs text-stone-400">Loading questions…</div>
+        <div className="bento-card p-10 text-center text-xs text-stone-400 bg-white">
+          Loading questions…
+        </div>
       ) : !data || data.items.length === 0 ? (
-        <div className="glass-card p-10 text-center text-xs text-stone-400">
+        <div className="bento-card p-10 text-center text-xs text-stone-400 bg-white">
           No questions match the current filters.
         </div>
       ) : (
-        <section className="glass-card overflow-hidden">
+        <section className="bento-card overflow-hidden bg-white">
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead className="border-b border-stone-100 bg-stone-50/60 text-left text-stone-400 font-semibold uppercase tracking-wider">
+              <thead className="border-b border-stone-100 bg-stone-50/60 text-left text-stone-400 font-semibold uppercase tracking-wider font-mono text-[11px]">
                 <tr>
                   <th className="px-5 py-3">Stem</th>
                   <th className="px-4 py-3">Topic</th>
@@ -181,13 +183,13 @@ export default function QuestionsPage() {
                   <th className="px-4 py-3">Source</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100/70">
+              <tbody className="divide-y divide-stone-100">
                 {data.items.map((q: Question) => (
-                  <tr key={q.id} className="hover:bg-white/60 transition-colors">
+                  <tr key={q.id} className="hover:bg-indigo-50/30 transition-colors">
                     <td className="max-w-md px-5 py-3">
                       <Link
                         href={`/admin/questions/${q.id}`}
-                        className="font-medium text-stone-900 hover:text-purple-600 transition"
+                        className="font-medium text-stone-900 hover:text-indigo-600 transition"
                       >
                         <Katex text={q.stem.slice(0, 120) + (q.stem.length > 120 ? '…' : '')} />
                       </Link>
@@ -200,12 +202,14 @@ export default function QuestionsPage() {
                     <td className="px-4 py-3 font-semibold text-stone-800">B{q.difficultyPrior}</td>
                     <td className="px-4 py-3">
                       <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${STATUS_STYLE[q.status] ?? ''}`}
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase font-mono ${STATUS_STYLE[q.status] ?? ''}`}
                       >
                         {q.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-stone-400 text-[11px]">{q.sourceName ?? '—'}</td>
+                    <td className="px-4 py-3 text-stone-400 text-[11px] font-mono">
+                      {q.sourceName ?? '—'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
