@@ -3,10 +3,14 @@
 import { useEffect, useState } from 'react';
 import {
   BILLING_TIERS,
+  activateMockPass,
+  createBillingOrder,
   getUserSubscription,
+  type BillingOrder,
   type PlanTierInfo,
   type UserSubscriptionResponse,
 } from '../../../lib/billing';
+import { useSession } from '../../../lib/session';
 import { IconCheckCircle, IconCreditCard, IconClock } from '../../../components/Icons';
 
 export default function BillingPage() {
@@ -14,6 +18,10 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(true);
   const [selectedPlan, setSelectedPlan] = useState<PlanTierInfo | null>(null);
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [order, setOrder] = useState<BillingOrder | null>(null);
+  const [checkoutBusy, setCheckoutBusy] = useState(false);
+  const [checkoutMsg, setCheckoutMsg] = useState<string | null>(null);
+  const { user } = useSession();
 
   useEffect(() => {
     getUserSubscription()
@@ -24,7 +32,33 @@ export default function BillingPage() {
 
   const openCheckout = (plan: PlanTierInfo) => {
     setSelectedPlan(plan);
+    setOrder(null);
+    setCheckoutMsg(null);
     setCheckoutModalOpen(true);
+  };
+
+  const closeCheckout = () => {
+    setCheckoutModalOpen(false);
+    setOrder(null);
+    setCheckoutMsg(null);
+  };
+
+  const runMockCheckout = async () => {
+    if (!selectedPlan || checkoutBusy || !user) return;
+    setCheckoutBusy(true);
+    setCheckoutMsg(null);
+    try {
+      const created = order ?? (await createBillingOrder(selectedPlan.tier));
+      setOrder(created);
+      await activateMockPass(created, user.id);
+      setSub(await getUserSubscription());
+      setCheckoutMsg('Pass activated — subscription updated.');
+      setTimeout(closeCheckout, 1200);
+    } catch (err) {
+      setCheckoutMsg(err instanceof Error ? err.message : 'Checkout failed');
+    } finally {
+      setCheckoutBusy(false);
+    }
   };
 
   return (
@@ -202,7 +236,7 @@ export default function BillingPage() {
               </div>
               <button
                 type="button"
-                onClick={() => setCheckoutModalOpen(false)}
+                onClick={closeCheckout}
                 className="text-slate-400 hover:text-slate-700 p-1 rounded-lg text-sm"
               >
                 ✕
@@ -221,29 +255,42 @@ export default function BillingPage() {
               </span>
             </div>
 
-            {/* Compliance Notice: Payment gateway decision pending */}
-            <div className="rounded-xl bg-amber-50/90 border border-amber-200/80 p-3.5 flex flex-col gap-1.5 text-xs text-amber-900">
-              <div className="flex items-center gap-1.5 font-bold text-amber-950">
-                <span>⚠️ Payment Gateway Selection Pending</span>
-              </div>
-              <p className="text-[11px] text-amber-800 leading-relaxed">
-                Payment gateway provider integration is pending finalization. Automated checkout is
-                not yet available, and no payments can be processed.
+            <div className="rounded-xl bg-sky-50/90 border border-sky-200/80 p-3.5 flex flex-col gap-1.5 text-xs text-sky-900">
+              <div className="font-bold text-sky-950">Mock payment gateway</div>
+              <p className="text-[11px] text-sky-800 leading-relaxed">
+                No real payment is charged — this simulates the gateway webhook so you can test pass
+                activation end-to-end. A production gateway (Razorpay/Stripe) plugs into the same
+                order + webhook flow.
               </p>
             </div>
+
+            {order && (
+              <div className="rounded-xl bg-[#f0f0e9]/80 border border-[#9daeac]/30 p-3 text-xs text-slate-600 font-mono break-all">
+                Order: {order.orderId}
+              </div>
+            )}
+
+            {checkoutMsg && (
+              <p
+                className={`text-xs font-medium ${checkoutMsg.includes('activated') ? 'text-green-700' : 'text-red-600'}`}
+              >
+                {checkoutMsg}
+              </p>
+            )}
 
             <div className="flex flex-col gap-2 pt-2">
               <button
                 type="button"
-                disabled
-                className="w-full py-2.5 px-4 rounded-xl bg-slate-200 text-slate-500 font-semibold text-xs cursor-not-allowed"
+                onClick={() => void runMockCheckout()}
+                disabled={checkoutBusy}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#174c4b] text-white font-semibold text-xs hover:opacity-90 disabled:opacity-50 transition"
               >
-                Checkout Not Available
+                {checkoutBusy ? 'Processing…' : `Pay ${selectedPlan.priceFormatted} (mock)`}
               </button>
 
               <button
                 type="button"
-                onClick={() => setCheckoutModalOpen(false)}
+                onClick={closeCheckout}
                 className="btn-secondary w-full py-2 text-xs font-semibold"
               >
                 Close

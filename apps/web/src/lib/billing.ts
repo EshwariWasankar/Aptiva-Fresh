@@ -137,3 +137,34 @@ export interface UserSubscriptionResponse {
 export async function getUserSubscription(): Promise<UserSubscriptionResponse> {
   return api<UserSubscriptionResponse>('/me/subscription');
 }
+
+export interface BillingOrder {
+  orderId: string;
+  tier: PassTier;
+  tierName: string;
+  amountCents: number;
+  currency: string;
+  durationDays: number;
+  gateway: string;
+  keyId: string;
+}
+
+export function createBillingOrder(tier: PassTier): Promise<BillingOrder> {
+  return api('/billing/orders', { method: 'POST', body: { tier, gateway: 'mock' } });
+}
+
+/** Mock-gateway activation: delivers the signed-equivalent webhook event locally. */
+export function activateMockPass(order: BillingOrder, userId: string): Promise<unknown> {
+  return api('/billing/webhook', {
+    method: 'POST',
+    body: {
+      idempotencyKey: order.orderId,
+      eventType: 'payment.captured',
+      gateway: 'mock',
+      userId,
+      tier: order.tier,
+      payload: { payment: { entity: { notes: { userId, tier: order.tier } } } },
+    },
+    auth: false,
+  } as Parameters<typeof api>[1]);
+}

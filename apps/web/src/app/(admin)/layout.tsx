@@ -12,6 +12,8 @@ const NAV: { href: string; label: string; roles: string[] }[] = [
   { href: '/admin/import', label: 'Import', roles: ['admin'] },
   { href: '/admin/blueprints', label: 'Blueprints', roles: ['admin'] },
   { href: '/admin/review', label: 'Review', roles: ['admin', 'reviewer'] },
+  { href: '/admin/lessons', label: 'Lessons', roles: ['admin'] },
+  { href: '/admin/drift', label: 'Drift', roles: ['admin'] },
 ];
 
 function AdminNav() {

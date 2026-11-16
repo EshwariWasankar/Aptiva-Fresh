@@ -8,7 +8,12 @@ import {
   putPlanSettings,
   updateConsents,
 } from '../../../lib/practice';
-import { getCommitment, setCommitment, type CommitmentResponse } from '../../../lib/commitments';
+import {
+  endCommitment,
+  getCommitment,
+  setCommitment,
+  type CommitmentResponse,
+} from '../../../lib/commitments';
 import {
   getNotificationPreferences,
   updateNotificationPreferences,
@@ -70,6 +75,26 @@ export default function SettingsPage() {
       .then(setNotifPrefs)
       .catch(() => undefined);
   }, []);
+
+  async function handleDeleteCommitment() {
+    if (
+      !window.confirm(
+        'End your current study commitment? Your streak history is kept but the goal will be removed.',
+      )
+    ) {
+      return;
+    }
+    setMsg(null);
+    setError(null);
+    try {
+      await endCommitment();
+      const res = await getCommitment();
+      setCommitmentData(res);
+      setMsg('Study commitment removed.');
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : 'Could not remove commitment.');
+    }
+  }
 
   async function handleSaveCommitment() {
     setSavingCommitment(true);
@@ -267,14 +292,25 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => void handleSaveCommitment()}
-              disabled={savingCommitment}
-              className="btn-primary w-fit py-2 px-4 text-xs font-semibold disabled:opacity-50 mt-1"
-            >
-              {savingCommitment ? 'Saving…' : 'Save study commitment'}
-            </button>
+            <div className="flex items-center gap-3 mt-1">
+              <button
+                type="button"
+                onClick={() => void handleSaveCommitment()}
+                disabled={savingCommitment}
+                className="btn-primary w-fit py-2 px-4 text-xs font-semibold disabled:opacity-50"
+              >
+                {savingCommitment ? 'Saving…' : 'Save study commitment'}
+              </button>
+              {commitmentData?.commitment?.status === 'active' && (
+                <button
+                  type="button"
+                  onClick={() => void handleDeleteCommitment()}
+                  className="text-xs font-semibold text-red-600 hover:text-red-700 underline underline-offset-2"
+                >
+                  End commitment
+                </button>
+              )}
+            </div>
           </section>
 
           {/* Notification & Reminder Preferences (FR-028) */}
