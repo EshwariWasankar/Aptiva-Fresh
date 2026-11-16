@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { AuthHeroCta, AuthNavCta } from '../../components/AuthCta';
 import type { PublicAssessment } from '../../lib/content';
@@ -7,7 +8,6 @@ import {
   IconCompass,
   IconTarget,
   IconActivity,
-  IconSparkles,
   IconClock,
   IconCheck,
 } from '../../components/Icons';
@@ -189,48 +189,84 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            {/* Hero Visual Telemetry Card */}
-            <div className="w-full lg:w-96 flex flex-col gap-4 shrink-0">
-              <div className="bento-card p-6 bg-gradient-to-br from-white to-[#f7f7f3] shadow-md border border-[#9daeac]/35">
-                <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-                  <span className="text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
-                    Adaptive Engine Telemetry
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#37420c] bg-[#f5f9dc] px-2 py-0.5 rounded-full border border-[#c1d16b]">
-                    <IconSparkles className="w-3 h-3 text-[#174c4b]" />
+            {/* Hero Visual Educational Showcase (Coursera / Codecademy / Udemy inspiration) */}
+            <div className="w-full lg:w-[460px] xl:w-[500px] flex flex-col gap-4 shrink-0 relative">
+              <div className="relative rounded-3xl overflow-hidden border-2 border-[#9daeac]/40 shadow-2xl bg-slate-900 group">
+                {/* Real educational student photograph */}
+                <Image
+                  src="/images/study-desk.jpg"
+                  alt="Student preparing for campus placement assessments on Aptiva"
+                  width={1200}
+                  height={800}
+                  priority
+                  className="w-full h-[360px] sm:h-[420px] object-cover object-center filter saturate-[1.08] transition-transform duration-700 group-hover:scale-105"
+                />
+
+                {/* Subtle dark gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none" />
+
+                {/* Floating Top Chip (Coursera / Udemy style) */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                  <div className="px-3.5 py-1.5 rounded-full border border-white/60 bg-white/95 backdrop-blur-md shadow-lg flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#174c4b] text-white">
+                      <IconCheck className="w-3 h-3 text-[#c1d16b]" />
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-[11px] font-bold text-slate-900 leading-tight">
+                        Diagnostic Verified
+                      </span>
+                      <span className="text-[9px] font-mono text-slate-500 -mt-0.5">
+                        TCS NQT &amp; Infosys SP
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#252d2d] bg-[#c1d16b] px-3 py-1 rounded-full shadow-lg font-mono">
+                    <span className="h-2 w-2 rounded-full bg-[#174c4b] animate-pulse" />
                     Live 2026
                   </span>
                 </div>
 
-                <div className="mt-4 flex flex-col gap-3">
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-xs font-medium text-slate-600">
-                      Average Target Readiness
+                {/* Floating Bottom Telemetry Card (Codecademy style) */}
+                <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-white/95 backdrop-blur-md border border-[#9daeac]/40 p-4 shadow-2xl flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex -space-x-2 overflow-hidden">
+                        <Image
+                          src="/images/student-portrait.jpg"
+                          alt="Student Candidate"
+                          width={32}
+                          height={32}
+                          className="inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover"
+                        />
+                        <Image
+                          src="/images/hero-student.jpg"
+                          alt="Student Peer"
+                          width={32}
+                          height={32}
+                          className="inline-block h-7 w-7 rounded-full ring-2 ring-white object-cover"
+                        />
+                      </div>
+                      <span className="text-xs font-bold text-slate-900">
+                        Target Readiness Range
+                      </span>
+                    </div>
+                    <span className="font-mono text-xs font-black text-[#174c4b] bg-[#e3eceb] px-2 py-0.5 rounded-md border border-[#9daeac]/40">
+                      88–94%
                     </span>
-                    <span className="stat-num text-2xl font-black text-slate-900">88–94%</span>
                   </div>
+
                   <div className="w-full bg-[#f0f0e9] h-2 rounded-full overflow-hidden border border-[#9daeac]/30">
                     <div className="bg-gradient-to-r from-[#174c4b] via-[#1b5756] to-[#c1d16b] h-full w-[91%] rounded-full shadow-xs" />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                    <div className="rounded-xl bg-white p-3 border border-[#9daeac]/30 shadow-2xs">
-                      <div className="stat-num text-lg font-bold text-slate-900">12,000+</div>
-                      <div className="text-[11px] text-slate-500 font-medium">Questions Solved</div>
-                    </div>
-                    <div className="rounded-xl bg-white p-3 border border-[#9daeac]/30 shadow-2xs">
-                      <div className="stat-num text-lg font-bold text-slate-900">4 Stages</div>
-                      <div className="text-[11px] text-slate-500 font-medium">Spaced Retry</div>
-                    </div>
+                  <div className="flex items-center justify-between text-[11px] text-slate-600 font-mono pt-0.5">
+                    <span className="flex items-center gap-1">
+                      <IconClock className="w-3.5 h-3.5 text-slate-400" />
+                      30-min setup diagnostic
+                    </span>
+                    <span className="font-semibold text-[#174c4b]">12,000+ Solved</span>
                   </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <IconClock className="w-3.5 h-3.5 text-slate-400" />
-                    30-min setup diagnostic
-                  </span>
-                  <span className="font-semibold text-[#174c4b]">Pausable once</span>
                 </div>
               </div>
             </div>
@@ -310,6 +346,68 @@ export default async function LandingPage() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        {/* Real Student Preparation Experience (Coursera / Babbel / Udemy inspiration) */}
+        <section className="glass-sheet p-8 sm:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 border border-[#9daeac]/35 overflow-hidden relative">
+          <div className="flex flex-col gap-4 max-w-xl">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#174c4b] font-mono">
+              <span className="h-2 w-2 rounded-full bg-[#c1d16b]" />
+              <span>Campus Placement Cohorts</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              Designed for serious placement aspirants, not casual quiz-takers.
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Whether you are preparing 3 weeks ahead for Day-1 campus recruitment drives or in a
+              48-hour sprint for a super-dream technical assessment, Aptiva dynamically scales
+              practice budgets so no high-weight topic is left neglected.
+            </p>
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="rounded-xl bg-[#f0f0e9] p-3.5 border border-[#9daeac]/30">
+                <div className="text-2xl font-black text-slate-900 font-mono">94.8%</div>
+                <div className="text-xs text-slate-600 mt-0.5 font-medium">
+                  Concept Retention after 4 Spaced Repetitions
+                </div>
+              </div>
+              <div className="rounded-xl bg-[#f0f0e9] p-3.5 border border-[#9daeac]/30">
+                <div className="text-2xl font-black text-slate-900 font-mono">3.2×</div>
+                <div className="text-xs text-slate-600 mt-0.5 font-medium">
+                  Faster Speed in Quantitative &amp; Logic Sections
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-[480px] grid grid-cols-2 gap-4 shrink-0">
+            <div className="relative rounded-2xl overflow-hidden shadow-lg border border-[#9daeac]/30 h-64 sm:h-72 group">
+              <Image
+                src="/images/hero-student.jpg"
+                alt="University students preparing together"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-3.5">
+                <span className="text-xs font-bold text-white leading-tight">
+                  Collaborative Study &amp; Diagnostic Review
+                </span>
+              </div>
+            </div>
+
+            <div className="relative rounded-2xl overflow-hidden shadow-lg border border-[#9daeac]/30 h-64 sm:h-72 group">
+              <Image
+                src="/images/students-collaborating.jpg"
+                alt="Students analyzing placement test patterns"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-3.5">
+                <span className="text-xs font-bold text-white leading-tight">
+                  TCS NQT &amp; Infosys Blueprint Analysis
+                </span>
+              </div>
+            </div>
           </div>
         </section>
 
