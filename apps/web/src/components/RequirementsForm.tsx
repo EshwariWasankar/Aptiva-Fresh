@@ -153,7 +153,7 @@ export function RequirementsForm() {
               type="radio"
               checked={mode === 'general'}
               onChange={() => setMode('general')}
-              className="accent-purple-600"
+              className="accent-[#174c4b]"
             />
             <span>General campus placement aptitude (balanced syllabus)</span>
           </label>
@@ -162,7 +162,7 @@ export function RequirementsForm() {
               type="radio"
               checked={mode === 'assessment_specific'}
               onChange={() => setMode('assessment_specific')}
-              className="accent-purple-600"
+              className="accent-[#174c4b]"
             />
             <span>Specific company assessment</span>
           </label>
@@ -287,8 +287,8 @@ export function RequirementsForm() {
                   key={t.topic.id}
                   className={`cursor-pointer rounded-full border px-3 py-1 text-xs transition-all ${
                     isSelected
-                      ? 'border-purple-500 bg-purple-50 text-purple-950 font-semibold shadow-2xs'
-                      : 'border-purple-100 bg-white/70 text-slate-600 hover:bg-white'
+                      ? 'border-[#c1d16b] bg-[#f5f9dc] text-[#37420c] font-bold shadow-2xs'
+                      : 'border-[#9daeac]/30 bg-white/70 text-slate-600 hover:bg-white'
                   }`}
                 >
                   <input

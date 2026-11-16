@@ -87,9 +87,9 @@ function OtpPasswordResetFlow() {
                 <div
                   className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold transition-all ${
                     isCompleted
-                      ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/20'
+                      ? 'bg-[#c1d16b] text-[#252d2d] font-bold shadow-xs'
                       : isCurrent
-                        ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30 ring-2 ring-indigo-200'
+                        ? 'bg-[#174c4b] text-white shadow-xs ring-2 ring-[#c1d16b]'
                         : 'bg-slate-100 text-slate-400'
                   }`}
                 >
@@ -98,7 +98,7 @@ function OtpPasswordResetFlow() {
                 <span
                   className={`text-xs font-medium hidden sm:inline ${
                     isCurrent
-                      ? 'text-indigo-950 font-semibold'
+                      ? 'text-[#174c4b] font-bold'
                       : isCompleted
                         ? 'text-slate-700'
                         : 'text-slate-400'
@@ -247,7 +247,7 @@ function StepEmail({
       <div className="flex justify-center text-xs text-slate-500 mt-2">
         <Link
           href="/login"
-          className="hover:text-indigo-600 transition flex items-center gap-1 font-medium"
+          className="text-[#174c4b] hover:underline transition flex items-center gap-1 font-semibold"
         >
           ← Back to sign in
         </Link>
@@ -410,7 +410,7 @@ function StepOtp({
               value={digit}
               onChange={(e) => handleDigitChange(idx, e.target.value)}
               onKeyDown={(e) => handleKeyDown(idx, e)}
-              className="w-11 h-12 sm:w-12 sm:h-13 text-center text-lg font-bold glass-input rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 transition-all select-all"
+              className="w-11 h-12 sm:w-12 sm:h-13 text-center text-lg font-bold glass-input rounded-xl focus:ring-2 focus:ring-[#174c4b] focus:border-[#174c4b] transition-all select-all"
               autoComplete="one-time-code"
               aria-label={`Digit ${idx + 1}`}
             />
@@ -449,7 +449,7 @@ function StepOtp({
               type="button"
               onClick={handleResend}
               disabled={resending}
-              className="text-indigo-600 hover:text-indigo-800 font-semibold transition disabled:opacity-50"
+              className="text-[#174c4b] hover:underline font-bold transition disabled:opacity-50"
             >
               {resending ? 'Sending…' : 'Resend code'}
             </button>
@@ -617,7 +617,7 @@ function StepSuccess() {
 
       <Link
         href="/login"
-        className="btn-primary w-full py-2.5 px-4 text-sm font-semibold text-center mt-2 shadow-md shadow-indigo-600/20"
+        className="btn-primary w-full py-2.5 px-4 text-sm font-semibold text-center mt-2 shadow-md shadow-[#174c4b]/20"
       >
         Sign in to your account
       </Link>

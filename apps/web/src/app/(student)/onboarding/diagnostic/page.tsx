@@ -52,8 +52,8 @@ export default function OnboardingDiagnosticPage() {
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <div className="border-b border-stone-200/70 pb-5">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 border border-indigo-200/60 px-3 py-0.5 text-xs font-bold text-indigo-700 mb-2 font-mono">
+      <div className="border-b border-[#9daeac]/30 pb-5">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#e3eceb] border border-[#9daeac]/40 px-3 py-0.5 text-xs font-bold text-[#174c4b] mb-2 font-mono">
           <IconCompass className="w-3.5 h-3.5" />
           <span>Baseline Assessment</span>
         </div>
@@ -68,17 +68,17 @@ export default function OnboardingDiagnosticPage() {
       </div>
 
       {active && (
-        <div className="rounded-2xl border border-indigo-200 bg-indigo-50/80 p-5 shadow-xs flex flex-col gap-3">
+        <div className="rounded-2xl border border-[#c1d16b] bg-[#f5f9dc] p-5 shadow-xs flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-indigo-950 uppercase tracking-wider font-mono">
+            <span className="text-xs font-bold text-[#252d2d] uppercase tracking-wider font-mono">
               In-Progress Session Detected
             </span>
-            <span className="text-xs text-indigo-800 font-semibold font-mono">
+            <span className="text-xs text-[#37420c] font-semibold font-mono">
               {active.answeredCount}/{active.questionCount} answered{' '}
               {active.status === 'paused' ? '(paused)' : ''}
             </span>
           </div>
-          <p className="text-xs text-indigo-900 leading-relaxed">
+          <p className="text-xs text-[#252d2d] leading-relaxed">
             You have an active {active.mode} diagnostic in progress. You can resume right where you
             left off.
           </p>
@@ -94,13 +94,13 @@ export default function OnboardingDiagnosticPage() {
 
       <div className="grid gap-6 sm:grid-cols-2">
         {/* Core Mode */}
-        <div className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 bg-white">
+        <div className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 bg-white border border-[#9daeac]/35">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
+              <span className="rounded-md bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
                 Full Scope
               </span>
-              <IconSparkles className="w-4 h-4 text-indigo-600" />
+              <IconSparkles className="w-4 h-4 text-[#174c4b]" />
             </div>
             <h2 className="text-lg font-bold text-slate-900">Core diagnostic</h2>
             <p className="mt-2 text-xs text-slate-600 leading-relaxed">
@@ -119,13 +119,13 @@ export default function OnboardingDiagnosticPage() {
         </div>
 
         {/* Express Mode */}
-        <div className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 bg-white">
+        <div className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 bg-white border border-[#9daeac]/35">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="rounded-md bg-amber-50 text-amber-800 border border-amber-200/60 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
+              <span className="rounded-md bg-[#f5f9dc] text-[#37420c] border border-[#c1d16b] px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
                 Rapid
               </span>
-              <IconClock className="w-4 h-4 text-amber-600" />
+              <IconClock className="w-4 h-4 text-[#174c4b]" />
             </div>
             <h2 className="text-lg font-bold text-slate-900">Express diagnostic</h2>
             <p className="mt-2 text-xs text-slate-600 leading-relaxed">
@@ -137,7 +137,7 @@ export default function OnboardingDiagnosticPage() {
                 type="checkbox"
                 checked={nearTest}
                 onChange={(e) => setNearTest(e.target.checked)}
-                className="rounded border-slate-300 text-amber-600 focus:ring-amber-500"
+                className="rounded border-[#9daeac]/60 text-[#174c4b] focus:ring-[#174c4b] accent-[#174c4b]"
               />
               <span>My test is within 48 hours</span>
             </label>
@@ -148,7 +148,7 @@ export default function OnboardingDiagnosticPage() {
             onClick={() => void start('express')}
             className={`w-full py-2.5 px-4 text-xs font-semibold rounded-xl text-white transition-all disabled:opacity-50 ${
               nearTest
-                ? 'bg-amber-600 hover:bg-amber-700 shadow-xs'
+                ? 'bg-[#174c4b] hover:bg-[#123c3b] shadow-xs'
                 : 'bg-slate-900 hover:bg-slate-800'
             }`}
           >

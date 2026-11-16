@@ -39,7 +39,7 @@ export default function AdminPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="border-b border-purple-100/60 pb-4">
+      <div className="border-b border-[#9daeac]/30 pb-4">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Admin Control Center
         </h1>
@@ -56,16 +56,16 @@ export default function AdminPage() {
             <Link
               key={t.href}
               href={t.href}
-              className="glass-card glass-card-interactive p-6 flex flex-col justify-between gap-4 group"
+              className="glass-card glass-card-interactive p-6 flex flex-col justify-between gap-4 group border border-[#9daeac]/35"
             >
               <div className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-700 border border-purple-100 group-hover:bg-purple-100/70 transition-colors">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40 group-hover:bg-[#c1d16b] group-hover:text-[#252d2d] group-hover:border-[#c1d16b] transition-all">
                   <Icon className="w-4 h-4" />
                 </span>
-                <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-colors" />
+                <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-[#174c4b] transition-colors" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-slate-900 group-hover:text-purple-600 transition-colors">
+                <h2 className="text-base font-bold text-slate-900 group-hover:text-[#174c4b] transition-colors">
                   {t.title}
                 </h2>
                 <p className="mt-1 text-xs text-slate-500 leading-relaxed">{t.desc}</p>

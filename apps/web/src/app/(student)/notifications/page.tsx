@@ -79,10 +79,10 @@ export default function NotificationsPage() {
   return (
     <div className="flex flex-col gap-8 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="border-b border-purple-100/60 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="border-b border-[#9daeac]/30 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-purple-100 text-purple-700">
+            <span className="p-1.5 rounded-lg bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40">
               <IconBell className="w-5 h-5" />
             </span>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
@@ -112,13 +112,13 @@ export default function NotificationsPage() {
       )}
 
       {/* Notifications List */}
-      <section className="glass-card p-6 flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-purple-50 pb-3">
+      <section className="glass-card p-6 flex flex-col gap-4 border border-[#9daeac]/35">
+        <div className="flex items-center justify-between border-b border-[#9daeac]/30 pb-3">
           <h2 className="text-sm font-bold text-slate-900">
             Recent Alerts ({notifications.length})
           </h2>
           {unreadCount > 0 && (
-            <span className="rounded-full bg-purple-100 text-purple-900 px-2.5 py-0.5 text-xs font-semibold">
+            <span className="rounded-full bg-[#f5f9dc] text-[#37420c] border border-[#c1d16b] px-2.5 py-0.5 text-xs font-semibold font-mono">
               {unreadCount} unread
             </span>
           )}
@@ -131,24 +131,24 @@ export default function NotificationsPage() {
             No notifications right now. You are completely up to date!
           </div>
         ) : (
-          <div className="flex flex-col divide-y divide-purple-50">
+          <div className="flex flex-col divide-y divide-[#9daeac]/20">
             {notifications.map((item) => (
               <div
                 key={item.id}
                 className={`py-3.5 px-2 flex items-start justify-between gap-4 rounded-xl transition ${
-                  item.read ? 'opacity-85' : 'bg-purple-50/30'
+                  item.read ? 'opacity-85' : 'bg-[#f0f0e9]/70'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <span
                     className={`mt-1 h-2 w-2 rounded-full shrink-0 ${
-                      item.read ? 'bg-transparent' : 'bg-purple-600 ring-2 ring-purple-200'
+                      item.read ? 'bg-transparent' : 'bg-[#c1d16b] ring-2 ring-[#174c4b]'
                     }`}
                   />
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-xs font-bold text-slate-900">{item.title}</h3>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-slate-400 font-mono">
                         {new Date(item.createdAt).toLocaleDateString()}
                       </span>
                     </div>
@@ -156,7 +156,7 @@ export default function NotificationsPage() {
                     {item.link && (
                       <Link
                         href={item.link}
-                        className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-purple-700 hover:text-purple-900 transition"
+                        className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-[#174c4b] hover:text-[#123c3b] transition"
                       >
                         View details →
                       </Link>
@@ -168,7 +168,7 @@ export default function NotificationsPage() {
                   <button
                     type="button"
                     onClick={() => void handleMarkRead(item.id)}
-                    className="text-[11px] font-medium text-slate-400 hover:text-purple-700 whitespace-nowrap"
+                    className="text-[11px] font-medium text-slate-400 hover:text-[#174c4b] whitespace-nowrap"
                   >
                     Mark read
                   </button>
@@ -181,19 +181,19 @@ export default function NotificationsPage() {
 
       {/* Weekly Summary Preview (FR-028) */}
       {weeklySummary && (
-        <section className="glass-card p-6 flex flex-col gap-4">
+        <section className="glass-card p-6 flex flex-col gap-4 border border-[#9daeac]/35">
           <div className="flex items-center gap-2">
-            <span className="p-1 rounded-lg bg-purple-100 text-purple-700">
+            <span className="p-1 rounded-lg bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40">
               <IconSparkles className="w-4 h-4" />
             </span>
             <h2 className="text-sm font-bold text-slate-900">Weekly Performance Summary</h2>
           </div>
 
-          <div className="rounded-xl bg-purple-50/50 p-4 border border-purple-100/70 flex flex-col gap-2">
+          <div className="rounded-xl bg-[#f0f0e9] p-4 border border-[#9daeac]/30 flex flex-col gap-2">
             <p className="text-xs text-slate-700 font-medium leading-relaxed">
               {weeklySummary.message}
             </p>
-            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-1">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-1 font-mono">
               <span>
                 Period: {weeklySummary.periodStart} to {weeklySummary.periodEnd}
               </span>
@@ -209,7 +209,7 @@ export default function NotificationsPage() {
       )}
 
       {/* Notification Preferences & Reminder Settings */}
-      <section className="glass-card p-6 flex flex-col gap-5">
+      <section className="glass-card p-6 flex flex-col gap-5 border border-[#9daeac]/35">
         <div>
           <h2 className="text-base font-bold text-slate-900">
             Notification &amp; Reminder Settings
@@ -225,7 +225,7 @@ export default function NotificationsPage() {
               type="checkbox"
               checked={prefs.optInReminders ?? false}
               onChange={(e) => setPrefs({ ...prefs, optInReminders: e.target.checked })}
-              className="mt-0.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+              className="mt-0.5 rounded border-[#9daeac]/60 text-[#174c4b] focus:ring-[#174c4b] accent-[#174c4b]"
             />
             <div>
               <span className="font-semibold text-slate-900">Daily Study Reminders</span>
@@ -240,7 +240,7 @@ export default function NotificationsPage() {
               type="checkbox"
               checked={prefs.optInWeeklySummary ?? false}
               onChange={(e) => setPrefs({ ...prefs, optInWeeklySummary: e.target.checked })}
-              className="mt-0.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+              className="mt-0.5 rounded border-[#9daeac]/60 text-[#174c4b] focus:ring-[#174c4b] accent-[#174c4b]"
             />
             <div>
               <span className="font-semibold text-slate-900">Weekly Progress Summary</span>
@@ -261,7 +261,7 @@ export default function NotificationsPage() {
                 onChange={(e) =>
                   setPrefs({ ...prefs, dailyLimit: Number.parseInt(e.target.value, 10) })
                 }
-                className="glass-input w-full py-2 px-3 text-xs"
+                className="glass-input w-full py-2 px-3 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
               >
                 <option value={1}>1 notification per day (Recommended)</option>
                 <option value={2}>2 notifications per day</option>
@@ -278,7 +278,7 @@ export default function NotificationsPage() {
                 onChange={(e) =>
                   setPrefs({ ...prefs, preferredHourUtc: Number.parseInt(e.target.value, 10) })
                 }
-                className="glass-input w-full py-2 px-3 text-xs"
+                className="glass-input w-full py-2 px-3 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
               >
                 <option value={9}>09:00 UTC (Early Afternoon IST)</option>
                 <option value={12}>12:00 UTC (Evening IST)</option>

@@ -59,7 +59,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="border-b border-stone-200/70 pb-4">
+      <div className="border-b border-[#9daeac]/30 pb-4">
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
           Mastery Profile
         </h1>
@@ -75,13 +75,13 @@ export default function ProfilePage() {
         </div>
       )}
       {!profile && !error && (
-        <div className="glass-card p-12 text-center text-xs text-slate-400">
+        <div className="glass-card p-12 text-center text-xs text-slate-400 border border-[#9daeac]/35">
           Loading mastery profile…
         </div>
       )}
 
       {profile && profile.topics.length === 0 && (
-        <div className="glass-card p-10 text-center flex flex-col items-center gap-3">
+        <div className="glass-card p-10 text-center flex flex-col items-center gap-3 border border-[#9daeac]/35">
           <IconCompass className="w-8 h-8 text-slate-300" />
           <h2 className="text-base font-bold text-slate-800">No diagnostic data calibrated yet</h2>
           <p className="text-xs text-slate-500 max-w-sm">
@@ -99,7 +99,7 @@ export default function ProfilePage() {
       {profile && profile.topics.length > 0 && (
         <>
           <div className="grid gap-6 md:grid-cols-[340px_1fr]">
-            <div className="bento-card p-6 flex flex-col justify-between bg-white">
+            <div className="bento-card p-6 flex flex-col justify-between bg-white border border-[#9daeac]/35">
               <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 font-mono">
                 Section Mastery Radar
               </h2>
@@ -108,13 +108,13 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="bento-card p-6 sm:p-7 flex flex-col justify-between gap-4 bg-white">
+            <div className="bento-card p-6 sm:p-7 flex flex-col justify-between gap-4 bg-white border border-[#9daeac]/35">
               <div>
                 <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 font-mono">
                   Baseline Profile Snapshot
                 </h2>
                 {profile.baseline ? (
-                  <div className="rounded-xl bg-stone-50 p-4 border border-stone-200/70 text-xs flex flex-col gap-1.5">
+                  <div className="rounded-xl bg-[#f0f0e9] p-4 border border-[#9daeac]/30 text-xs flex flex-col gap-1.5">
                     <span className="font-semibold text-slate-800">
                       Calibrated: {new Date(profile.baseline.takenAt).toLocaleDateString()}
                     </span>
@@ -134,7 +134,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Interactive GitHub-style Study Activity Heatmap */}
-          <section className="bento-card p-6 bg-white">
+          <section className="bento-card p-6 bg-white border border-[#9daeac]/35">
             <StudyHeatmap
               activity={activity}
               loading={activityLoading}
@@ -143,12 +143,12 @@ export default function ProfilePage() {
             />
           </section>
 
-          <div className="bento-card overflow-hidden bg-white">
-            <div className="border-b border-stone-100 p-4 px-6 flex items-center justify-between">
+          <div className="bento-card overflow-hidden bg-white border border-[#9daeac]/35">
+            <div className="border-b border-[#9daeac]/30 p-4 px-6 flex items-center justify-between">
               <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700 font-mono">
                 Topic-by-Topic Estimates ({profile.topics.length} topics)
               </h2>
-              <span className="text-[11px] text-slate-400 font-medium">
+              <span className="text-[11px] text-slate-400 font-medium font-mono">
                 Click column header to sort
               </span>
             </div>
@@ -156,16 +156,16 @@ export default function ProfilePage() {
           </div>
 
           {snapshots.length > 0 && (
-            <div className="bento-card p-6 flex flex-col gap-3 bg-white">
+            <div className="bento-card p-6 flex flex-col gap-3 bg-white border border-[#9daeac]/35">
               <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                 Historical Calibration Snapshots
               </h2>
-              <ul className="divide-y divide-stone-100 text-xs">
+              <ul className="divide-y divide-[#9daeac]/20 text-xs">
                 {snapshots.map((s) => (
                   <li key={s.id} className="flex items-center justify-between py-2.5">
                     <span className="flex items-center gap-2">
                       {s.isBaseline && (
-                        <span className="rounded-full bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 text-[11px] font-bold text-indigo-700 font-mono">
+                        <span className="rounded-full bg-[#e3eceb] border border-[#9daeac]/40 px-2 py-0.5 text-[11px] font-bold text-[#174c4b] font-mono">
                           baseline
                         </span>
                       )}

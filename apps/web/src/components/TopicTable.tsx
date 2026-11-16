@@ -15,7 +15,7 @@ function errorMixSummary(row: ProfileTopicRow): string {
     .join(', ');
 }
 
-/** P-10 TopicTable — sortable, accessible equivalent of the radar with purple pastel styling. */
+/** P-10 TopicTable — sortable, accessible equivalent of the radar with Performance Lab styling. */
 export function TopicTable({ rows }: { rows: ProfileTopicRow[] }) {
   const [sort, setSort] = useState<SortKey>('rating');
   const [dir, setDir] = useState<-1 | 1>(-1);
@@ -39,7 +39,7 @@ export function TopicTable({ rows }: { rows: ProfileTopicRow[] }) {
     <th className="px-4 py-3 text-left">
       <button
         type="button"
-        className="font-bold text-slate-800 hover:text-indigo-900 transition inline-flex items-center gap-1"
+        className="font-bold text-slate-800 hover:text-[#174c4b] transition inline-flex items-center gap-1"
         onClick={() => {
           if (sort === key) setDir((d) => (d === 1 ? -1 : 1));
           else {
@@ -59,7 +59,7 @@ export function TopicTable({ rows }: { rows: ProfileTopicRow[] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs">
-        <thead className="border-b border-stone-200 bg-stone-50/90 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
+        <thead className="border-b border-[#9daeac]/30 bg-[#f0f0e9]/80 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
           <tr>
             {head('name', 'Topic')}
             <th className="px-4 py-3 text-left font-semibold">Section</th>
@@ -70,14 +70,14 @@ export function TopicTable({ rows }: { rows: ProfileTopicRow[] }) {
             <th className="px-4 py-3 text-left font-semibold">Primary errors</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-stone-100">
+        <tbody className="divide-y divide-[#9daeac]/20">
           {sorted.map((r) => {
             const acc = r.accuracyEma == null ? '—' : `${Math.round(r.accuracyEma * 100)}%`;
             return (
-              <tr key={r.topic.id} className="hover:bg-indigo-50/30 transition-colors">
+              <tr key={r.topic.id} className="hover:bg-[#f0f0e9]/70 transition-colors">
                 <td className="px-4 py-3 font-semibold text-slate-900">{r.topic.name}</td>
                 <td className="px-4 py-3 text-slate-500 capitalize">{r.sectionSlug}</td>
-                <td className="px-4 py-3 font-mono font-bold text-indigo-950">
+                <td className="px-4 py-3 font-mono font-bold text-[#174c4b]">
                   {r.rating.toFixed(2)}
                 </td>
                 <td className="px-4 py-3 font-mono text-slate-500">

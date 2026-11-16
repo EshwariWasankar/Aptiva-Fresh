@@ -117,7 +117,8 @@ export function QuestionEditor({ question, topics }: Props) {
     }
   }
 
-  const inputCls = 'w-full glass-input px-3.5 py-2 text-xs font-medium';
+  const inputCls =
+    'w-full glass-input px-3.5 py-2 text-xs font-medium border-[#9daeac]/40 focus:border-[#174c4b]';
   const labelCls = 'mb-1 block text-xs font-semibold text-stone-700';
 
   return (
@@ -149,8 +150,10 @@ export function QuestionEditor({ question, topics }: Props) {
                 key={f}
                 type="button"
                 onClick={() => set('format', f)}
-                className={`rounded border px-4 py-1.5 text-sm ${
-                  form.format === f ? 'bg-neutral-900 text-white' : 'bg-white'
+                className={`rounded-xl border px-4 py-1.5 text-xs font-semibold transition-all ${
+                  form.format === f
+                    ? 'bg-[#174c4b] text-white border-[#174c4b] shadow-xs'
+                    : 'bg-white text-slate-700 border-[#9daeac]/40 hover:bg-[#f0f0e9]'
                 }`}
               >
                 {f === 'mcq' ? 'Multiple choice' : 'Numerical'}
@@ -243,8 +246,8 @@ export function QuestionEditor({ question, topics }: Props) {
           onChange={(e) => set('stem', e.target.value)}
         />
         {form.stem && (
-          <div className="mt-2 rounded border bg-neutral-50 p-3 text-sm break-words [overflow-wrap:anywhere] overflow-x-auto max-w-full">
-            <div className="mb-1 text-xs text-neutral-400">Preview</div>
+          <div className="mt-2 rounded-xl border border-[#9daeac]/30 bg-[#f0f0e9] p-3 text-sm break-words [overflow-wrap:anywhere] overflow-x-auto max-w-full">
+            <div className="mb-1 text-xs text-slate-400 font-mono">Preview</div>
             <Katex text={form.stem} />
           </div>
         )}
@@ -273,6 +276,7 @@ export function QuestionEditor({ question, topics }: Props) {
                     setOptions((rows) => rows.map((r, j) => ({ ...r, isCorrect: j === i })))
                   }
                   title="Mark correct"
+                  className="accent-[#174c4b]"
                 />
                 <input
                   className={`${inputCls} flex-1`}
@@ -296,7 +300,7 @@ export function QuestionEditor({ question, topics }: Props) {
                 />
                 <button
                   type="button"
-                  className="rounded border px-2 py-1 text-sm"
+                  className="rounded-lg border border-[#9daeac]/30 px-2.5 py-1 text-xs hover:bg-rose-50 hover:text-rose-700 disabled:opacity-40"
                   onClick={() => setOptions((rows) => rows.filter((_, j) => j !== i))}
                   disabled={options.length <= 2}
                 >
@@ -307,10 +311,10 @@ export function QuestionEditor({ question, topics }: Props) {
           </div>
           <button
             type="button"
-            className="mt-2 rounded border px-3 py-1 text-sm"
+            className="mt-2 btn-secondary py-1 px-3 text-xs font-semibold"
             onClick={() => setOptions((rows) => [...rows, blankOption()])}
           >
-            Add option
+            + Add option
           </button>
         </div>
       ) : (

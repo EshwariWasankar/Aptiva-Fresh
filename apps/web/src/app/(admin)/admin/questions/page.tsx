@@ -13,10 +13,10 @@ import {
 import { ApiError } from '../../../../lib/apiClient';
 
 const STATUS_STYLE: Record<string, string> = {
-  draft: 'bg-stone-100 text-stone-700 border border-stone-200/50',
-  reviewed: 'bg-indigo-50 text-indigo-700 border border-indigo-200/50',
-  published: 'bg-emerald-50 text-emerald-700 border border-emerald-200/50',
-  retired: 'bg-stone-100 text-stone-400 line-through',
+  draft: 'bg-[#f0f0e9] text-stone-700 border border-[#9daeac]/40',
+  reviewed: 'bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40',
+  published: 'bg-[#f5f9dc] text-[#37420c] border border-[#c1d16b]',
+  retired: 'bg-[#f0f0e9] text-stone-400 line-through border border-stone-200',
 };
 
 export default function QuestionsPage() {
@@ -71,7 +71,7 @@ export default function QuestionsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between border-b border-stone-200/50 pb-4">
+      <div className="flex items-center justify-between border-b border-[#9daeac]/30 pb-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-stone-900">Question Item Bank</h1>
           <p className="mt-1 text-xs text-stone-500">
@@ -84,18 +84,18 @@ export default function QuestionsPage() {
       </div>
 
       {/* Filter Row */}
-      <div className="bento-card p-4 flex flex-wrap gap-2.5 bg-white">
+      <div className="bento-card p-4 flex flex-wrap gap-2.5 bg-white border border-[#9daeac]/35">
         <input
           type="search"
           placeholder="Search stems…"
           value={filters.q}
           onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value, page: 1 }))}
-          className="glass-input px-3 py-1.5 text-xs min-w-48"
+          className="glass-input px-3 py-1.5 text-xs min-w-48 border-[#9daeac]/40 focus:border-[#174c4b]"
         />
         <select
           value={filters.topicId}
           onChange={(e) => setFilters((f) => ({ ...f, topicId: e.target.value, page: 1 }))}
-          className="glass-input px-2.5 py-1.5 text-xs"
+          className="glass-input px-2.5 py-1.5 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
         >
           <option value="">All topics</option>
           {topicOptions.map((t) => (
@@ -107,7 +107,7 @@ export default function QuestionsPage() {
         <select
           value={filters.status}
           onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value, page: 1 }))}
-          className="glass-input px-2.5 py-1.5 text-xs"
+          className="glass-input px-2.5 py-1.5 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
         >
           <option value="">All statuses</option>
           {['draft', 'reviewed', 'published', 'retired'].map((s) => (
@@ -119,7 +119,7 @@ export default function QuestionsPage() {
         <select
           value={filters.format}
           onChange={(e) => setFilters((f) => ({ ...f, format: e.target.value, page: 1 }))}
-          className="glass-input px-2.5 py-1.5 text-xs"
+          className="glass-input px-2.5 py-1.5 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
         >
           <option value="">All formats</option>
           <option value="mcq">MCQ</option>
@@ -128,7 +128,7 @@ export default function QuestionsPage() {
         <select
           value={filters.pool}
           onChange={(e) => setFilters((f) => ({ ...f, pool: e.target.value, page: 1 }))}
-          className="glass-input px-2.5 py-1.5 text-xs"
+          className="glass-input px-2.5 py-1.5 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
         >
           <option value="">All pools</option>
           {['diagnostic', 'practice', 'reassessment'].map((p) => (
@@ -140,7 +140,7 @@ export default function QuestionsPage() {
         <select
           value={filters.difficulty}
           onChange={(e) => setFilters((f) => ({ ...f, difficulty: e.target.value, page: 1 }))}
-          className="glass-input px-2.5 py-1.5 text-xs"
+          className="glass-input px-2.5 py-1.5 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
         >
           <option value="">Any difficulty</option>
           {[1, 2, 3].map((d) => (
@@ -161,18 +161,18 @@ export default function QuestionsPage() {
       )}
 
       {loading ? (
-        <div className="bento-card p-10 text-center text-xs text-stone-400 bg-white">
+        <div className="bento-card p-10 text-center text-xs text-stone-400 bg-white border border-[#9daeac]/35">
           Loading questions…
         </div>
       ) : !data || data.items.length === 0 ? (
-        <div className="bento-card p-10 text-center text-xs text-stone-400 bg-white">
+        <div className="bento-card p-10 text-center text-xs text-stone-400 bg-white border border-[#9daeac]/35">
           No questions match the current filters.
         </div>
       ) : (
-        <section className="bento-card overflow-hidden bg-white">
+        <section className="bento-card overflow-hidden bg-white border border-[#9daeac]/35">
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead className="border-b border-stone-100 bg-stone-50/60 text-left text-stone-400 font-semibold uppercase tracking-wider font-mono text-[11px]">
+              <thead className="border-b border-[#9daeac]/30 bg-[#f0f0e9] text-left text-slate-500 font-semibold uppercase tracking-wider font-mono text-[11px]">
                 <tr>
                   <th className="px-5 py-3">Stem</th>
                   <th className="px-4 py-3">Topic</th>
@@ -183,13 +183,13 @@ export default function QuestionsPage() {
                   <th className="px-4 py-3">Source</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-[#9daeac]/20">
                 {data.items.map((q: Question) => (
-                  <tr key={q.id} className="hover:bg-indigo-50/30 transition-colors">
+                  <tr key={q.id} className="hover:bg-[#f0f0e9]/60 transition-colors">
                     <td className="max-w-md px-5 py-3">
                       <Link
                         href={`/admin/questions/${q.id}`}
-                        className="font-medium text-stone-900 hover:text-indigo-600 transition"
+                        className="font-medium text-stone-900 hover:text-[#174c4b] transition"
                       >
                         <Katex text={q.stem.slice(0, 120) + (q.stem.length > 120 ? '…' : '')} />
                       </Link>

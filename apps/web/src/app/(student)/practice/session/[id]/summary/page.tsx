@@ -77,7 +77,7 @@ export default function SessionSummaryPage() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
-      <div className="border-b border-purple-100/60 pb-4">
+      <div className="border-b border-[#9daeac]/30 pb-4">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Session Performance Summary
         </h1>
@@ -96,10 +96,10 @@ export default function SessionSummaryPage() {
         ].map(([k, v]) => (
           <div
             key={k}
-            className="glass-card p-5 text-center flex flex-col justify-center items-center gap-1"
+            className="glass-card p-5 text-center flex flex-col justify-center items-center gap-1 border border-[#9daeac]/35"
           >
             <div className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">{v}</div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 font-mono">
               {k}
             </div>
           </div>
@@ -108,18 +108,18 @@ export default function SessionSummaryPage() {
 
       {/* Topics Breakdown */}
       {summary.topics.length > 0 && (
-        <section className="glass-card p-6 flex flex-col gap-3">
-          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+        <section className="glass-card p-6 flex flex-col gap-3 border border-[#9daeac]/35">
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide font-mono">
             Performance by Topic
           </h2>
           <ul className="flex flex-col gap-2">
             {summary.topics.map((t) => (
               <li
                 key={t.topicId}
-                className="flex items-center justify-between rounded-xl bg-purple-50/50 p-3 px-3.5 border border-purple-100/60 text-xs"
+                className="flex items-center justify-between rounded-xl bg-[#f0f0e9] p-3 px-3.5 border border-[#9daeac]/30 text-xs"
               >
                 <span className="font-semibold text-slate-800">{t.name}</span>
-                <span className="font-bold text-purple-900 bg-white/90 px-2.5 py-0.5 rounded-md border border-purple-200/50">
+                <span className="font-bold text-[#174c4b] bg-white px-2.5 py-0.5 rounded-md border border-[#9daeac]/35 font-mono">
                   {t.correct} / {t.attempted} correct
                 </span>
               </li>
@@ -132,10 +132,10 @@ export default function SessionSummaryPage() {
       <div
         className={`rounded-2xl border p-4 text-xs font-medium flex items-center justify-between ${
           summary.recalcStatus === 'done'
-            ? 'border-emerald-200/80 bg-emerald-50/80 text-emerald-900'
+            ? 'border-[#c1d16b] bg-[#f5f9dc] text-[#37420c]'
             : summary.recalcStatus === 'failed'
-              ? 'border-amber-200/80 bg-amber-50/80 text-amber-900'
-              : 'border-purple-200/80 bg-purple-50/80 text-purple-950'
+              ? 'border-rose-200/80 bg-rose-50/80 text-rose-900'
+              : 'border-[#9daeac]/40 bg-[#e3eceb] text-[#174c4b]'
         }`}
       >
         <div className="flex items-center gap-2">

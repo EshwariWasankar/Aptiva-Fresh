@@ -92,12 +92,12 @@ function StudentNav() {
 
   return (
     <header className="sticky top-3 z-40 mx-auto max-w-[1440px] px-3 sm:px-6">
-      {/* Single Unified Academic Masthead in Deep Oxford Ink */}
+      {/* Single Unified Academic Masthead in Deep Teal ("The Performance Lab") */}
       <div className="navy-glass-header flex items-center justify-between gap-4 lg:gap-8 px-4 sm:px-6 py-2.5 sm:py-3 shadow-xl">
         {/* Left: Brand Logo & Assessment Target Selector */}
         <div className="flex items-center gap-3 sm:gap-3.5 shrink-0">
           <Link href="/dashboard" className="flex items-center gap-2.5 group shrink-0">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30 transition-transform group-hover:scale-105">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#174c4b] via-[#1b5756] to-[#252d2d] text-sm font-semibold text-[#c1d16b] shadow-md shadow-[#174c4b]/40 border border-[#9daeac]/30 transition-transform group-hover:scale-105">
               <svg
                 width="18"
                 height="18"
@@ -117,33 +117,33 @@ function StudentNav() {
               <span className="text-base font-bold tracking-tight text-white leading-tight">
                 Aptiva
               </span>
-              <span className="text-[9px] uppercase tracking-widest text-indigo-300/80 font-mono -mt-0.5">
+              <span className="text-[9px] uppercase tracking-widest text-[#c1d16b] font-mono -mt-0.5">
                 Adaptive Prep
               </span>
             </div>
           </Link>
 
-          <span className="hidden text-xs text-slate-700 sm:inline">|</span>
+          <span className="hidden text-xs text-[#9daeac]/40 sm:inline">|</span>
 
           {/* Assessment Target Selector */}
           <Link
             href="/setup/requirements"
-            className="hidden sm:flex items-center gap-2 rounded-full bg-slate-900/90 px-3 py-1 text-[11px] font-medium text-slate-200 border border-slate-700/80 hover:border-indigo-400/60 hover:text-white transition-all shadow-xs shrink-0"
+            className="hidden sm:flex items-center gap-2 rounded-full bg-[#123c3b]/90 px-3 py-1 text-[11px] font-medium text-slate-100 border border-[#9daeac]/30 hover:border-[#c1d16b]/60 hover:text-white transition-all shadow-xs shrink-0"
             title="Assessment Target & Requirements"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 ring-2 ring-amber-400/30 animate-pulse"></span>
+            <span className="h-1.5 w-1.5 rounded-full bg-[#c1d16b] ring-2 ring-[#c1d16b]/40 animate-pulse"></span>
             <span className="truncate max-w-[150px] font-medium">Target: GMAT Focus</span>
-            <IconChevronDown className="w-3 h-3 text-slate-400" />
+            <IconChevronDown className="w-3 h-3 text-[#9daeac]" />
           </Link>
 
           {/* Distinct structural divider separating Target Selector from Navigation */}
           <span
-            className="hidden lg:inline-block h-4 w-px bg-slate-800 shrink-0 ml-1"
+            className="hidden lg:inline-block h-4 w-px bg-[#9daeac]/20 shrink-0 ml-1"
             aria-hidden="true"
           />
         </div>
 
-        {/* Center: Desktop Navigation Bar with guaranteed horizontal safety */}
+        {/* Center: Desktop Navigation Bar with Chartreuse Active Pills */}
         <nav className="hidden lg:flex items-center gap-1 text-xs font-medium shrink min-w-0 overflow-x-auto no-scrollbar">
           {NAV.map((item) => {
             const active =
@@ -155,8 +155,8 @@ function StudentNav() {
                 href={item.href}
                 className={`rounded-full px-2.5 xl:px-3 py-1.5 transition-all text-xs whitespace-nowrap shrink-0 ${
                   active
-                    ? 'bg-indigo-100 text-indigo-950 font-bold shadow-xs'
-                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                    ? 'bg-[#c1d16b] text-[#252d2d] font-bold shadow-xs'
+                    : 'text-slate-200 hover:bg-[#123c3b] hover:text-white'
                 }`}
               >
                 {item.label}
@@ -173,11 +173,11 @@ function StudentNav() {
               type="button"
               onClick={() => setNotificationMenuOpen(!notificationMenuOpen)}
               aria-label="Notifications"
-              className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800/80 border border-slate-700/60 text-slate-300 hover:text-white hover:bg-slate-700/80 transition-colors"
+              className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-[#123c3b]/80 border border-[#9daeac]/30 text-slate-200 hover:text-white hover:bg-[#123c3b] transition-colors"
             >
               <IconBell className="w-4 h-4" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-slate-950 ring-2 ring-slate-900 font-mono">
+                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c1d16b] px-1 text-[10px] font-bold text-[#252d2d] ring-2 ring-[#174c4b] font-mono">
                   {unreadCount}
                 </span>
               )}
@@ -190,7 +190,7 @@ function StudentNav() {
                   <div className="flex items-center gap-1.5 font-bold text-slate-900">
                     <span>Notifications</span>
                     {unreadCount > 0 && (
-                      <span className="rounded-full bg-amber-100 text-amber-900 border border-amber-200 px-2 py-0.5 text-[10px] font-mono">
+                      <span className="rounded-full bg-[#f5f9dc] text-[#37420c] border border-[#c1d16b] px-2 py-0.5 text-[10px] font-mono font-bold">
                         {unreadCount} new
                       </span>
                     )}
@@ -199,7 +199,7 @@ function StudentNav() {
                     <button
                       type="button"
                       onClick={() => void handleMarkAllRead()}
-                      className="text-[11px] font-medium text-indigo-700 hover:text-indigo-900"
+                      className="text-[11px] font-medium text-[#174c4b] hover:underline"
                     >
                       Mark all as read
                     </button>
@@ -218,7 +218,7 @@ function StudentNav() {
                         className={`p-2.5 rounded-xl border transition ${
                           n.read
                             ? 'bg-white/40 border-stone-100 text-slate-600'
-                            : 'bg-indigo-50/70 border-indigo-100 text-slate-900 font-medium'
+                            : 'bg-[#f5f9dc]/70 border-[#c1d16b]/50 text-slate-900 font-medium'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -227,7 +227,7 @@ function StudentNav() {
                             <button
                               type="button"
                               onClick={(e) => void handleMarkRead(n.id, e)}
-                              className="text-[10px] text-indigo-700 hover:text-indigo-900 shrink-0"
+                              className="text-[10px] text-[#174c4b] hover:underline shrink-0"
                             >
                               Mark read
                             </button>
@@ -240,7 +240,7 @@ function StudentNav() {
                           <Link
                             href={n.link}
                             onClick={() => setNotificationMenuOpen(false)}
-                            className="mt-1.5 inline-block text-[11px] font-semibold text-indigo-700 hover:underline"
+                            className="mt-1.5 inline-block text-[11px] font-semibold text-[#174c4b] hover:underline"
                           >
                             Go to page →
                           </Link>
@@ -254,7 +254,7 @@ function StudentNav() {
                   <Link
                     href="/notifications"
                     onClick={() => setNotificationMenuOpen(false)}
-                    className="text-xs font-semibold text-indigo-700 hover:text-indigo-900"
+                    className="text-xs font-semibold text-[#174c4b] hover:underline"
                   >
                     View all alerts &amp; settings →
                   </Link>
@@ -274,7 +274,7 @@ function StudentNav() {
           {(user?.role === 'admin' || user?.role === 'reviewer') && (
             <Link
               href="/admin/questions"
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-slate-900 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/40 transition hover:scale-105 shrink-0"
+              className="flex items-center gap-1.5 rounded-xl bg-[#123c3b] px-3 py-1.5 text-xs font-semibold text-[#c1d16b] shadow-md shadow-[#174c4b]/40 border border-[#c1d16b]/50 transition hover:bg-[#0f2e2d] hover:scale-105 shrink-0"
               title="Open Admin Portal & Question Bank"
             >
               <svg
@@ -299,10 +299,10 @@ function StudentNav() {
             className="flex items-center gap-2 group"
             title="View Mastery Profile"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-xs font-semibold text-white shadow-sm ring-1 ring-white/20 transition-transform group-hover:scale-105">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#123c3b] to-[#252d2d] text-xs font-bold text-[#c1d16b] shadow-sm ring-1 ring-[#9daeac]/40 transition-transform group-hover:scale-105">
               {userInitial}
             </div>
-            <span className="hidden text-xs text-slate-300 xl:inline font-medium group-hover:text-white transition-colors truncate max-w-[120px]">
+            <span className="hidden text-xs text-slate-200 xl:inline font-medium group-hover:text-white transition-colors truncate max-w-[120px]">
               {user?.email}
             </span>
           </Link>
@@ -311,7 +311,7 @@ function StudentNav() {
           <button
             type="button"
             onClick={() => void signOut().then(() => (window.location.href = '/login'))}
-            className="hidden sm:inline-block rounded-lg px-2.5 py-1 text-xs font-medium text-slate-400 transition hover:bg-slate-800/80 hover:text-slate-200"
+            className="hidden sm:inline-block rounded-lg px-2.5 py-1 text-xs font-medium text-slate-300 transition hover:bg-[#123c3b] hover:text-white"
           >
             Sign out
           </button>
@@ -321,7 +321,7 @@ function StudentNav() {
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
-            className="lg:hidden flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800/80 border border-slate-700/60 text-slate-300 hover:text-white hover:bg-slate-700/80 transition-colors"
+            className="lg:hidden flex h-8 w-8 items-center justify-center rounded-xl bg-[#123c3b]/80 border border-[#9daeac]/30 text-slate-200 hover:text-white hover:bg-[#123c3b] transition-colors"
           >
             {mobileMenuOpen ? <IconX className="w-4 h-4" /> : <IconMenu className="w-4 h-4" />}
           </button>
@@ -332,14 +332,14 @@ function StudentNav() {
       {mobileMenuOpen && (
         <nav
           aria-label="Mobile Navigation"
-          className="lg:hidden mt-2 rounded-2xl navy-glass-header p-3 shadow-2xl border border-slate-700/60 animate-in fade-in slide-in-from-top-2 flex flex-col gap-1 text-xs"
+          className="lg:hidden mt-2 rounded-2xl navy-glass-header p-3 shadow-2xl border border-[#9daeac]/30 animate-in fade-in slide-in-from-top-2 flex flex-col gap-1 text-xs"
         >
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 pb-2 border-b border-slate-800">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 pb-2 border-b border-[#9daeac]/20">
             {(user?.role === 'admin' || user?.role === 'reviewer') && (
               <Link
                 href="/admin/questions"
                 onClick={() => setMobileMenuOpen(false)}
-                className="col-span-2 sm:col-span-3 flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md border border-purple-400/40"
+                className="col-span-2 sm:col-span-3 flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-bold bg-[#123c3b] text-[#c1d16b] shadow-md border border-[#c1d16b]/50"
               >
                 <svg
                   width="14"
@@ -368,23 +368,23 @@ function StudentNav() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium transition-all ${
                     active
-                      ? 'bg-purple-200 text-purple-950 font-bold'
-                      : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                      ? 'bg-[#c1d16b] text-[#252d2d] font-bold shadow-xs'
+                      : 'text-slate-200 hover:bg-[#123c3b] hover:text-white'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${active ? 'text-purple-950' : 'text-slate-400'}`} />
+                  <Icon className={`w-4 h-4 ${active ? 'text-[#252d2d]' : 'text-slate-300'}`} />
                   <span>{item.label}</span>
                 </Link>
               );
             })}
           </div>
 
-          <div className="pt-2 flex items-center justify-between text-xs text-slate-400 px-2">
+          <div className="pt-2 flex items-center justify-between text-xs text-slate-300 px-2">
             <span className="truncate max-w-[200px]">{user?.email}</span>
             <button
               type="button"
               onClick={() => void signOut().then(() => (window.location.href = '/login'))}
-              className="text-rose-400 hover:text-rose-300 font-medium"
+              className="text-rose-300 hover:text-rose-200 font-medium"
             >
               Sign out
             </button>

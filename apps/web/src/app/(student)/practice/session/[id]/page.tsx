@@ -137,8 +137,8 @@ export default function PracticeRunnerPage() {
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
           {next?.lesson ? 'Concept review' : 'Active Practice Drill'}
         </span>
-        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-stone-100 px-3 py-1 rounded-full border border-stone-200/60 font-mono">
-          <IconClock className="w-3.5 h-3.5 text-indigo-600" />
+        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-[#f0f0e9] px-3 py-1 rounded-full border border-[#9daeac]/30 font-mono">
+          <IconClock className="w-3.5 h-3.5 text-[#174c4b]" />
           <span>
             {mm}:{String(ss).padStart(2, '0')}
           </span>
@@ -168,12 +168,12 @@ export default function PracticeRunnerPage() {
       {/* Lesson View */}
       {phase === 'lesson' && next?.lesson && (
         <section className="bento-card p-6 sm:p-8 flex flex-col gap-4 overflow-hidden max-w-full bg-white">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-700 uppercase tracking-wider font-mono">
+          <div className="flex items-center gap-2 text-xs font-bold text-[#174c4b] uppercase tracking-wider font-mono">
             <IconSparkles className="w-4 h-4" />
             <span>Key Concept</span>
           </div>
           <h2 className="text-xl font-bold text-slate-900 break-words">{next.lesson.title}</h2>
-          <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100/60 break-words [overflow-wrap:anywhere] overflow-x-auto">
+          <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 bg-[#f0f0e9]/80 p-4 rounded-xl border border-[#9daeac]/30 break-words [overflow-wrap:anywhere] overflow-x-auto">
             {next.lesson.content}
           </div>
           <button
@@ -202,7 +202,7 @@ export default function PracticeRunnerPage() {
                   onClick={() => setSelected(o.id)}
                   className={`rounded-xl border p-3.5 px-4 text-left text-xs sm:text-sm font-medium transition-all max-w-full break-words [overflow-wrap:anywhere] flex items-start ${
                     selected === o.id
-                      ? 'border-indigo-600 bg-indigo-50/90 text-indigo-950 shadow-xs ring-1 ring-indigo-500'
+                      ? 'border-[#174c4b] bg-[#e3eceb] text-slate-950 shadow-xs ring-1 ring-[#174c4b]'
                       : 'border-stone-200/70 bg-stone-50/50 hover:bg-white text-slate-800'
                   }`}
                 >
@@ -259,9 +259,9 @@ export default function PracticeRunnerPage() {
       {phase === 'feedback' && feedback && (
         <div className="flex flex-col gap-4">
           {reveal && (
-            <div className="rounded-2xl border border-indigo-200/80 bg-indigo-50/90 p-4 text-xs text-indigo-950 flex items-center justify-between">
+            <div className="rounded-2xl border border-[#c1d16b] bg-[#f5f9dc] p-4 text-xs text-[#252d2d] flex items-center justify-between">
               <span>Correct answer:</span>
-              <strong className="text-sm font-bold text-indigo-900">
+              <strong className="text-sm font-bold text-[#174c4b]">
                 {reveal.correctOption ? reveal.correctOption.text : (reveal.numericAnswer ?? '—')}
               </strong>
             </div>
@@ -272,7 +272,7 @@ export default function PracticeRunnerPage() {
               <span
                 className={`flex h-8 w-8 items-center justify-center rounded-xl font-bold text-sm ${
                   feedback.isCorrect
-                    ? 'bg-emerald-100 text-emerald-800'
+                    ? 'bg-[#f5f9dc] text-[#37420c] border border-[#c1d16b]'
                     : 'bg-amber-100 text-amber-800'
                 }`}
               >
@@ -281,7 +281,7 @@ export default function PracticeRunnerPage() {
               <div>
                 <h3
                   className={`text-base font-bold ${
-                    feedback.isCorrect ? 'text-emerald-800' : 'text-amber-800'
+                    feedback.isCorrect ? 'text-[#174c4b]' : 'text-amber-800'
                   }`}
                 >
                   {feedback.isCorrect
@@ -305,14 +305,14 @@ export default function PracticeRunnerPage() {
             )}
 
             {reveal?.solution && (
-              <details className="rounded-xl bg-indigo-50/40 border border-indigo-100/60 p-4 group">
-                <summary className="cursor-pointer text-xs font-bold text-indigo-700 flex items-center justify-between">
+              <details className="rounded-xl bg-[#f0f0e9]/80 border border-[#9daeac]/30 p-4 group">
+                <summary className="cursor-pointer text-xs font-bold text-[#174c4b] flex items-center justify-between">
                   <span>Worked Step-by-Step Solution</span>
                   <span className="text-slate-400 group-open:rotate-180 transition-transform">
                     ▼
                   </span>
                 </summary>
-                <div className="mt-3 whitespace-pre-wrap text-xs text-slate-700 leading-relaxed border-t border-indigo-100/60 pt-3">
+                <div className="mt-3 whitespace-pre-wrap text-xs text-slate-700 leading-relaxed border-t border-[#9daeac]/30 pt-3">
                   {reveal.solution}
                 </div>
               </details>

@@ -53,7 +53,7 @@ export default function ReviewPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-5 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#9daeac]/30 pb-5 gap-3">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
             Editorial Review Queue
@@ -63,7 +63,7 @@ export default function ReviewPage() {
             required for diagnostic publication.
           </p>
         </div>
-        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-white/80 self-start sm:self-auto">
+        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-[#9daeac]/40 self-start sm:self-auto">
           {(['draft', 'reviewed'] as const).map((s) => (
             <button
               key={s}
@@ -71,8 +71,8 @@ export default function ReviewPage() {
               onClick={() => setStatus(s)}
               className={`rounded-full px-4 py-1 text-xs font-semibold capitalize transition-all ${
                 status === s
-                  ? 'glass-pill-active text-stone-900'
-                  : 'text-stone-500 hover:text-stone-800'
+                  ? 'bg-[#174c4b] text-white shadow-xs'
+                  : 'text-stone-600 hover:text-[#174c4b]'
               }`}
             >
               {s}
@@ -88,27 +88,30 @@ export default function ReviewPage() {
       )}
 
       {loading ? (
-        <div className="glass-card p-10 text-center text-xs text-stone-400">
+        <div className="glass-card p-10 text-center text-xs text-stone-400 border border-[#9daeac]/35">
           Loading review queue…
         </div>
       ) : items.length === 0 ? (
-        <div className="glass-card p-12 text-center text-xs text-stone-400">
+        <div className="glass-card p-12 text-center text-xs text-stone-400 border border-[#9daeac]/35">
           Review queue is currently empty for status: {status}.
         </div>
       ) : (
         <ul className="flex flex-col gap-4">
           {items.map((q) => (
-            <li key={q.id} className="glass-card p-6 flex flex-col gap-3">
+            <li
+              key={q.id}
+              className="glass-card p-6 flex flex-col gap-3 border border-[#9daeac]/35"
+            >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0 flex-1 flex flex-col gap-2">
                   <Link
                     href={`/admin/questions/${q.id}`}
-                    className="font-semibold text-sm text-stone-900 hover:text-purple-600 transition"
+                    className="font-semibold text-sm text-stone-900 hover:text-[#174c4b] transition"
                   >
                     <Katex text={q.stem.slice(0, 280) + (q.stem.length > 280 ? '…' : '')} />
                   </Link>
-                  <div className="flex items-center gap-2 text-[11px] text-stone-500 flex-wrap">
-                    <span className="font-semibold text-stone-700 bg-stone-100/90 px-2 py-0.5 rounded-md">
+                  <div className="flex items-center gap-2 text-[11px] text-stone-500 flex-wrap font-mono">
+                    <span className="font-semibold text-stone-700 bg-[#f0f0e9] border border-[#9daeac]/30 px-2 py-0.5 rounded-md">
                       {q.topic.name}
                     </span>
                     <span>·</span>
@@ -125,13 +128,13 @@ export default function ReviewPage() {
                     )}
                   </div>
                   {q.reviews.length > 0 && (
-                    <div className="text-[11px] text-stone-500 bg-stone-50/70 p-2 rounded-lg border border-stone-200/40">
+                    <div className="text-[11px] text-stone-600 bg-[#f0f0e9] p-2 rounded-lg border border-[#9daeac]/30">
                       {q.reviews.length} prior review(s):{' '}
                       {q.reviews.map((r) => `${r.reviewer.email} (${r.decision})`).join(', ')}
                     </div>
                   )}
                   <input
-                    className="glass-input mt-1 px-3 py-1.5 text-xs"
+                    className="glass-input mt-1 px-3 py-1.5 text-xs border-[#9daeac]/40 focus:border-[#174c4b]"
                     placeholder="Review notes or feedback for author (optional)…"
                     value={notes[q.id] ?? ''}
                     onChange={(e) => setNotes((n) => ({ ...n, [q.id]: e.target.value }))}
@@ -142,7 +145,7 @@ export default function ReviewPage() {
                     type="button"
                     disabled={busy === q.id}
                     onClick={() => void decide(q, 'approve')}
-                    className="rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-2 text-xs transition-colors shadow-2xs disabled:opacity-40"
+                    className="rounded-xl bg-[#174c4b] hover:bg-[#123c3b] text-white font-semibold px-4 py-2 text-xs transition-colors shadow-2xs disabled:opacity-40"
                   >
                     Approve
                   </button>

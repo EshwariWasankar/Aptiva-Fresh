@@ -102,11 +102,11 @@ export default async function LandingPage() {
       </div>
 
       <div className="mx-auto w-full max-w-[1360px] px-4 sm:px-6 lg:px-8 py-5 flex flex-col gap-10 flex-1">
-        {/* Dark Oxford Ink Floating Masthead */}
+        {/* Deep Teal Floating Masthead ("The Performance Lab") */}
         <header className="navy-glass-header flex items-center justify-between px-6 py-3.5 shadow-xl">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30 transition-transform group-hover:scale-105">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#174c4b] via-[#1b5756] to-[#252d2d] text-sm font-semibold text-[#c1d16b] shadow-md shadow-[#174c4b]/40 border border-[#9daeac]/30 transition-transform group-hover:scale-105">
                 <svg
                   width="18"
                   height="18"
@@ -126,16 +126,16 @@ export default async function LandingPage() {
                 <span className="text-base font-bold tracking-tight text-white leading-tight">
                   Aptiva
                 </span>
-                <span className="text-[9px] uppercase tracking-widest text-indigo-300/80 font-mono -mt-0.5">
+                <span className="text-[9px] uppercase tracking-widest text-[#c1d16b] font-mono -mt-0.5">
                   Adaptive EdTech
                 </span>
               </div>
             </Link>
 
-            <span className="hidden sm:inline text-slate-700">|</span>
+            <span className="hidden sm:inline text-[#9daeac]/40">|</span>
 
-            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-slate-800/80 px-2.5 py-0.5 text-[11px] font-medium text-slate-300 border border-slate-700/60 font-mono">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[#123c3b]/80 px-2.5 py-0.5 text-[11px] font-medium text-slate-200 border border-[#9daeac]/30 font-mono">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#c1d16b] animate-pulse" />
               Diagnostic Engine Live
             </span>
           </div>
@@ -143,13 +143,13 @@ export default async function LandingPage() {
           <nav className="flex items-center gap-4 text-sm">
             <a
               href="#how-it-works"
-              className="hidden md:inline text-xs font-semibold text-slate-300 hover:text-white transition"
+              className="hidden md:inline text-xs font-semibold text-slate-200 hover:text-white transition"
             >
               How it works
             </a>
             <a
               href="#blueprints"
-              className="hidden md:inline text-xs font-semibold text-slate-300 hover:text-white transition"
+              className="hidden md:inline text-xs font-semibold text-slate-200 hover:text-white transition"
             >
               Company Blueprints
             </a>
@@ -161,8 +161,8 @@ export default async function LandingPage() {
         <div className="glass-sheet p-8 sm:p-12 lg:p-16 flex flex-col gap-12 relative overflow-hidden">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
             <div className="flex flex-col gap-6 max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 border border-indigo-200/80 px-4 py-1.5 text-xs font-bold text-indigo-800 w-fit shadow-2xs font-mono">
-                <span className="h-2 w-2 rounded-full bg-indigo-600 animate-pulse" />
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#f5f9dc] border border-[#c1d16b] px-4 py-1.5 text-xs font-bold text-[#252d2d] w-fit shadow-2xs font-mono">
+                <span className="h-2 w-2 rounded-full bg-[#174c4b] animate-pulse" />
                 <span>Placement Preparation × Bayesian Intelligence</span>
               </div>
 
@@ -189,15 +189,15 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            {/* Hero Visual Telemetry Card (Coursera / Kajabi stats card) */}
+            {/* Hero Visual Telemetry Card */}
             <div className="w-full lg:w-96 flex flex-col gap-4 shrink-0">
-              <div className="bento-card p-6 bg-gradient-to-br from-white to-stone-50/80 shadow-md border border-stone-200/80">
+              <div className="bento-card p-6 bg-gradient-to-br from-white to-[#f7f7f3] shadow-md border border-[#9daeac]/35">
                 <div className="flex items-center justify-between border-b border-stone-100 pb-3">
                   <span className="text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
                     Adaptive Engine Telemetry
                   </span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
-                    <IconSparkles className="w-3 h-3 text-emerald-600" />
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#37420c] bg-[#f5f9dc] px-2 py-0.5 rounded-full border border-[#c1d16b]">
+                    <IconSparkles className="w-3 h-3 text-[#174c4b]" />
                     Live 2026
                   </span>
                 </div>
@@ -209,16 +209,16 @@ export default async function LandingPage() {
                     </span>
                     <span className="stat-num text-2xl font-black text-slate-900">88–94%</span>
                   </div>
-                  <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
-                    <div className="bg-gradient-to-r from-indigo-500 to-emerald-500 h-full w-[91%] rounded-full" />
+                  <div className="w-full bg-[#f0f0e9] h-2 rounded-full overflow-hidden border border-[#9daeac]/30">
+                    <div className="bg-gradient-to-r from-[#174c4b] via-[#1b5756] to-[#c1d16b] h-full w-[91%] rounded-full shadow-xs" />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                    <div className="rounded-xl bg-white p-3 border border-stone-200/60 shadow-2xs">
+                    <div className="rounded-xl bg-white p-3 border border-[#9daeac]/30 shadow-2xs">
                       <div className="stat-num text-lg font-bold text-slate-900">12,000+</div>
                       <div className="text-[11px] text-slate-500 font-medium">Questions Solved</div>
                     </div>
-                    <div className="rounded-xl bg-white p-3 border border-stone-200/60 shadow-2xs">
+                    <div className="rounded-xl bg-white p-3 border border-[#9daeac]/30 shadow-2xs">
                       <div className="stat-num text-lg font-bold text-slate-900">4 Stages</div>
                       <div className="text-[11px] text-slate-500 font-medium">Spaced Retry</div>
                     </div>
@@ -230,7 +230,7 @@ export default async function LandingPage() {
                     <IconClock className="w-3.5 h-3.5 text-slate-400" />
                     30-min setup diagnostic
                   </span>
-                  <span className="font-semibold text-indigo-700">Pausable once</span>
+                  <span className="font-semibold text-[#174c4b]">Pausable once</span>
                 </div>
               </div>
             </div>
@@ -261,9 +261,9 @@ export default async function LandingPage() {
 
         {/* 3 Step Interactive Workflow (Bento Layout) */}
         <section id="how-it-works" className="flex flex-col gap-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-stone-200/70 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#9daeac]/30 pb-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-indigo-700 font-mono">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#174c4b] font-mono">
                 <span>The Diagnostic Loop</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-1">
@@ -286,15 +286,15 @@ export default async function LandingPage() {
                 >
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 font-bold border border-indigo-100 group-hover:bg-indigo-100 transition-colors font-mono">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e3eceb] text-[#174c4b] font-bold border border-[#9daeac]/35 group-hover:bg-[#c1d16b]/20 group-hover:border-[#c1d16b]/60 transition-colors font-mono">
                         <Icon className="w-5 h-5" />
                       </span>
-                      <span className="text-xs font-bold tracking-wider text-slate-400 font-mono bg-stone-100 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-bold tracking-wider text-slate-400 font-mono bg-[#f0f0e9] px-2 py-0.5 rounded-full">
                         {s.step}
                       </span>
                     </div>
 
-                    <div className="inline-block text-[11px] font-bold uppercase tracking-wider text-indigo-600 font-mono mb-1">
+                    <div className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#174c4b] font-mono mb-1">
                       {s.tag}
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 leading-snug">{s.title}</h3>
@@ -304,7 +304,7 @@ export default async function LandingPage() {
                   </div>
 
                   <div className="pt-4 border-t border-stone-100 text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
-                    <IconCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <IconCheck className="w-3.5 h-3.5 text-[#174c4b]" />
                     <span>{s.detail}</span>
                   </div>
                 </div>
@@ -315,9 +315,9 @@ export default async function LandingPage() {
 
         {/* Supported Assessment Blueprints Grid */}
         <section id="blueprints" className="flex flex-col gap-6">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-stone-200/70 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-[#9daeac]/30 pb-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-indigo-700 font-mono">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#174c4b] font-mono">
                 <span>Verified Exam Specifications</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-1">
@@ -344,13 +344,13 @@ export default async function LandingPage() {
                 >
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
-                      <span className="rounded-lg bg-indigo-50 border border-indigo-100 px-2.5 py-1 text-xs font-bold text-indigo-900 font-mono">
+                      <span className="rounded-lg bg-[#e3eceb] border border-[#9daeac]/40 px-2.5 py-1 text-xs font-bold text-[#174c4b] font-mono">
                         {a.company}
                       </span>
-                      <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                      <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-[#174c4b] transition-colors" />
                     </div>
 
-                    <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors mt-1">
+                    <h3 className="text-base font-bold text-slate-900 group-hover:text-[#174c4b] transition-colors mt-1">
                       {a.name}
                     </h3>
 
@@ -359,7 +359,7 @@ export default async function LandingPage() {
                       <span>·</span>
                       <span className="inline-flex items-center gap-1 text-[11px]">
                         {a.currentVersion?.lastVerifiedAt ? (
-                          <span className="text-emerald-700 font-medium">
+                          <span className="text-[#174c4b] font-bold">
                             ✓ Verified{' '}
                             {new Date(a.currentVersion.lastVerifiedAt).toLocaleDateString()}
                           </span>
@@ -372,7 +372,7 @@ export default async function LandingPage() {
 
                   <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
                     <span className="text-slate-500">View test pattern</span>
-                    <span className="font-semibold text-indigo-700 group-hover:underline">
+                    <span className="font-semibold text-[#174c4b] group-hover:underline">
                       Launch prep →
                     </span>
                   </div>

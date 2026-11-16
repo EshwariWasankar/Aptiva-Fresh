@@ -55,9 +55,9 @@ export function WhyThisPanel({ rationale }: { rationale: PlanRationale }) {
     rows.push(['Extended for budget', `+${rationale.extendedForBudget} min`]);
   }
   return (
-    <div className="mt-3 rounded-xl bg-purple-50/70 border border-purple-200/50 p-3.5 text-xs text-slate-800">
-      <div className="mb-2 font-semibold text-purple-950 flex items-center gap-1.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-purple-600"></span>
+    <div className="mt-3 rounded-xl bg-[#f0f0e9]/80 border border-[#9daeac]/35 p-3.5 text-xs text-slate-800">
+      <div className="mb-2 font-bold text-[#174c4b] flex items-center gap-1.5">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#c1d16b]"></span>
         Why this block was scheduled
       </div>
       {rows.length === 0 ? (

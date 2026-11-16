@@ -64,7 +64,7 @@ export default function DiagnosticResultPage() {
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-purple-100/60 pb-5 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#9daeac]/30 pb-5 gap-3">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Diagnostic Analysis &amp; Baseline
@@ -90,7 +90,7 @@ export default function DiagnosticResultPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-purple-50 text-left text-slate-400 font-semibold uppercase tracking-wider">
+                <tr className="border-b border-[#9daeac]/30 text-left text-slate-400 font-semibold uppercase tracking-wider">
                   <th className="pb-2.5 pr-2">Topic</th>
                   <th className="pb-2.5 pr-2">Section</th>
                   <th className="pb-2.5 pr-2">Accuracy</th>
@@ -98,9 +98,9 @@ export default function DiagnosticResultPage() {
                   <th className="pb-2.5">Evidence</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-purple-50/70">
+              <tbody className="divide-y divide-[#9daeac]/20">
                 {result.byTopic.map((t) => (
-                  <tr key={t.topicId} className="hover:bg-purple-50/40 transition-colors">
+                  <tr key={t.topicId} className="hover:bg-[#f0f0e9]/70 transition-colors">
                     <td className="py-2.5 pr-2 font-medium text-slate-800">
                       {t.topicName ?? t.topicId.slice(0, 8)}
                     </td>
@@ -112,7 +112,7 @@ export default function DiagnosticResultPage() {
                         className={`px-2 py-0.5 rounded-md text-[11px] font-medium ${
                           t.thinEvidence
                             ? 'bg-amber-50 text-amber-700 border border-amber-200/50'
-                            : 'bg-purple-50 text-purple-700 border border-purple-100'
+                            : 'bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/35'
                         }`}
                       >
                         {t.thinEvidence ? 'thin' : `${t.answered} items`}
@@ -135,7 +135,7 @@ export default function DiagnosticResultPage() {
               {result.byDifficulty.map((b) => (
                 <div
                   key={b.band}
-                  className="flex justify-between items-center rounded-xl bg-purple-50/40 p-2.5 px-3 border border-purple-100/50"
+                  className="flex justify-between items-center rounded-xl bg-[#f0f0e9]/60 p-2.5 px-3 border border-[#9daeac]/30"
                 >
                   <span className="capitalize font-semibold text-slate-700">{b.label}</span>
                   <div className="flex items-center gap-2">
@@ -154,13 +154,13 @@ export default function DiagnosticResultPage() {
               Pacing Analysis
             </h2>
             <div className="mt-1 flex flex-col gap-2">
-              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+              <div className="flex justify-between items-center py-1 border-b border-[#9daeac]/20">
                 <span className="text-slate-600 font-medium">Avg time vs expected</span>
                 <span className="font-bold text-slate-900">
                   {ratio(result.timeVsExpected.avgRatio)}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+              <div className="flex justify-between items-center py-1 border-b border-[#9daeac]/20">
                 <span className="text-slate-600 font-medium">Over expected (&gt;1.2×)</span>
                 <span className="font-semibold text-slate-800">
                   {pct(result.timeVsExpected.overExpectedShare)}
@@ -180,13 +180,13 @@ export default function DiagnosticResultPage() {
               Fatigue &amp; Consistency
             </h2>
             <div className="mt-1 flex flex-col gap-2">
-              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+              <div className="flex justify-between items-center py-1 border-b border-[#9daeac]/20">
                 <span className="text-slate-600 font-medium">First half accuracy</span>
                 <span className="font-bold text-slate-900">
                   {pct(result.consistency.firstHalfAccuracy)}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+              <div className="flex justify-between items-center py-1 border-b border-[#9daeac]/20">
                 <span className="text-slate-600 font-medium">Second half accuracy</span>
                 <span className="font-bold text-slate-900">
                   {pct(result.consistency.secondHalfAccuracy)}

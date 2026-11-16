@@ -104,14 +104,11 @@ export function StudyHeatmap({
   }, [activeFilter, compact]);
 
   const getIntensityClass = (minutes: number) => {
-    if (minutes <= 0) return 'bg-slate-100/90 border-slate-200/60 hover:border-purple-300';
-    if (minutes < 15)
-      return 'bg-purple-200 border-purple-300/80 hover:ring-2 hover:ring-purple-300';
-    if (minutes < 30)
-      return 'bg-purple-400 border-purple-500/80 hover:ring-2 hover:ring-purple-400';
-    if (minutes < 60)
-      return 'bg-purple-600 border-purple-700/80 hover:ring-2 hover:ring-purple-500';
-    return 'bg-purple-800 border-purple-950/80 hover:ring-2 hover:ring-purple-600';
+    if (minutes <= 0) return 'bg-[#f0f0e9] border-[#9daeac]/30 hover:border-[#9daeac]';
+    if (minutes < 15) return 'bg-[#e3eceb] border-[#9daeac]/50 hover:ring-2 hover:ring-[#9daeac]';
+    if (minutes < 30) return 'bg-[#a6c7c5] border-[#174c4b]/40 hover:ring-2 hover:ring-[#174c4b]';
+    if (minutes < 60) return 'bg-[#174c4b] border-[#123c3b] hover:ring-2 hover:ring-[#c1d16b]';
+    return 'bg-[#c1d16b] border-[#b3c458] hover:ring-2 hover:ring-[#174c4b]';
   };
 
   const activeDay = selectedDay || hoveredDay;
@@ -127,15 +124,15 @@ export function StudyHeatmap({
   return (
     <div className="flex flex-col gap-6 w-full">
       {/* Top Header & Range Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-purple-50 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#9daeac]/30 pb-3">
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-base sm:text-lg font-bold tracking-tight text-slate-900">
               Study Activity &amp; Commitments
             </h3>
             {activity && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-semibold text-purple-900 border border-purple-200">
-                <IconFlame className="w-3.5 h-3.5 text-purple-700" />
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f9dc] px-2.5 py-0.5 text-xs font-bold text-[#37420c] border border-[#c1d16b]">
+                <IconFlame className="w-3.5 h-3.5 text-[#174c4b]" />
                 {activity.currentStreak} day streak
               </span>
             )}
@@ -147,14 +144,14 @@ export function StudyHeatmap({
 
         {/* Range Filters */}
         {!compact && (
-          <div className="flex items-center gap-1 rounded-xl bg-purple-50/80 p-1 border border-purple-100 self-start sm:self-auto">
+          <div className="flex items-center gap-1 rounded-xl bg-[#f0f0e9] p-1 border border-[#9daeac]/40 self-start sm:self-auto">
             <button
               type="button"
               onClick={() => handleFilterClick(30)}
               className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
                 activeFilter === 30
-                  ? 'bg-white text-purple-900 font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-purple-700'
+                  ? 'bg-[#174c4b] text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-[#174c4b]'
               }`}
             >
               30 Days
@@ -164,8 +161,8 @@ export function StudyHeatmap({
               onClick={() => handleFilterClick(180)}
               className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
                 activeFilter === 180
-                  ? 'bg-white text-purple-900 font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-purple-700'
+                  ? 'bg-[#174c4b] text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-[#174c4b]'
               }`}
             >
               6 Months
@@ -175,8 +172,8 @@ export function StudyHeatmap({
               onClick={() => handleFilterClick(365)}
               className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
                 activeFilter === 365
-                  ? 'bg-white text-purple-900 font-bold shadow-xs'
-                  : 'text-slate-600 hover:text-purple-700'
+                  ? 'bg-[#174c4b] text-white font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-[#174c4b]'
               }`}
             >
               1 Year
@@ -188,7 +185,7 @@ export function StudyHeatmap({
       {/* Summary Statistics Bar */}
       {activity && (
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 w-full">
-          <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/80 flex flex-col justify-between">
+          <div className="rounded-xl bg-[#f0f0e9]/50 p-3.5 border border-[#9daeac]/30 flex flex-col justify-between">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
               Study Hours
             </span>
@@ -197,7 +194,7 @@ export function StudyHeatmap({
             </span>
           </div>
 
-          <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/80 flex flex-col justify-between">
+          <div className="rounded-xl bg-[#f0f0e9]/50 p-3.5 border border-[#9daeac]/30 flex flex-col justify-between">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
               Active Days
             </span>
@@ -206,16 +203,16 @@ export function StudyHeatmap({
             </span>
           </div>
 
-          <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/80 flex flex-col justify-between">
+          <div className="rounded-xl bg-[#f0f0e9]/50 p-3.5 border border-[#9daeac]/30 flex flex-col justify-between">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
               Current Streak
             </span>
-            <span className="text-xl font-bold tracking-tight text-purple-700 mt-1 flex items-center gap-1">
+            <span className="text-xl font-bold tracking-tight text-[#174c4b] mt-1 flex items-center gap-1">
               {activity.currentStreak}d
             </span>
           </div>
 
-          <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/80 flex flex-col justify-between">
+          <div className="rounded-xl bg-[#f0f0e9]/50 p-3.5 border border-[#9daeac]/30 flex flex-col justify-between">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
               Longest Streak
             </span>
@@ -224,7 +221,7 @@ export function StudyHeatmap({
             </span>
           </div>
 
-          <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/80 flex flex-col justify-between">
+          <div className="rounded-xl bg-[#f0f0e9]/50 p-3.5 border border-[#9daeac]/30 flex flex-col justify-between">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
               Sessions
             </span>
@@ -233,7 +230,7 @@ export function StudyHeatmap({
             </span>
           </div>
 
-          <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/80 flex flex-col justify-between">
+          <div className="rounded-xl bg-[#f0f0e9]/50 p-3.5 border border-[#9daeac]/30 flex flex-col justify-between">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
               Questions
             </span>
@@ -242,7 +239,7 @@ export function StudyHeatmap({
             </span>
           </div>
 
-          <div className="rounded-xl bg-purple-50/60 p-3.5 border border-purple-100/80 flex flex-col justify-between col-span-2 sm:col-span-1">
+          <div className="rounded-xl bg-[#f0f0e9]/50 p-3.5 border border-[#9daeac]/30 flex flex-col justify-between col-span-2 sm:col-span-1">
             <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">
               Avg / Active Day
             </span>
@@ -254,7 +251,7 @@ export function StudyHeatmap({
       )}
 
       {/* Heatmap Contribution Grid Card: Centered & Balanced Layout */}
-      <div className="rounded-2xl bg-white/70 p-5 sm:p-7 border border-purple-100/80 shadow-xs flex flex-col gap-4 overflow-hidden w-full">
+      <div className="rounded-2xl bg-white/90 p-5 sm:p-7 border border-[#9daeac]/35 shadow-xs flex flex-col gap-4 overflow-hidden w-full">
         {loading ? (
           <div className="py-16 text-center text-xs text-slate-400">Loading study heatmap…</div>
         ) : (
@@ -361,7 +358,7 @@ export function StudyHeatmap({
                                   !day.inRange
                                     ? 'opacity-0 cursor-default pointer-events-none'
                                     : isSelected
-                                      ? 'ring-2 ring-purple-600 scale-110 z-10'
+                                      ? 'ring-2 ring-[#174c4b] scale-110 z-10'
                                       : ''
                                 } ${day.inRange ? getIntensityClass(minutes) : ''}`}
                               >
@@ -384,7 +381,7 @@ export function StudyHeatmap({
         )}
 
         {/* Legend & Day Details Footer: Centered & Balanced */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-purple-100/60 text-xs text-slate-600">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-[#9daeac]/30 text-xs text-slate-600">
           {/* Active / Hovered Day Details */}
           <div className="flex items-center gap-2 min-h-6">
             {activeDay ? (
@@ -399,7 +396,7 @@ export function StudyHeatmap({
                   })}
                   :
                 </span>
-                <span className="font-semibold text-purple-950">
+                <span className="font-semibold text-[#174c4b]">
                   {Math.round(activeDay.activeSeconds / 60)} mins studied
                 </span>
                 <span className="text-slate-400">·</span>
@@ -426,11 +423,11 @@ export function StudyHeatmap({
           {/* Less -> More Legend */}
           <div className="flex items-center gap-1.5 self-end sm:self-auto text-xs text-slate-500 font-medium shrink-0">
             <span>Less</span>
-            <span className="h-3 w-3 rounded-xs bg-slate-100 border border-slate-200/60" />
-            <span className="h-3 w-3 rounded-xs bg-purple-200 border border-purple-300" />
-            <span className="h-3 w-3 rounded-xs bg-purple-400 border border-purple-500" />
-            <span className="h-3 w-3 rounded-xs bg-purple-600 border border-purple-700" />
-            <span className="h-3 w-3 rounded-xs bg-purple-800 border border-purple-950" />
+            <span className="h-3 w-3 rounded-xs bg-[#f0f0e9] border border-[#9daeac]/30" />
+            <span className="h-3 w-3 rounded-xs bg-[#e3eceb] border border-[#9daeac]/50" />
+            <span className="h-3 w-3 rounded-xs bg-[#a6c7c5] border border-[#174c4b]/40" />
+            <span className="h-3 w-3 rounded-xs bg-[#174c4b] border border-[#123c3b]" />
+            <span className="h-3 w-3 rounded-xs bg-[#c1d16b] border border-[#b3c458]" />
             <span>More</span>
           </div>
         </div>
@@ -438,9 +435,9 @@ export function StudyHeatmap({
 
       {/* Commitment & Rest Day Summary Note */}
       {activity?.commitment && (
-        <div className="rounded-xl bg-purple-50/50 p-4 border border-purple-100/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs w-full">
+        <div className="rounded-xl bg-[#f5f9dc]/60 p-4 border border-[#c1d16b]/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs w-full">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-700">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e3eceb] text-[#174c4b]">
               <IconTarget className="w-4 h-4" />
             </div>
             <div>
@@ -455,7 +452,7 @@ export function StudyHeatmap({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-700 border border-purple-200/60 shadow-2xs">
+            <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-700 border border-[#9daeac]/40 shadow-2xs">
               Rest Day:{' '}
               {activity.restDayUsed ? 'Used' : `${activity.plannedRestDays} planned / allowed`}
             </span>

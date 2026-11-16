@@ -30,9 +30,9 @@ export default function BillingPage() {
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto w-full">
       {/* Header */}
-      <div className="border-b border-stone-200/70 pb-5">
+      <div className="border-b border-[#9daeac]/30 pb-5">
         <div className="flex items-center gap-2.5">
-          <span className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
+          <span className="p-1.5 rounded-lg bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/35">
             <IconCreditCard className="w-5 h-5" />
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
@@ -55,7 +55,7 @@ export default function BillingPage() {
             <span
               className={`rounded-full px-2.5 py-0.5 text-xs font-bold font-mono ${
                 sub?.isPassActive
-                  ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+                  ? 'bg-[#f5f9dc] text-[#37420c] border border-[#c1d16b]'
                   : 'bg-stone-100 text-slate-700 border border-stone-200'
               }`}
             >
@@ -71,7 +71,7 @@ export default function BillingPage() {
 
           {sub?.validUntil && (
             <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <IconClock className="w-3.5 h-3.5 text-indigo-600" />
+              <IconClock className="w-3.5 h-3.5 text-[#174c4b]" />
               <span>
                 Valid through{' '}
                 {new Date(sub.validUntil).toLocaleDateString('en-US', {
@@ -86,7 +86,7 @@ export default function BillingPage() {
 
         <div className="flex items-center gap-2 text-xs">
           <div className="rounded-xl bg-stone-50 px-4 py-2.5 border border-stone-200/70 flex items-center gap-2">
-            <IconCheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <IconCheckCircle className="w-4 h-4 text-[#174c4b] shrink-0" />
             <span className="font-semibold text-slate-800">
               {sub?.features.practicePlanCount === 'unlimited'
                 ? 'Unlimited Adaptive Plans'
@@ -113,11 +113,11 @@ export default function BillingPage() {
               <div
                 key={tier.tier}
                 className={`bento-card bento-card-hover p-6 flex flex-col justify-between gap-5 relative transition-all bg-white ${
-                  tier.popular ? 'ring-2 ring-indigo-600 shadow-md sm:-translate-y-1' : ''
+                  tier.popular ? 'ring-2 ring-[#c1d16b] shadow-md sm:-translate-y-1' : ''
                 }`}
               >
                 {tier.badge && (
-                  <span className="absolute -top-3 left-6 rounded-full bg-gradient-to-r from-indigo-600 to-slate-900 px-3 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider shadow-sm font-mono">
+                  <span className="absolute -top-3 left-6 rounded-full bg-[#174c4b] border border-[#c1d16b]/50 px-3 py-0.5 text-[10px] font-bold text-[#c1d16b] uppercase tracking-wider shadow-sm font-mono">
                     {tier.badge}
                   </span>
                 )}
@@ -146,7 +146,7 @@ export default function BillingPage() {
                       <li key={i} className="flex items-start gap-2 text-xs">
                         <span
                           className={`mt-0.5 shrink-0 font-bold ${
-                            f.included ? 'text-indigo-600' : 'text-slate-300'
+                            f.included ? 'text-[#174c4b]' : 'text-slate-300'
                           }`}
                         >
                           {f.included ? '✓' : '—'}
@@ -193,9 +193,9 @@ export default function BillingPage() {
       {checkoutModalOpen && selectedPlan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in">
           <div className="glass-card max-w-md w-full p-6 sm:p-7 flex flex-col gap-5 shadow-2xl border border-white relative">
-            <div className="flex items-start justify-between border-b border-purple-100/70 pb-3">
+            <div className="flex items-start justify-between border-b border-[#9daeac]/30 pb-3">
               <div>
-                <span className="text-[11px] font-semibold text-purple-700 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-[#174c4b] uppercase tracking-wider font-mono">
                   Pass Details
                 </span>
                 <h3 className="text-lg font-bold text-slate-900 mt-0.5">{selectedPlan.name}</h3>
@@ -209,7 +209,7 @@ export default function BillingPage() {
               </button>
             </div>
 
-            <div className="rounded-xl bg-purple-50/70 p-4 border border-purple-100/80 flex items-baseline justify-between">
+            <div className="rounded-xl bg-[#f0f0e9]/80 p-4 border border-[#9daeac]/30 flex items-baseline justify-between">
               <div>
                 <span className="text-xs text-slate-600 block">One-Time Fee:</span>
                 <span className="text-xs text-slate-500">

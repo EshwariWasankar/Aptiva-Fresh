@@ -214,8 +214,8 @@ export default function DiagnosticRunnerPage() {
         <span className="text-xs font-bold text-slate-800 uppercase tracking-wider font-mono">
           Question {item.position} of {item.total}
         </span>
-        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-stone-100 px-3 py-1 rounded-full border border-stone-200/60 font-mono">
-          <IconClock className="w-3.5 h-3.5 text-indigo-600" />
+        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-[#f0f0e9] px-3 py-1 rounded-full border border-[#9daeac]/30 font-mono">
+          <IconClock className="w-3.5 h-3.5 text-[#174c4b]" />
           <span>{fmtElapsed(elapsed)}</span>
           <span className="text-slate-400 font-normal">
             · target ~{Math.round(q.expectedTimeMs / 1000)}s
@@ -223,10 +223,10 @@ export default function DiagnosticRunnerPage() {
         </div>
       </div>
 
-      {/* Progress Bar in Indigo */}
-      <div className="h-1.5 w-full rounded-full bg-stone-200 overflow-hidden">
+      {/* Progress Bar in The Performance Lab Chartreuse */}
+      <div className="h-2 w-full rounded-full bg-[#f0f0e9] border border-[#9daeac]/30 overflow-hidden">
         <div
-          className="h-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-600 transition-all duration-300"
+          className="h-full rounded-full bg-gradient-to-r from-[#174c4b] via-[#1b5756] to-[#c1d16b] transition-all duration-300"
           style={{ width: `${(item.position / item.total) * 100}%` }}
         />
       </div>
@@ -248,7 +248,7 @@ export default function DiagnosticRunnerPage() {
                 key={o.id}
                 className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 px-4 text-xs sm:text-sm font-medium transition-all max-w-full break-words [overflow-wrap:anywhere] ${
                   selected === o.id
-                    ? 'border-indigo-600 bg-indigo-50/90 text-indigo-950 shadow-xs ring-1 ring-indigo-500'
+                    ? 'border-[#174c4b] bg-[#e3eceb] text-slate-950 shadow-xs ring-1 ring-[#174c4b]'
                     : 'border-stone-200/70 bg-stone-50/50 hover:bg-white text-slate-800'
                 }`}
               >
@@ -258,7 +258,7 @@ export default function DiagnosticRunnerPage() {
                   value={o.id}
                   checked={selected === o.id}
                   onChange={() => setSelected(o.id)}
-                  className="accent-indigo-600 mt-0.5 shrink-0"
+                  className="accent-[#174c4b] mt-0.5 shrink-0"
                 />
                 <Katex text={o.text} className="max-w-full break-words" />
               </label>

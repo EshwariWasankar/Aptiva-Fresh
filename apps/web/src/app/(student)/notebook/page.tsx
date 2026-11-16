@@ -21,7 +21,7 @@ export default function NotebookPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/70 pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#9daeac]/30 pb-5">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             Spaced Mistake Notebook
@@ -31,7 +31,7 @@ export default function NotebookPage() {
             14d.
           </p>
         </div>
-        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-white/80 self-start sm:self-auto">
+        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-[#9daeac]/30 self-start sm:self-auto">
           {(['open', 'resolved', 'all'] as const).map((f) => (
             <button
               key={f}
@@ -55,7 +55,7 @@ export default function NotebookPage() {
 
       {entries.length === 0 && !error && (
         <div className="bento-card p-12 text-center flex flex-col items-center gap-2 bg-white">
-          <IconBook className="w-8 h-8 text-indigo-300" />
+          <IconBook className="w-8 h-8 text-[#9daeac]" />
           <h3 className="text-sm font-bold text-slate-800">No entries in this view</h3>
           <p className="text-xs text-slate-500 max-w-sm">
             Mistakes and wrong answers from practice drills will be catalogued here for scheduled
@@ -94,16 +94,16 @@ export default function NotebookPage() {
 
               <div className="shrink-0 text-right">
                 {e.resolvedAt ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200/60 px-3 py-1 text-[11px] font-bold text-emerald-800">
-                    <IconCheck className="w-3.5 h-3.5" />
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f9dc] border border-[#c1d16b] px-3 py-1 text-[11px] font-bold text-[#37420c]">
+                    <IconCheck className="w-3.5 h-3.5 text-[#174c4b]" />
                     Resolved
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/60 px-3 py-1 text-[11px] font-semibold text-amber-800 font-mono">
-                    <IconClock className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e3eceb] border border-[#9daeac]/40 px-3 py-1 text-[11px] font-semibold text-[#174c4b] font-mono">
+                    <IconClock className="w-3.5 h-3.5 text-[#174c4b]" />
                     <span>Retry {e.retryAt ? new Date(e.retryAt).toLocaleDateString() : '—'}</span>
                     {e.retryCount < LADDER.length && (
-                      <span className="text-amber-700 font-medium">
+                      <span className="text-[#174c4b] font-medium">
                         (stage {e.retryCount + 1}/{LADDER.length})
                       </span>
                     )}

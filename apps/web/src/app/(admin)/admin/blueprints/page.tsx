@@ -164,7 +164,7 @@ export default function BlueprintsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between border-b border-stone-200/50 pb-5 gap-3">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between border-b border-[#9daeac]/30 pb-5 gap-3">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
             Assessment Blueprints
@@ -180,7 +180,7 @@ export default function BlueprintsPage() {
             placeholder="Draft from company records…"
             value={draftCompany}
             onChange={(e) => setDraftCompany(e.target.value)}
-            className="glass-input px-3 py-1.5 text-xs w-48"
+            className="glass-input px-3 py-1.5 text-xs w-48 border-[#9daeac]/40 focus:border-[#174c4b]"
           />
           <button
             type="button"
@@ -207,7 +207,7 @@ export default function BlueprintsPage() {
       )}
 
       {loading ? (
-        <div className="glass-card p-10 text-center text-xs text-stone-400">
+        <div className="glass-card p-10 text-center text-xs text-stone-400 border border-[#9daeac]/35">
           Loading blueprints…
         </div>
       ) : (
@@ -215,15 +215,16 @@ export default function BlueprintsPage() {
           {items.map((a) => (
             <li
               key={a.id}
-              className="glass-card glass-card-interactive p-5 flex flex-col justify-between gap-3"
+              className="glass-card glass-card-interactive p-5 flex flex-col justify-between gap-3 border border-[#9daeac]/35"
             >
               <div>
                 <div className="font-bold text-sm text-stone-900">{a.name}</div>
                 <div className="text-xs text-stone-500 mt-0.5">
-                  {a.company} · slug: <code className="text-[11px] text-stone-700">{a.slug}</code>
+                  {a.company} · slug:{' '}
+                  <code className="text-[11px] text-stone-700 font-mono">{a.slug}</code>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-stone-100">
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[#9daeac]/20">
                 {a.versions.map((v) => (
                   <button
                     key={v.id}
@@ -231,8 +232,8 @@ export default function BlueprintsPage() {
                     onClick={() => void openDetail(a.id)}
                     className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold transition-colors ${
                       v.isCurrent
-                        ? 'bg-emerald-50 border border-emerald-300 text-emerald-800'
-                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                        ? 'bg-[#f5f9dc] border border-[#c1d16b] text-[#37420c]'
+                        : 'bg-[#f0f0e9] border border-[#9daeac]/30 text-stone-600 hover:bg-[#e3eceb]'
                     }`}
                   >
                     v{v.version} {v.isCurrent ? '· active' : ''}
@@ -256,8 +257,8 @@ export default function BlueprintsPage() {
       )}
 
       {detail && currentVersion && (
-        <div className="glass-card p-6 flex flex-col gap-4 border-2 border-purple-200/60">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-100 pb-3 gap-2">
+        <div className="glass-card p-6 flex flex-col gap-4 border-2 border-[#174c4b]/50">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#9daeac]/30 pb-3 gap-2">
             <div>
               <h2 className="text-lg font-bold text-stone-900">{detail.name}</h2>
               <span className="text-xs text-stone-500 font-medium">
@@ -267,7 +268,7 @@ export default function BlueprintsPage() {
                   : '· unverified'}
               </span>
             </div>
-            <span className="rounded-full bg-purple-50 border border-purple-200/50 px-3 py-1 text-xs font-semibold text-purple-900">
+            <span className="rounded-full bg-[#e3eceb] border border-[#9daeac]/40 px-3 py-1 text-xs font-semibold text-[#174c4b] font-mono">
               {currentVersion.sections.length} test sections
             </span>
           </div>
@@ -276,15 +277,15 @@ export default function BlueprintsPage() {
             {currentVersion.sections.map((s) => (
               <div
                 key={s.id}
-                className="rounded-xl bg-stone-50/70 p-4 border border-stone-200/40 flex flex-col gap-2"
+                className="rounded-xl bg-[#f0f0e9] p-4 border border-[#9daeac]/30 flex flex-col gap-2"
               >
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/30 pb-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#9daeac]/20 pb-2">
                   <span className="font-bold text-xs text-stone-900">
                     Section {s.orderNo}. {s.name}
                   </span>
                   <ProvenanceBadge source={s.source} />
                 </div>
-                <div className="text-xs text-stone-600 font-medium">
+                <div className="text-xs text-stone-600 font-medium font-mono">
                   {s.durationMin ?? '?'} min · {s.questionCountMin ?? '?'}–
                   {s.questionCountMax ?? '?'} questions
                   {s.negativeMarking != null ? ` · −${s.negativeMarking} negative marking` : ''}
@@ -293,7 +294,7 @@ export default function BlueprintsPage() {
                   {s.weights.map((w) => (
                     <li
                       key={w.id}
-                      className="flex flex-wrap items-center justify-between gap-2 text-xs bg-white/70 p-2 px-3 rounded-lg border border-stone-200/30"
+                      className="flex flex-wrap items-center justify-between gap-2 text-xs bg-white p-2 px-3 rounded-lg border border-[#9daeac]/30"
                     >
                       <span className="font-medium text-stone-800">
                         {w.topic.name} —{' '}
@@ -309,8 +310,8 @@ export default function BlueprintsPage() {
             ))}
           </div>
 
-          <div className="pt-2 border-t border-stone-100">
-            <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2">
+          <div className="pt-2 border-t border-[#9daeac]/30">
+            <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wide mb-2 font-mono">
               Revision Log
             </h3>
             <ul className="flex flex-col gap-1 text-xs text-stone-600">
@@ -319,13 +320,13 @@ export default function BlueprintsPage() {
                   <span>
                     v{v.version} —{' '}
                     {v.isCurrent ? (
-                      <strong className="text-emerald-700">active</strong>
+                      <strong className="text-[#174c4b]">active</strong>
                     ) : (
                       'superseded'
                     )}{' '}
                     · valid from {new Date(v.validFrom).toLocaleDateString()}
                   </span>
-                  <span className="text-stone-400">{v.sections.length} sections</span>
+                  <span className="text-stone-400 font-mono">{v.sections.length} sections</span>
                 </li>
               ))}
             </ul>

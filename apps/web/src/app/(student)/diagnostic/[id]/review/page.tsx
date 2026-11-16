@@ -71,7 +71,7 @@ export default function DiagnosticReviewPage() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6 w-full overflow-hidden question-container">
-      <div className="border-b border-purple-100/60 pb-4">
+      <div className="border-b border-[#9daeac]/30 pb-4">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Review Diagnostic Mistakes
         </h1>
@@ -87,7 +87,7 @@ export default function DiagnosticReviewPage() {
             key={item.attemptId}
             className="glass-card p-6 flex flex-col gap-4 overflow-hidden max-w-full"
           >
-            <div className="flex items-center justify-between text-xs border-b border-purple-50 pb-3">
+            <div className="flex items-center justify-between text-xs border-b border-[#9daeac]/20 pb-3">
               <span className="font-semibold text-slate-600">
                 Q{item.sequenceNo} · {item.topicName} ·{' '}
                 {item.timeMs != null && item.expectedTimeMs > 0
@@ -121,7 +121,7 @@ export default function DiagnosticReviewPage() {
                         ? 'bg-emerald-50/90 border-emerald-300 text-emerald-950 font-semibold'
                         : o.id === item.selectedOptionId
                           ? 'bg-rose-50/90 border-rose-300 text-rose-950 font-semibold'
-                          : 'bg-white/60 border-purple-100/60 text-slate-600'
+                          : 'bg-white/80 border-[#9daeac]/30 text-slate-700'
                     }`}
                   >
                     <span className="shrink-0 mr-1.5">
@@ -134,7 +134,7 @@ export default function DiagnosticReviewPage() {
             )}
 
             {item.format === 'numerical' && (
-              <div className="rounded-xl bg-purple-50/40 p-3.5 border border-purple-100/60 text-xs flex items-center gap-4">
+              <div className="rounded-xl bg-[#f0f0e9]/80 p-3.5 border border-[#9daeac]/30 text-xs flex items-center gap-4">
                 <div>
                   <span className="text-slate-400 font-medium">Correct answer: </span>
                   <span className="font-mono font-bold text-emerald-800">
@@ -152,14 +152,14 @@ export default function DiagnosticReviewPage() {
             )}
 
             {item.solution && (
-              <details className="rounded-xl bg-purple-50/40 border border-purple-100/60 p-4 group">
-                <summary className="cursor-pointer text-xs font-bold text-purple-700 flex items-center justify-between">
+              <details className="rounded-xl bg-[#f0f0e9]/80 border border-[#9daeac]/30 p-4 group">
+                <summary className="cursor-pointer text-xs font-bold text-[#174c4b] flex items-center justify-between">
                   <span>Worked step-by-step solution</span>
                   <span className="text-slate-400 group-open:rotate-180 transition-transform">
                     ▼
                   </span>
                 </summary>
-                <div className="mt-3 rounded-lg bg-white/90 p-3 text-xs text-slate-800 leading-relaxed border border-purple-100/60">
+                <div className="mt-3 rounded-lg bg-white/90 p-3 text-xs text-slate-800 leading-relaxed border border-[#9daeac]/30">
                   <Katex text={item.solution} />
                 </div>
               </details>
@@ -188,7 +188,7 @@ export default function DiagnosticReviewPage() {
             )}
 
             {!item.feedback && !item.inference?.conflict && (
-              <div className="mt-1 rounded-xl bg-purple-50/40 p-3.5 border border-purple-100/60">
+              <div className="mt-1 rounded-xl bg-[#f0f0e9]/80 p-3.5 border border-[#9daeac]/30">
                 <ErrorCausePicker
                   attemptId={item.attemptId}
                   onSaved={(r) => {
@@ -212,7 +212,7 @@ export default function DiagnosticReviewPage() {
         ))}
       </div>
 
-      <div className="flex gap-3 pt-3 border-t border-purple-100/60">
+      <div className="flex gap-3 pt-3 border-t border-[#9daeac]/30">
         <button
           type="button"
           onClick={() => router.push(`/diagnostic/${id}/result`)}

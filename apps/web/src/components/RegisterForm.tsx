@@ -158,11 +158,11 @@ export function RegisterForm() {
           type="checkbox"
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
-          className="mt-0.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+          className="mt-0.5 rounded border-[#9daeac]/40 text-[#174c4b] focus:ring-[#174c4b]"
         />
         <span>
           I agree to the{' '}
-          <Link href="/privacy" className="text-purple-600 underline">
+          <Link href="/privacy" className="text-[#174c4b] font-semibold underline">
             privacy notice
           </Link>{' '}
           (version {CONSENT_NOTICE_VERSION}).
@@ -188,16 +188,13 @@ export function RegisterForm() {
       </button>
       <div className="flex justify-between text-xs text-slate-600 mt-1">
         <span>Already have an account?</span>
-        <Link
-          href="/login"
-          className="font-semibold text-purple-600 hover:text-purple-700 transition"
-        >
+        <Link href="/login" className="font-bold text-[#174c4b] hover:underline transition">
           Sign in
         </Link>
       </div>
       <div className="relative my-2 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-purple-100"></div>
+          <div className="w-full border-t border-[#9daeac]/30"></div>
         </div>
         <span className="relative bg-white/70 px-3 text-[11px] text-slate-400">or</span>
       </div>

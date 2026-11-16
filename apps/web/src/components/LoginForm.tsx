@@ -59,7 +59,7 @@ export function LoginForm() {
       <div className="flex justify-end -mt-2">
         <Link
           href="/reset-password"
-          className="text-xs font-medium text-indigo-600 hover:text-indigo-800 transition"
+          className="text-xs font-semibold text-[#174c4b] hover:underline transition"
         >
           Forgot password?
         </Link>
@@ -81,16 +81,13 @@ export function LoginForm() {
       </button>
       <div className="text-center text-xs text-slate-600 mt-1">
         Don&apos;t have an account?{' '}
-        <Link
-          href="/register"
-          className="font-semibold text-indigo-600 hover:text-indigo-800 transition"
-        >
+        <Link href="/register" className="font-bold text-[#174c4b] hover:underline transition">
           Create account
         </Link>
       </div>
       <div className="relative my-2 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-purple-100"></div>
+          <div className="w-full border-t border-[#9daeac]/30"></div>
         </div>
         <span className="relative bg-white/70 px-3 text-[11px] text-slate-400">or</span>
       </div>

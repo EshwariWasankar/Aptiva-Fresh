@@ -48,30 +48,38 @@ export function ProfileRadar({ values }: Props) {
       aria-label="Ability radar by section"
     >
       {rings.map((pts, i) => (
-        <polygon key={i} points={pts} fill="none" stroke="#d4d4d4" strokeWidth="1" />
+        <polygon
+          key={i}
+          points={pts}
+          fill="none"
+          stroke="#9daeac"
+          strokeOpacity="0.4"
+          strokeWidth="1"
+        />
       ))}
       {sections.map((s, i) => {
         const [x, y] = point(i, 2200);
         return (
           <g key={s}>
-            <line x1={cx} y1={cy} x2={x} y2={y} stroke="#e5e5e5" />
+            <line x1={cx} y1={cy} x2={x} y2={y} stroke="#9daeac" strokeOpacity="0.3" />
             <text
               x={cx + (R + 18) * Math.cos(angle(i))}
               y={cy + (R + 18) * Math.sin(angle(i)) + 4}
               textAnchor="middle"
               fontSize="11"
-              fill="#404040"
+              fontWeight="600"
+              fill="#252d2d"
             >
               {SECTION_LABELS[s] ?? s}
             </text>
           </g>
         );
       })}
-      <polygon points={poly} fill="rgba(55, 48, 163, 0.16)" stroke="#3730a3" strokeWidth="2.2" />
+      <polygon points={poly} fill="rgba(193, 209, 107, 0.3)" stroke="#174c4b" strokeWidth="2.2" />
       {sections.map((s, i) => {
         const [x, y] = point(i, values[s] ?? 1500);
         return (
-          <circle key={s} cx={x} cy={y} r="3.5" fill="#3730a3" stroke="#ffffff" strokeWidth="1.5" />
+          <circle key={s} cx={x} cy={y} r="3.5" fill="#174c4b" stroke="#c1d16b" strokeWidth="1.5" />
         );
       })}
     </svg>

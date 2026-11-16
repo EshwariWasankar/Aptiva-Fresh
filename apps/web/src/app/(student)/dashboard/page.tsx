@@ -108,14 +108,14 @@ export default function StudentHomePage() {
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Overview Header with Live Telemetry Badges */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-stone-200/70 pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-[#9daeac]/30 pb-5">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
               Adaptive Workspace
             </span>
             <span className="h-1 w-1 rounded-full bg-slate-300" />
-            <span className="text-xs font-semibold text-indigo-700">Campus Drive 2026</span>
+            <span className="text-xs font-semibold text-[#174c4b]">Campus Drive 2026</span>
           </div>
           <h1 className="mt-1 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
             Welcome back, {userDisplayName}
@@ -128,19 +128,19 @@ export default function StudentHomePage() {
         <div className="flex items-center gap-2 flex-wrap">
           {activity && (
             <>
-              <span className="rounded-full bg-white border border-stone-200/90 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-amber-500 ring-2 ring-amber-400/30" />
+              <span className="rounded-full bg-white border border-[#9daeac]/40 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#c1d16b] ring-2 ring-[#c1d16b]/40" />
                 <span className="stat-num">{activity.currentStreak}</span>
                 <span className="text-slate-500 font-medium">day streak</span>
               </span>
-              <span className="rounded-full bg-white border border-stone-200/90 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-indigo-500" />
+              <span className="rounded-full bg-white border border-[#9daeac]/40 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#174c4b]" />
                 <span className="stat-num">{Math.round(activity.totalStudyHours)}</span>
                 <span className="text-slate-500 font-medium">hrs total</span>
               </span>
             </>
           )}
-          <span className="rounded-full bg-white border border-stone-200/90 px-3.5 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
+          <span className="rounded-full bg-white border border-[#9daeac]/40 px-3.5 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
             {currentMonthYear}
           </span>
         </div>
@@ -148,10 +148,10 @@ export default function StudentHomePage() {
 
       {/* First Time / Onboarding Banner (if no plan active) */}
       {noPlan && (
-        <div className="bento-card p-6 sm:p-8 bg-gradient-to-br from-indigo-50/90 via-white to-amber-50/50 border border-indigo-100 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div className="bento-card p-6 sm:p-8 bg-gradient-to-br from-[#e3eceb]/80 via-white to-[#f5f9dc]/60 border border-[#9daeac]/40 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="flex flex-col gap-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100/80 px-2.5 py-0.5 text-[11px] font-bold text-indigo-900 w-fit font-mono">
-              <IconSparkles className="w-3.5 h-3.5 text-indigo-600" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f9dc] border border-[#c1d16b] px-2.5 py-0.5 text-[11px] font-bold text-[#37420c] w-fit font-mono">
+              <IconSparkles className="w-3.5 h-3.5 text-[#174c4b]" />
               <span>Get Started in 3 Steps</span>
             </div>
             <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
@@ -195,11 +195,11 @@ export default function StudentHomePage() {
                 <span className="text-xs font-bold tracking-wider uppercase text-slate-400 font-mono">
                   Daily Schedule
                 </span>
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#174c4b]" />
               </div>
               <Link
                 href="/plan"
-                className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 transition inline-flex items-center gap-1"
+                className="text-xs font-semibold text-[#174c4b] hover:text-[#123c3b] transition inline-flex items-center gap-1"
               >
                 Full plan
                 <IconArrowUpRight className="w-3.5 h-3.5" />
@@ -216,13 +216,13 @@ export default function StudentHomePage() {
             {noPlan ? (
               <div className="mt-4 rounded-xl bg-amber-50/80 border border-amber-200/70 p-4 text-xs text-amber-900">
                 No active plan yet —{' '}
-                <Link href="/setup/requirements" className="font-bold text-indigo-800 underline">
+                <Link href="/setup/requirements" className="font-bold text-[#174c4b] underline">
                   set up requirements
                 </Link>{' '}
                 to generate your personalized blueprint.
               </div>
             ) : todayItems.length === 0 ? (
-              <div className="mt-4 rounded-xl bg-slate-50 border border-stone-200/70 p-4 text-xs text-slate-600 flex items-center gap-2.5">
+              <div className="mt-4 rounded-xl bg-[#f0f0e9]/60 border border-[#9daeac]/30 p-4 text-xs text-slate-600 flex items-center gap-2.5">
                 <IconCalendar className="w-4 h-4 text-slate-400 shrink-0" />
                 <span>Rest day or no blocks scheduled for today. Great time for a review!</span>
               </div>
@@ -231,17 +231,17 @@ export default function StudentHomePage() {
                 {todayItems.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-stone-50/80 hover:bg-stone-100/80 border border-stone-200/70 p-2.5 px-3 transition-colors text-xs"
+                    className="flex items-center justify-between rounded-xl bg-[#f0f0e9]/50 hover:bg-[#f0f0e9] border border-[#9daeac]/30 p-2.5 px-3 transition-colors text-xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="h-2 w-2 rounded-full bg-indigo-600" />
+                      <span className="h-2 w-2 rounded-full bg-[#c1d16b]" />
                       <span className="font-semibold text-slate-800">
                         {BLOCK_LABEL[i.blockType] ?? i.blockType}
                       </span>
                       <span className="text-slate-400">·</span>
                       <span className="text-slate-600 font-medium">{i.topic.name}</span>
                     </div>
-                    <span className="font-semibold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-stone-200/60 font-mono shadow-2xs">
+                    <span className="font-semibold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-[#9daeac]/30 font-mono shadow-2xs">
                       {i.minutes}m
                     </span>
                   </li>
@@ -274,7 +274,7 @@ export default function StudentHomePage() {
           <div>
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <IconSparkles className="w-4 h-4 text-indigo-600" />
+                <IconSparkles className="w-4 h-4 text-[#174c4b]" />
                 Priority topics
               </h2>
               <span className="text-xs text-slate-400 font-medium font-mono">High leverage</span>
@@ -287,10 +287,10 @@ export default function StudentHomePage() {
                 {priorities.map((i, idx) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-stone-50/70 hover:bg-stone-100/70 p-2.5 px-3 border border-stone-200/70 transition-colors"
+                    className="flex items-center justify-between rounded-xl bg-[#f0f0e9]/50 hover:bg-[#f0f0e9] p-2.5 px-3 border border-[#9daeac]/30 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-50 text-[11px] font-bold text-indigo-700 border border-indigo-200/60 font-mono">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#e3eceb] text-[11px] font-bold text-[#174c4b] border border-[#9daeac]/40 font-mono">
                         {idx + 1}
                       </span>
                       <div className="flex flex-col">
@@ -300,7 +300,7 @@ export default function StudentHomePage() {
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs font-semibold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-stone-200/60 font-mono shadow-2xs">
+                    <span className="text-xs font-semibold text-slate-700 bg-white px-2 py-0.5 rounded-md border border-[#9daeac]/30 font-mono shadow-2xs">
                       {i.minutes}m
                     </span>
                   </li>
@@ -315,7 +315,7 @@ export default function StudentHomePage() {
           <div>
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <IconCheck className="w-4 h-4 text-emerald-600" />
+                <IconCheck className="w-4 h-4 text-[#174c4b]" />
                 Low priority (maintenance)
               </h2>
               <span className="text-xs text-slate-400 font-medium font-mono">Mastered areas</span>
@@ -330,13 +330,13 @@ export default function StudentHomePage() {
                 {lowPriority.map((i) => (
                   <li
                     key={i.id}
-                    className="flex items-center justify-between rounded-xl bg-stone-50/70 hover:bg-stone-100/70 p-2.5 px-3 border border-stone-200/70 transition-colors"
+                    className="flex items-center justify-between rounded-xl bg-[#f0f0e9]/50 hover:bg-[#f0f0e9] p-2.5 px-3 border border-[#9daeac]/30 transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                      <span className="h-2 w-2 rounded-full bg-[#c1d16b]" />
                       <span className="text-xs font-semibold text-slate-800">{i.topic.name}</span>
                     </div>
-                    <span className="text-xs font-semibold text-slate-600 bg-white px-2 py-0.5 rounded-md border border-stone-200/60 font-mono shadow-2xs">
+                    <span className="text-xs font-semibold text-slate-600 bg-white px-2 py-0.5 rounded-md border border-[#9daeac]/30 font-mono shadow-2xs">
                       {i.minutes}m
                     </span>
                   </li>
@@ -349,17 +349,17 @@ export default function StudentHomePage() {
 
       {/* What Changed Banner (if recalibration occurred) */}
       {latestChange && changeItems.length > 0 && (
-        <section className="bento-card border border-indigo-200 bg-indigo-50/70 p-5 shadow-xs">
+        <section className="bento-card border border-[#c1d16b] bg-[#f5f9dc]/80 p-5 shadow-xs">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-indigo-950 flex items-center gap-2">
-              <IconSparkles className="w-4 h-4 text-indigo-600" />
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <IconSparkles className="w-4 h-4 text-[#174c4b]" />
               What changed in your plan
             </h2>
-            <span className="text-xs text-indigo-700 font-semibold font-mono">
+            <span className="text-xs text-[#174c4b] font-bold font-mono">
               {new Date(latestChange.createdAt).toLocaleDateString()} · {latestChange.trigger}
             </span>
           </div>
-          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-indigo-900 list-disc list-inside">
+          <ul className="mt-3 flex flex-col gap-1.5 text-xs text-slate-800 list-disc list-inside">
             {changeItems.map((c, idx) => (
               <li key={idx}>{c}</li>
             ))}
@@ -407,13 +407,13 @@ export default function StudentHomePage() {
                 className="bento-card bento-card-hover p-5 flex flex-col justify-between gap-3 group bg-white"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 group-hover:border-indigo-200 group-hover:bg-indigo-100 transition-colors">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/35 group-hover:bg-[#c1d16b]/20 group-hover:border-[#c1d16b]/60 transition-colors">
                     <Icon className="w-4 h-4" />
                   </span>
-                  <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                  <IconArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-[#174c4b] transition-colors" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-[#174c4b] transition-colors">
                     {c.title}
                   </h3>
                   <p className="mt-1 text-xs text-slate-500 line-clamp-2 leading-relaxed">

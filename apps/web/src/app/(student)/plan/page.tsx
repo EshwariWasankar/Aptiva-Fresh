@@ -146,7 +146,7 @@ export default function PlanPage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Top Action Bar */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/70 pb-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#9daeac]/30 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Link
@@ -158,7 +158,7 @@ export default function PlanPage() {
             <span className="text-stone-300">·</span>
             <Link
               href="/plan/history"
-              className="text-xs font-semibold text-indigo-700 hover:text-indigo-900 hover:underline"
+              className="text-xs font-semibold text-[#174c4b] hover:underline"
             >
               Plan History
             </Link>
@@ -209,7 +209,7 @@ export default function PlanPage() {
         <details className="bento-card p-5 group bg-white">
           <summary className="cursor-pointer text-xs font-bold text-slate-800 flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <IconSparkles className="w-4 h-4 text-indigo-600" />
+              <IconSparkles className="w-4 h-4 text-[#174c4b]" />
               Recalibration History ({changes.length} revisions)
             </span>
             <span className="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
@@ -236,8 +236,8 @@ export default function PlanPage() {
           <section key={day.dayIndex} className="bento-card p-6 flex flex-col gap-4 bg-white">
             <header className="flex items-center justify-between border-b border-stone-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700 font-bold text-xs border border-indigo-100/70">
-                  <IconCalendar className="w-4 h-4 text-indigo-600" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e3eceb] text-[#174c4b] font-bold text-xs border border-[#9daeac]/35">
+                  <IconCalendar className="w-4 h-4 text-[#174c4b]" />
                 </span>
                 <h2 className="text-base font-bold text-slate-900">
                   {day.date
@@ -264,7 +264,7 @@ export default function PlanPage() {
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <span className="rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-2.5 py-1 text-xs font-bold font-mono">
+                        <span className="rounded-lg bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40 px-2.5 py-1 text-xs font-bold font-mono">
                           {BLOCK_LABEL[item.blockType] ?? item.blockType}
                         </span>
                         <span className="font-bold text-sm text-slate-900">{item.topic.name}</span>
@@ -301,7 +301,7 @@ export default function PlanPage() {
                               return n;
                             })
                           }
-                          className="font-semibold text-indigo-700 hover:text-indigo-900 underline transition"
+                          className="font-semibold text-[#174c4b] hover:underline transition"
                         >
                           Why this?
                         </button>
@@ -328,7 +328,7 @@ export default function PlanPage() {
                             onClick={() => void sendFeedback(item.id, r)}
                             className={`rounded-full border px-2.5 py-0.5 text-[11px] transition-colors ${
                               feedbackSent.has(key)
-                                ? 'border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold'
+                                ? 'border-[#c1d16b] bg-[#f5f9dc] text-[#37420c] font-bold'
                                 : 'border-stone-200 bg-white/80 text-slate-600 hover:bg-white'
                             } disabled:opacity-50`}
                           >

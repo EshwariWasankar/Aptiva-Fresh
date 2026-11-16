@@ -58,8 +58,8 @@ export function ErrorCausePicker({
             onClick={() => setSelected(t.code)}
             className={`rounded-full px-3 py-1 text-xs transition-all ${
               selected === t.code
-                ? 'bg-purple-950 text-white font-semibold shadow-xs'
-                : 'border border-purple-100 bg-white/70 text-slate-700 hover:border-purple-300 hover:text-purple-700'
+                ? 'bg-[#174c4b] text-white font-semibold shadow-xs'
+                : 'border border-[#9daeac]/35 bg-white/80 text-slate-700 hover:border-[#174c4b] hover:text-[#174c4b]'
             }`}
           >
             {t.label}

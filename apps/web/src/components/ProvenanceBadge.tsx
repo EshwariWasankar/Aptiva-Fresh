@@ -21,7 +21,7 @@ export function ProvenanceBadge({ source }: { source: ProvenanceSource | null })
   }
   return (
     <span className="inline-flex flex-wrap items-center gap-1.5 text-[11px]">
-      <span className="rounded-full bg-purple-50/90 px-2.5 py-0.5 font-medium text-purple-700 border border-purple-200/60">
+      <span className="rounded-full bg-[#e3eceb] px-2.5 py-0.5 font-bold text-[#174c4b] border border-[#9daeac]/40 font-mono">
         {TYPE_LABEL[source.sourceType] ?? source.sourceType}
       </span>
       <span

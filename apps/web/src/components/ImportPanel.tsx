@@ -23,7 +23,8 @@ import { ApiError } from '../lib/apiClient';
 
 type Tab = 'questions' | 'company' | 'coverage';
 
-const inputCls = 'w-full glass-input px-3.5 py-2 text-xs';
+const inputCls =
+  'w-full glass-input px-3.5 py-2 text-xs border-[#9daeac]/40 focus:border-[#174c4b]';
 const btnCls = 'btn-primary px-4 py-2 text-xs font-semibold disabled:opacity-50';
 const btnGhost = 'btn-secondary px-3 py-1.5 text-xs font-medium disabled:opacity-50';
 
@@ -81,8 +82,8 @@ function QuestionImportTab() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-lg border border-neutral-200 p-4">
-        <h2 className="mb-3 text-lg font-semibold">Run an import</h2>
+      <section className="glass-card p-5 border border-[#9daeac]/35">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">Run an import</h2>
         <div className="grid gap-3 sm:grid-cols-3">
           <label className="flex flex-col gap-1 text-sm">
             Source
@@ -129,8 +130,8 @@ function QuestionImportTab() {
       <ErrorBox error={error} />
 
       {report && (
-        <section className="rounded-lg border border-neutral-200 p-4">
-          <h2 className="mb-2 text-lg font-semibold">Import report</h2>
+        <section className="glass-card p-5 border border-[#9daeac]/35">
+          <h2 className="mb-2 text-lg font-semibold text-slate-900">Import report</h2>
           <dl className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-5">
             <div>
               <dt className="text-neutral-500">Files</dt>
@@ -192,8 +193,8 @@ function QuestionImportTab() {
         </section>
       )}
 
-      <section className="rounded-lg border border-neutral-200 p-4">
-        <h2 className="mb-3 text-lg font-semibold">Import batches</h2>
+      <section className="glass-card p-5 border border-[#9daeac]/35">
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">Import batches</h2>
         {batches.length === 0 ? (
           <p className="text-sm text-neutral-500">No batches yet.</p>
         ) : (
@@ -507,8 +508,10 @@ function CompanyTab() {
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-lg border border-neutral-200 p-4">
-          <h2 className="mb-2 text-lg font-semibold">Draft blueprint from records</h2>
+        <div className="glass-card p-5 border border-[#9daeac]/35">
+          <h2 className="mb-2 text-lg font-semibold text-slate-900">
+            Draft blueprint from records
+          </h2>
           <div className="flex gap-2">
             <input
               className={inputCls}
@@ -529,8 +532,8 @@ function CompanyTab() {
             publish under Blueprints.
           </p>
         </div>
-        <div className="rounded-lg border border-neutral-200 p-4">
-          <h2 className="mb-2 text-lg font-semibold">Fit tags</h2>
+        <div className="glass-card p-5 border border-[#9daeac]/35">
+          <h2 className="mb-2 text-lg font-semibold text-slate-900">Fit tags</h2>
           <p className="mb-2 text-sm text-neutral-600">
             Recompute question→section fit for a published blueprint.
           </p>
@@ -569,17 +572,21 @@ function CoverageTab() {
     <div className="flex flex-col gap-4">
       <p className="text-sm text-neutral-600">{report.target}</p>
       <div className="grid grid-cols-3 gap-3 text-sm">
-        <div className="rounded border border-neutral-200 p-3">
-          <div className="text-neutral-500">Reviewed items</div>
-          <div className="text-xl font-semibold">{report.totals.reviewed}</div>
+        <div className="rounded-xl border border-[#9daeac]/30 bg-[#f0f0e9] p-3.5">
+          <div className="text-slate-500 text-xs font-mono uppercase">Reviewed items</div>
+          <div className="text-xl font-bold text-slate-900 mt-1">{report.totals.reviewed}</div>
         </div>
-        <div className="rounded border border-neutral-200 p-3">
-          <div className="text-neutral-500">Published items</div>
-          <div className="text-xl font-semibold">{report.totals.published}</div>
+        <div className="rounded-xl border border-[#9daeac]/30 bg-[#f0f0e9] p-3.5">
+          <div className="text-slate-500 text-xs font-mono uppercase">Published items</div>
+          <div className="text-xl font-bold text-slate-900 mt-1">{report.totals.published}</div>
         </div>
-        <div className="rounded border border-neutral-200 p-3">
-          <div className="text-neutral-500">Cells below threshold ({report.threshold})</div>
-          <div className="text-xl font-semibold">{report.belowThreshold.length}</div>
+        <div className="rounded-xl border border-[#9daeac]/30 bg-[#f0f0e9] p-3.5">
+          <div className="text-slate-500 text-xs font-mono uppercase">
+            Cells below threshold ({report.threshold})
+          </div>
+          <div className="text-xl font-bold text-slate-900 mt-1">
+            {report.belowThreshold.length}
+          </div>
         </div>
       </div>
       {report.belowThreshold.length > 0 && (
@@ -619,7 +626,7 @@ export default function ImportPanel() {
   ];
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-4 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#9daeac]/30 pb-4 gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-stone-900">
             Batch Ingest &amp; Coverage
@@ -629,15 +636,15 @@ export default function ImportPanel() {
             metrics.
           </p>
         </div>
-        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-white/80 self-start sm:self-auto">
+        <div className="glass-pill p-1 flex items-center gap-1 shadow-xs border border-[#9daeac]/40 self-start sm:self-auto">
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`rounded-full px-3.5 py-1 text-xs font-semibold transition-all ${
                 tab === t.id
-                  ? 'glass-pill-active text-stone-900'
-                  : 'text-stone-500 hover:text-stone-800'
+                  ? 'bg-[#174c4b] text-white shadow-xs'
+                  : 'text-stone-600 hover:text-[#174c4b]'
               }`}
             >
               {t.label}

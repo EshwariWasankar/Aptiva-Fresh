@@ -58,7 +58,7 @@ export default function PracticePage() {
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/70 pb-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#9daeac]/30 pb-5">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Daily Practice Drills
@@ -72,7 +72,7 @@ export default function PracticePage() {
           href="/notebook"
           className="btn-secondary px-4 py-2 text-xs font-semibold inline-flex items-center gap-1.5 shadow-2xs"
         >
-          <IconBook className="w-4 h-4 text-indigo-600" />
+          <IconBook className="w-4 h-4 text-[#174c4b]" />
           <span>Mistake notebook</span>
         </Link>
       </div>
@@ -100,7 +100,7 @@ export default function PracticePage() {
 
       {todayItems.length === 0 && plan && !missing && (
         <div className="bento-card p-8 text-center flex flex-col items-center gap-2 bg-white">
-          <IconCalendar className="w-8 h-8 text-indigo-300" />
+          <IconCalendar className="w-8 h-8 text-[#9daeac]" />
           <h3 className="text-sm font-bold text-slate-800">No drills scheduled for today</h3>
           <p className="text-xs text-slate-500 max-w-sm">
             You&apos;ve completed your blocks for today, or today is a scheduled rest day. Review
@@ -120,7 +120,7 @@ export default function PracticePage() {
           >
             <div className="flex flex-col gap-1">
               <div className="inline-flex items-center gap-2">
-                <span className="rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200/50 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
+                <span className="rounded-md bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider font-mono">
                   {item.blockType.replace(/_/g, ' ')}
                 </span>
                 <span className="text-xs text-slate-400">·</span>

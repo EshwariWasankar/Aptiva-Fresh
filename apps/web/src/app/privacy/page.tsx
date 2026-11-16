@@ -12,11 +12,11 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 flex items-center justify-center">
       <main className="w-full max-w-2xl">
-        <div className="glass-sheet p-8 sm:p-10 flex flex-col gap-6 shadow-2xl">
-          <div className="flex items-center gap-3 border-b border-stone-200/50 pb-4">
+        <div className="glass-sheet p-8 sm:p-10 flex flex-col gap-6 shadow-2xl border border-[#9daeac]/35">
+          <div className="flex items-center gap-3 border-b border-[#9daeac]/30 pb-4">
             <Link
               href="/"
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-sm shadow-md shadow-purple-500/20"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#174c4b] via-[#123c3b] to-[#252d2d] text-white font-bold text-sm shadow-md shadow-slate-900/30 border border-[#9daeac]/40"
             >
               A
             </Link>
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
             delete your data at any time from your account settings. The final notice is published
             after formal review.
           </p>
-          <div className="pt-2 border-t border-stone-200/40">
+          <div className="pt-2 border-t border-[#9daeac]/30">
             <Link href="/" className="btn-secondary py-2 px-4 text-xs font-medium inline-block">
               Back to Aptiva
             </Link>

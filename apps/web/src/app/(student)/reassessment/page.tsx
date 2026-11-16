@@ -28,7 +28,7 @@ const KINDS = [
   },
 ];
 
-/** P-18 — start a reassessment in pastel & purple aesthetics. */
+/** P-18 — start a reassessment in Performance Lab aesthetics. */
 export default function ReassessmentPage() {
   const router = useRouter();
   const [topics, setTopics] = useState<{ topicId: string; name: string }[]>([]);
@@ -74,7 +74,7 @@ export default function ReassessmentPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="border-b border-stone-200/70 pb-4">
+      <div className="border-b border-[#9daeac]/30 pb-4">
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
           Targeted Reassessments
         </h1>
@@ -101,7 +101,7 @@ export default function ReassessmentPage() {
           <select
             value={topicId}
             onChange={(e) => setTopicId(e.target.value)}
-            className="glass-input px-3.5 py-2.5 text-xs font-medium"
+            className="glass-input px-3.5 py-2.5 text-xs font-medium border-[#9daeac]/40 focus:border-[#174c4b]"
           >
             <option value="">Select a topic from your syllabus…</option>
             {topics.map((t) => (
@@ -117,14 +117,14 @@ export default function ReassessmentPage() {
         {KINDS.map((k) => (
           <section
             key={k.kind}
-            className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 group bg-white"
+            className="bento-card bento-card-hover p-6 sm:p-7 flex flex-col justify-between gap-5 group bg-white border border-[#9daeac]/35"
           >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 font-bold text-xs group-hover:bg-indigo-100 transition-colors">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/40 font-bold text-xs group-hover:bg-[#c1d16b] group-hover:text-[#252d2d] group-hover:border-[#c1d16b] transition-all">
                   <IconActivity className="w-4 h-4" />
                 </span>
-                <span className="text-[11px] font-semibold text-slate-500 font-mono bg-stone-100 px-2 py-0.5 rounded-full">
+                <span className="text-[11px] font-semibold text-slate-600 font-mono bg-[#f0f0e9] border border-[#9daeac]/30 px-2 py-0.5 rounded-full">
                   ~{k.minutes} min
                 </span>
               </div>

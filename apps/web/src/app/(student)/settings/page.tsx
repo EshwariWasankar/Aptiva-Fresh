@@ -171,7 +171,7 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto w-full">
       {/* Page Header */}
-      <div className="border-b border-purple-100/60 pb-5">
+      <div className="border-b border-[#9daeac]/30 pb-5">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Account &amp; Study Settings
         </h1>
@@ -200,7 +200,7 @@ export default function SettingsPage() {
           <section className="bento-card p-6 flex flex-col gap-4 bg-white">
             <div className="flex items-center justify-between border-b border-stone-100 pb-2">
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
+                <span className="p-1 rounded-lg bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/35">
                   <IconTarget className="w-4 h-4" />
                 </span>
                 <h2 className="text-sm font-bold text-slate-900">
@@ -208,7 +208,7 @@ export default function SettingsPage() {
                 </h2>
               </div>
               {commitmentData?.commitment && (
-                <span className="rounded-full bg-indigo-50 text-indigo-900 border border-indigo-200 px-2.5 py-0.5 text-[11px] font-semibold font-mono">
+                <span className="rounded-full bg-[#f5f9dc] text-[#37420c] border border-[#c1d16b] px-2.5 py-0.5 text-[11px] font-bold font-mono">
                   Status: {commitmentData.commitment.status}
                 </span>
               )}
@@ -220,7 +220,7 @@ export default function SettingsPage() {
             </p>
 
             {commitmentData?.evaluation && (
-              <div className="rounded-xl bg-indigo-50/60 p-3.5 border border-indigo-100/70 text-xs text-indigo-950 font-medium">
+              <div className="rounded-xl bg-[#f0f0e9]/80 p-3.5 border border-[#9daeac]/30 text-xs text-slate-800 font-medium">
                 {commitmentData.evaluation.text}
               </div>
             )}
@@ -280,7 +280,7 @@ export default function SettingsPage() {
           {/* Notification & Reminder Preferences (FR-028) */}
           <section className="bento-card p-6 flex flex-col gap-4 bg-white">
             <div className="flex items-center gap-2 border-b border-stone-100 pb-2">
-              <span className="p-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
+              <span className="p-1 rounded-lg bg-[#e3eceb] text-[#174c4b] border border-[#9daeac]/35">
                 <IconBell className="w-4 h-4" />
               </span>
               <h2 className="text-sm font-bold text-slate-900">
@@ -296,7 +296,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setNotifPrefs({ ...notifPrefs, optInReminders: e.target.checked })
                   }
-                  className="mt-0.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="mt-0.5 rounded border-[#9daeac]/40 text-[#174c4b] focus:ring-[#174c4b]"
                 />
                 <div>
                   <span className="font-semibold text-slate-900">Study Drill Reminders</span>
@@ -313,7 +313,7 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setNotifPrefs({ ...notifPrefs, optInWeeklySummary: e.target.checked })
                   }
-                  className="mt-0.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="mt-0.5 rounded border-[#9daeac]/40 text-[#174c4b] focus:ring-[#174c4b]"
                 />
                 <div>
                   <span className="font-semibold text-slate-900">Weekly Progress Recap</span>
@@ -384,7 +384,7 @@ export default function SettingsPage() {
                 type="checkbox"
                 checked={keepMyPlan}
                 onChange={(e) => setKeepMyPlan(e.target.checked)}
-                className="mt-0.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                className="mt-0.5 rounded border-[#9daeac]/40 text-[#174c4b] focus:ring-[#174c4b]"
               />
               <div>
                 <span className="font-semibold text-slate-900">Keep my plan locked</span>
@@ -420,7 +420,7 @@ export default function SettingsPage() {
                     type="checkbox"
                     checked={consents[p.id] ?? false}
                     onChange={(e) => void toggleConsent(p.id, e.target.checked)}
-                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                    className="rounded border-[#9daeac]/40 text-[#174c4b] focus:ring-[#174c4b]"
                   />
                   <span className="font-medium text-slate-800">{p.label}</span>
                 </label>

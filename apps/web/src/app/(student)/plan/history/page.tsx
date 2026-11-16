@@ -7,7 +7,7 @@ import { getPlan, listPlanVersions, restorePlan, type PlanVersion } from '../../
 import { getCurrentPlan, type PlanResponse } from '../../../../lib/content';
 import { ApiError } from '../../../../lib/apiClient';
 
-/** P-16 — plan version history with restore in pastel & purple styling. */
+/** P-16 — plan version history with restore in Performance Lab styling. */
 export default function PlanHistoryPage() {
   const router = useRouter();
   const [versions, setVersions] = useState<PlanVersion[]>([]);
@@ -52,10 +52,10 @@ export default function PlanHistoryPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="border-b border-purple-100/60 pb-4">
+      <div className="border-b border-[#9daeac]/30 pb-4">
         <Link
           href="/plan"
-          className="text-xs font-medium text-slate-400 hover:text-slate-700 transition"
+          className="text-xs font-medium text-slate-500 hover:text-[#174c4b] transition"
         >
           ← Back to Plan
         </Link>
@@ -74,10 +74,10 @@ export default function PlanHistoryPage() {
         </div>
       )}
 
-      <section className="glass-card overflow-hidden">
+      <section className="glass-card overflow-hidden border border-[#9daeac]/35">
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
-            <thead className="border-b border-purple-50 bg-purple-50/50 text-left uppercase text-slate-400 font-semibold tracking-wider">
+            <thead className="border-b border-[#9daeac]/30 bg-[#f0f0e9] text-left uppercase text-slate-500 font-semibold tracking-wider font-mono">
               <tr>
                 <th className="px-5 py-3.5">Version</th>
                 <th className="px-5 py-3.5">Created</th>
@@ -87,12 +87,12 @@ export default function PlanHistoryPage() {
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-purple-50/70">
+            <tbody className="divide-y divide-[#9daeac]/20">
               {versions.map((v) => (
-                <tr key={v.planId} className="hover:bg-purple-50/40 transition-colors">
+                <tr key={v.planId} className="hover:bg-[#f0f0e9]/60 transition-colors">
                   <td className="px-5 py-3.5">
                     {v.isCurrent && (
-                      <span className="mr-2 rounded-full bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
+                      <span className="mr-2 rounded-full bg-[#f5f9dc] border border-[#c1d16b] px-2 py-0.5 text-[11px] font-semibold text-[#37420c]">
                         active
                       </span>
                     )}
@@ -110,7 +110,7 @@ export default function PlanHistoryPage() {
                         <button
                           type="button"
                           onClick={() => void compare(v.planId)}
-                          className="text-xs font-semibold text-purple-600 hover:text-purple-700 transition"
+                          className="text-xs font-semibold text-[#174c4b] hover:text-[#123c3b] transition"
                         >
                           {compareId === v.planId ? 'Hide' : 'Compare'}
                         </button>
@@ -140,19 +140,19 @@ export default function PlanHistoryPage() {
       </section>
 
       {comparePlan && current && (
-        <section className="glass-card p-6 flex flex-col gap-4">
-          <h2 className="text-sm font-bold text-slate-900 border-b border-purple-50 pb-3">
+        <section className="glass-card p-6 flex flex-col gap-4 border border-[#9daeac]/35">
+          <h2 className="text-sm font-bold text-slate-900 border-b border-[#9daeac]/30 pb-3">
             Comparison: Current Active Plan vs {compareId?.slice(0, 8)}
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 text-xs">
-            <div className="rounded-xl bg-slate-50/70 p-4 border border-slate-200/60">
+            <div className="rounded-xl bg-[#f0f0e9] p-4 border border-[#9daeac]/35">
               <h3 className="font-bold text-slate-900 mb-2">
                 Current ({current.items.length} items)
               </h3>
               <TopicSummary items={current.items} />
             </div>
-            <div className="rounded-xl bg-purple-50/60 p-4 border border-purple-200/50">
-              <h3 className="font-bold text-purple-950 mb-2">
+            <div className="rounded-xl bg-[#e3eceb]/60 p-4 border border-[#9daeac]/40">
+              <h3 className="font-bold text-[#174c4b] mb-2">
                 Selected ({comparePlan.items.length} items)
               </h3>
               <TopicSummary items={comparePlan.items} />
@@ -173,7 +173,7 @@ function TopicSummary({ items }: { items: { topic: { name: string }; minutes: nu
       {top.map(([name, mins]) => (
         <li
           key={name}
-          className="flex justify-between py-1 border-b border-purple-100/40 last:border-0"
+          className="flex justify-between py-1 border-b border-[#9daeac]/20 last:border-0"
         >
           <span className="font-medium text-slate-700">{name}</span>
           <span className="font-bold text-slate-900">{mins}m</span>
