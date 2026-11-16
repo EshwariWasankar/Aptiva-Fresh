@@ -1,0 +1,32 @@
+# Keep host artifacts out of the Docker build context — without this,
+# `COPY . .` ships Windows node_modules/dist into the Linux image and
+# breaks native binaries (esbuild, prisma engines, etc.).
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/*.tsbuildinfo
+.git
+.github
+.vscode
+.idea
+*.log
+.env
+.env.*
+!.env.example
+apps/api/.env
+apps/web/.env*
+!.env.example
+.tmp
+neon.ts
+.dockerignore
+Dockerfile
+**/Dockerfile
+docker-compose*.yml
+infra/
+docs/
+*.md
+!README.md
+playwright-report
+test-results

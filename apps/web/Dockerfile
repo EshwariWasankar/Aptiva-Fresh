@@ -20,7 +20,6 @@ COPY . .
 ENV NODE_ENV=production
 RUN pnpm db:generate
 RUN pnpm --filter @aptiva/engine build
-RUN pnpm --filter @aptiva/shared build
 RUN pnpm --filter @aptiva/ingest build
 RUN pnpm --filter @aptiva/web build
 
