@@ -21,7 +21,8 @@ import type { ImportRunDto } from './dto';
 const DS01_REPO = 'drsarveshwarbharti/Aptitude-For-Placements';
 const DS11_REPO = 'atmamoon/ultimate-aptitude';
 const DS12_REPO = 'jidvish/aptitude-test-platform-public';
-const GSM8K_URL = 'https://huggingface.co/datasets/openai/gsm8k/resolve/main/main/train.jsonl';
+const GSM8K_DATASET = 'openai/gsm8k';
+const HF_ROWS_BASE = 'https://datasets-server.huggingface.co';
 
 interface SourceSpec {
   sourceName: string;
@@ -80,25 +81,28 @@ export class ImportService {
     if (dto.dryRun) return summary;
 
     // ---- Load stage: single transaction, batch row + draft questions ----
-    const batch = await this.prisma.$transaction(async (tx) => {
-      const b = await tx.importBatch.create({
-        data: {
-          sourceName: spec.sourceName,
-          sourceRef,
-          parserVersion: spec.parserVersion,
-          accepted: report.accepted.length,
-          rejected: report.rejected.length,
-          duplicates: report.duplicates.length,
-          createdBy: actorId,
-        },
-      });
-      const rows = report.accepted.map(({ item }) => this.questionRow(item, b.id));
-      for (let i = 0; i < rows.length; i += 500) {
-        await tx.question.createMany({ data: rows.slice(i, i + 500) });
-      }
-      await this.createOptions(tx, b.id, report.accepted);
-      return b;
-    });
+    const batch = await this.prisma.$transaction(
+      async (tx) => {
+        const b = await tx.importBatch.create({
+          data: {
+            sourceName: spec.sourceName,
+            sourceRef,
+            parserVersion: spec.parserVersion,
+            accepted: report.accepted.length,
+            rejected: report.rejected.length,
+            duplicates: report.duplicates.length,
+            createdBy: actorId,
+          },
+        });
+        const rows = report.accepted.map(({ item }) => this.questionRow(item, b.id));
+        for (let i = 0; i < rows.length; i += 500) {
+          await tx.question.createMany({ data: rows.slice(i, i + 500) });
+        }
+        await this.createOptions(tx, b.id, report.accepted);
+        return b;
+      },
+      { timeout: 300_000, maxWait: 15_000 },
+    );
 
     await this.prisma.auditLog.create({
       data: {
@@ -175,18 +179,79 @@ export class ImportService {
       };
     }
 
-    // ds-03 — GSM8K JSONL from Hugging Face (pinned to main revision).
-    const res = await fetch(GSM8K_URL);
-    if (!res.ok) throw new BadRequestException(`GSM8K fetch failed: ${res.status}`);
-    const text = await res.text();
-    const { items: parsed, rejected } = parseGsm8k(text, 'main/train.jsonl');
+    // ds-03 — GSM8K via the HF datasets-server rows API. The upstream repo
+    // only ships parquet now (the old main/train.jsonl URL 404s), so we page
+    // through /rows and re-emit JSONL for the parser.
+    const jsonl = await this.fetchGsm8kJsonl();
+    const { items: parsed, rejected } = parseGsm8k(jsonl, 'main/train');
     if (rejected.length > 0) this.logger.warn(`ds-03: ${rejected.length} row rejects`);
     return {
-      items: parsed.map((item) => ({ item, sourcePath: 'main/train.jsonl' })),
+      items: parsed.map((item) => ({ item, sourcePath: 'main/train' })),
       fileRejects: rejected,
-      sourceRef: `hf:openai/gsm8k@main:${GSM8K_URL}`,
+      sourceRef: `hf:${GSM8K_DATASET}@main:${HF_ROWS_BASE}/rows`,
       filesSeen: 1,
     };
+  }
+
+  /** Page through the HF datasets-server rows API and rebuild GSM8K JSONL.
+   *  GSM8K_JSONL_PATH overrides the fetch with a local JSONL file (one
+   *  {"question","answer"} object per line) — useful when HF rate-limits. */
+  private async fetchGsm8kJsonl(): Promise<string> {
+    const localPath = process.env.GSM8K_JSONL_PATH;
+    if (localPath) {
+      const { readFile } = await import('node:fs/promises');
+      return readFile(localPath, 'utf8');
+    }
+    const sizeUrl = `${HF_ROWS_BASE}/size?dataset=${GSM8K_DATASET}&config=main&split=train`;
+    const sizeRes = await fetch(sizeUrl);
+    if (!sizeRes.ok) throw new BadRequestException(`GSM8K size fetch failed: ${sizeRes.status}`);
+    const sizeBody = (await sizeRes.json()) as {
+      size?: { splits?: { split?: string; num_rows?: number }[] };
+    };
+    const numRows = sizeBody.size?.splits?.find((s) => s.split === 'train')?.num_rows ?? 0;
+    if (numRows <= 0) throw new BadRequestException('GSM8K dataset reported 0 rows');
+
+    const PAGE = 100;
+    const pages = Math.ceil(numRows / PAGE);
+    const lines: string[] = [];
+    const CONCURRENCY = 2;
+    const fetchPage = async (page: number): Promise<string[]> => {
+      const offset = page * PAGE;
+      const url =
+        `${HF_ROWS_BASE}/rows?dataset=${GSM8K_DATASET}&config=main&split=train` +
+        `&offset=${offset}&length=${PAGE}`;
+      for (let attempt = 0; attempt < 4; attempt++) {
+        const res = await fetch(url);
+        if (res.ok) {
+          const body = (await res.json()) as {
+            rows?: { row?: { question?: unknown; answer?: unknown } }[];
+          };
+          return (body.rows ?? [])
+            .map((r) => r.row)
+            .filter((r): r is { question: string; answer: string } =>
+              Boolean(r && typeof r.question === 'string' && typeof r.answer === 'string'),
+            )
+            .map((r) => JSON.stringify({ question: r.question, answer: r.answer }));
+        }
+        if (res.status !== 429 && res.status < 500) {
+          throw new BadRequestException(`GSM8K rows fetch failed: ${res.status}`);
+        }
+        const retryAfter = Number(res.headers.get('retry-after'));
+        const waitMs =
+          Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 1000 * 2 ** attempt;
+        await new Promise((r) => setTimeout(r, waitMs));
+      }
+      throw new BadRequestException('GSM8K rows fetch failed: rate limited');
+    };
+    for (let start = 0; start < pages; start += CONCURRENCY) {
+      const batch = Array.from(
+        { length: Math.min(CONCURRENCY, pages - start) },
+        (_, i) => start + i,
+      );
+      const results = await Promise.all(batch.map(fetchPage));
+      for (const part of results) lines.push(...part);
+    }
+    return lines.join('\n');
   }
 
   /** Persist MCQ options for accepted rows (createMany can't nest). */

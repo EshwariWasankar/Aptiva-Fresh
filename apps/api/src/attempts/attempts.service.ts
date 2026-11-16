@@ -54,6 +54,21 @@ const KIND_POOL: Record<string, string> = {
   topic_test: 'reassessment',
 };
 
+/**
+ * Which format should be served next to keep the session's running
+ * MCQ/numerical ratio closest to the blueprint's declared mix.
+ */
+function preferredFormat(
+  mix: { mcq: number; numerical: number },
+  served: { mcq: number; numerical: number },
+): 'mcq' | 'numerical' {
+  const target = mix.numerical / (mix.mcq + mix.numerical);
+  const total = served.mcq + served.numerical;
+  const errIfNum = Math.abs((served.numerical + 1) / (total + 1) - target);
+  const errIfMcq = Math.abs(served.numerical / (total + 1) - target);
+  return errIfNum <= errIfMcq ? 'numerical' : 'mcq';
+}
+
 @Injectable()
 export class AttemptsService {
   private readonly logger = new Logger(AttemptsService.name);
@@ -607,57 +622,214 @@ export class AttemptsService {
     });
     const seen = new Set([...servedCount, ...attempted.map((a) => a.questionId)]);
 
-    let candidates = await this.prisma.question.findMany({
-      where: {
-        status: 'published',
-        pool,
-        ...(topicIds ? { topicId: { in: topicIds } } : {}),
-      },
-      select: { id: true, topicId: true, difficultyPrior: true, expectedTimeMs: true },
-      take: 1000,
-    });
-    if (candidates.length === 0 && topicIds) {
-      // Sparse pool: widen to the whole session pool rather than dead-end.
-      candidates = await this.prisma.question.findMany({
-        where: { status: 'published', pool },
-        select: { id: true, topicId: true, difficultyPrior: true, expectedTimeMs: true },
+    // Blueprint format-mix bias: pick the MCQ/numerical format that keeps
+    // this session closest to the target blueprint section's declared mix.
+    // Applied inside the candidate query — with large pools a post-fetch
+    // filter would be starved by the take:1000 truncation. Every strategy
+    // escalates to a wider candidate set, so serving never dead-ends.
+    const mix = await this.sessionFormatMix(userId, row);
+    const wantFormat =
+      mix && mix.numerical > 0
+        ? preferredFormat(mix, await this.servedFormatCounts(sessionId, servedCount))
+        : null;
+
+    const select = {
+      id: true,
+      topicId: true,
+      format: true,
+      difficultyPrior: true,
+      expectedTimeMs: true,
+    } as const;
+    const fetchCandidates = (format: 'mcq' | 'numerical' | null, scoped: boolean) =>
+      this.prisma.question.findMany({
+        where: {
+          status: 'published',
+          pool,
+          ...(scoped && topicIds ? { topicId: { in: topicIds } } : {}),
+          ...(format ? { format } : {}),
+        },
+        select,
         take: 1000,
       });
-    }
-    const unseen = candidates.filter((c) => !seen.has(c.id));
-    if (unseen.length === 0) {
-      return { sessionId, done: true as const, reason: 'pool_exhausted' as const };
-    }
 
     // Difficulty step ≤ 1 band from the last served question.
     const lastDiff = await this.lastDifficulty(sessionId);
-    let pool1 = unseen;
-    if (lastDiff !== null) {
-      const stepped = unseen.filter((c) => Math.abs(c.difficultyPrior - lastDiff) <= 1);
-      if (stepped.length > 0) pool1 = stepped;
-    }
-
-    // Topic-share cap (mixed sessions only): no topic above 60% of served.
     const topicCounts = await this.topicCounts(sessionId);
-    const distinctTopics = new Set(pool1.map((c) => c.topicId)).size;
-    if (distinctTopics > 1) {
-      const cap = Math.max(2, Math.ceil(servedCount.size * 0.6));
-      const under = pool1.filter((c) => (topicCounts.get(c.topicId) ?? 0) < cap);
-      if (under.length > 0) pool1 = under;
-    }
 
-    pool1.sort(
-      (a, b) =>
-        Math.abs(a.difficultyPrior - (lastDiff ?? a.difficultyPrior)) -
-          Math.abs(b.difficultyPrior - (lastDiff ?? b.difficultyPrior)) ||
-        a.expectedTimeMs - b.expectedTimeMs ||
-        a.id.localeCompare(b.id),
-    );
-    const pick = pool1[0]!;
+    /** Run the unseen → difficulty-step → topic-cap → deterministic pick pipeline. */
+    const tryPick = (
+      candidates: {
+        id: string;
+        topicId: string;
+        format: string;
+        difficultyPrior: number;
+        expectedTimeMs: number;
+      }[],
+    ) => {
+      const unseen = candidates.filter((c) => !seen.has(c.id));
+      if (unseen.length === 0) return null;
+      let pool1 = unseen;
+      if (lastDiff !== null) {
+        const stepped = unseen.filter((c) => Math.abs(c.difficultyPrior - lastDiff) <= 1);
+        if (stepped.length > 0) pool1 = stepped;
+      }
+      // Topic-share cap (mixed sessions only): no topic above 60% of served.
+      const distinctTopics = new Set(pool1.map((c) => c.topicId)).size;
+      if (distinctTopics > 1) {
+        const cap = Math.max(2, Math.ceil(servedCount.size * 0.6));
+        const under = pool1.filter((c) => (topicCounts.get(c.topicId) ?? 0) < cap);
+        if (under.length > 0) pool1 = under;
+      }
+      pool1.sort(
+        (a, b) =>
+          Math.abs(a.difficultyPrior - (lastDiff ?? a.difficultyPrior)) -
+            Math.abs(b.difficultyPrior - (lastDiff ?? b.difficultyPrior)) ||
+          a.expectedTimeMs - b.expectedTimeMs ||
+          a.id.localeCompare(b.id),
+      );
+      return pool1[0] ?? null;
+    };
+
+    // Pick with the preferred format first; if it yields nothing, retry
+    // unrestricted. The sparse-pool widen to the whole pool only applies to
+    // the unrestricted pass — a format preference must not pull off-topic
+    // questions (e.g. arithmetic items into a Data Interpretation session).
+    const run = async (format: 'mcq' | 'numerical' | null) => {
+      let candidates = await fetchCandidates(format, true);
+      if (candidates.length === 0 && topicIds && format === null) {
+        candidates = await fetchCandidates(null, false);
+      }
+      return tryPick(candidates);
+    };
+    const pick = (await run(wantFormat)) ?? (wantFormat ? await run(null) : null);
+    if (!pick) {
+      return { sessionId, done: true as const, reason: 'pool_exhausted' as const };
+    }
     await this.markShown(sessionId, pick.id);
     await this.bumpTopicCount(sessionId, pick.topicId);
     await this.setLastDifficulty(sessionId, pick.difficultyPrior);
     return this.serveQuestion(userId, sessionId, pick.id);
+  }
+
+  /**
+   * MCQ/numerical mix declared by the blueprint section this session targets.
+   * Resolves session → plan item → plan → requirement → assessment → current
+   * blueprint version → section (via topic weights), falling back to the
+   * generic blueprint and finally to the version-wide aggregate mix.
+   * Returns null when no blueprint context exists — serving is never blocked.
+   */
+  private async sessionFormatMix(
+    userId: string,
+    row: { planItemId: string | null; topicId: string | null },
+  ): Promise<{ mcq: number; numerical: number } | null> {
+    try {
+      let assessmentId: string | null = null;
+      if (row.planItemId) {
+        const item = await this.prisma.practicePlanItem.findUnique({
+          where: { id: row.planItemId },
+          select: {
+            plan: { select: { requirement: { select: { assessmentId: true } } } },
+          },
+        });
+        assessmentId = item?.plan.requirement.assessmentId ?? null;
+      }
+      if (!assessmentId) {
+        const req = await this.prisma.preparationRequirement.findFirst({
+          where: { userId, isActive: true },
+          select: { assessmentId: true },
+        });
+        assessmentId = req?.assessmentId ?? null;
+      }
+      const assessment = assessmentId
+        ? await this.prisma.assessment.findUnique({ where: { id: assessmentId } })
+        : await this.prisma.assessment.findUnique({ where: { slug: 'generic' } });
+      if (!assessment) return null;
+      const version = await this.prisma.assessmentVersion.findFirst({
+        where: { assessmentId: assessment.id, isCurrent: true },
+        select: { id: true },
+      });
+      if (!version) return null;
+
+      if (row.topicId) {
+        const sectionMix = await this.topicSectionMix(version.id, row.topicId);
+        if (sectionMix) return sectionMix;
+      }
+      return this.aggregateMix(version.id);
+    } catch {
+      return null;
+    }
+  }
+
+  /** formatMix of the blueprint section weighting this topic (exact, then descendants). */
+  private async topicSectionMix(
+    versionId: string,
+    topicId: string,
+  ): Promise<{ mcq: number; numerical: number } | null> {
+    const parse = (mix: Prisma.JsonValue): { mcq: number; numerical: number } | null => {
+      if (mix == null || typeof mix !== 'object' || Array.isArray(mix)) return null;
+      const m = mix as Record<string, unknown>;
+      const mcq = typeof m.mcq === 'number' ? m.mcq : 0;
+      const numerical = typeof m.numerical === 'number' ? m.numerical : 0;
+      return mcq + numerical > 0 ? { mcq, numerical } : null;
+    };
+
+    const direct = await this.prisma.blueprintTopicWeight.findFirst({
+      where: { topicId, section: { versionId } },
+      select: { section: { select: { formatMix: true } } },
+    });
+    const directMix = direct ? parse(direct.section.formatMix) : null;
+    if (directMix) return directMix;
+
+    const descendants = await this.topicDescendants(topicId);
+    if (descendants.length > 1) {
+      const w = await this.prisma.blueprintTopicWeight.findFirst({
+        where: { topicId: { in: descendants }, section: { versionId } },
+        select: { section: { select: { formatMix: true } } },
+      });
+      const mix = w ? parse(w.section.formatMix) : null;
+      if (mix) return mix;
+    }
+    return null;
+  }
+
+  /** Question-count-weighted format mix across all sections of a blueprint version. */
+  private async aggregateMix(
+    versionId: string,
+  ): Promise<{ mcq: number; numerical: number } | null> {
+    const sections = await this.prisma.blueprintSection.findMany({
+      where: { versionId },
+      select: { formatMix: true, questionCountMax: true, questionCountMin: true },
+    });
+    let mcq = 0;
+    let numerical = 0;
+    for (const s of sections) {
+      if (s.formatMix == null || typeof s.formatMix !== 'object' || Array.isArray(s.formatMix)) {
+        continue;
+      }
+      const m = s.formatMix as Record<string, unknown>;
+      const w = s.questionCountMax ?? s.questionCountMin ?? 1;
+      mcq += (typeof m.mcq === 'number' ? m.mcq : 0) * w;
+      numerical += (typeof m.numerical === 'number' ? m.numerical : 0) * w;
+    }
+    return mcq + numerical > 0 ? { mcq, numerical } : null;
+  }
+
+  /** Formats of questions already served in this session. */
+  private async servedFormatCounts(
+    sessionId: string,
+    served: Set<string>,
+  ): Promise<{ mcq: number; numerical: number }> {
+    const counts = { mcq: 0, numerical: 0 };
+    if (served.size === 0) return counts;
+    const rows = await this.prisma.question.findMany({
+      where: { id: { in: [...served].slice(0, 200) } },
+      select: { format: true },
+    });
+    for (const r of rows) {
+      if (r.format === 'numerical') counts.numerical += 1;
+      else counts.mcq += 1;
+    }
+    return counts;
   }
 
   private async servedIds(sessionId: string): Promise<Set<string>> {

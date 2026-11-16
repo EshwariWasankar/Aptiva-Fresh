@@ -61,10 +61,15 @@ export function parseGsm8k(
       return;
     }
     const decimals = decimalPlacesOf(value);
+    const cleanSolution = answer
+      .slice(0, marker)
+      .replace(/<<[^>]*>>/g, '')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
     items.push({
       format: 'numerical',
       stem: question,
-      solution: answer.slice(0, marker).trim() || null,
+      solution: cleanSolution || null,
       numericAnswer: value,
       answerFormat: 'decimal',
       decimalPlaces: decimals > 0 ? decimals : null,

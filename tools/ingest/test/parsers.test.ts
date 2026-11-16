@@ -84,7 +84,7 @@ describe('parseGsm8k (golden)', () => {
       JSON.stringify({
         question:
           'Natalia sold clips to 48 friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether?',
-        answer: 'Natalia sold 48/2 = 24 clips in May. 48 + 24 = 72 clips. #### 72',
+        answer: 'Natalia sold 48/2 = <<48/2=24>> 24 clips in May. 48 + 24 = 72 clips. #### 72',
       }),
       JSON.stringify({ question: 'bad row', answer: 'no marker here' }),
       'not json',
@@ -93,6 +93,8 @@ describe('parseGsm8k (golden)', () => {
     expect(items).toHaveLength(1);
     expect(items[0]!.numericAnswer).toBe(72);
     expect(items[0]!.difficultyPrior).toBe(1);
+    expect(items[0]!.solution).not.toContain('<<');
+    expect(items[0]!.solution).toContain('24 clips in May');
     expect(rejected).toHaveLength(2);
   });
 });
