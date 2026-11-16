@@ -26,6 +26,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    // Cap build workers — static generation OOMs on memory-constrained hosts.
+    cpus: 2,
+    staticGenerationMaxConcurrency: 2,
+    staticGenerationMinPagesPerWorker: 50,
+  },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
