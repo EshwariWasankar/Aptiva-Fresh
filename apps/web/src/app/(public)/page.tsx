@@ -32,16 +32,16 @@ async function fetchAssessments(): Promise<PublicAssessment[]> {
   }
 }
 
-const TOPIC_SHELF = [
-  { label: 'Quantitative Aptitude', badge: 'Math' },
-  { label: 'Logical Reasoning', badge: 'Logic' },
-  { label: 'Data Interpretation', badge: 'Graphs' },
-  { label: 'Verbal Ability', badge: 'English' },
-  { label: 'TCS NQT', badge: 'Pattern 2026' },
-  { label: 'Infosys SP/DSE', badge: 'Aptitude' },
-  { label: 'Cognizant GenC', badge: 'Automata' },
-  { label: 'Accenture', badge: 'Cognitive' },
-  { label: 'Wipro Turbo', badge: 'Elite' },
+const TOPIC_SHELF: { label: string; badge: string; href: string }[] = [
+  { label: 'Quantitative Aptitude', badge: 'Math', href: '/assessments/generic' },
+  { label: 'Logical Reasoning', badge: 'Logic', href: '/assessments/generic' },
+  { label: 'Data Interpretation', badge: 'Graphs', href: '/assessments/generic' },
+  { label: 'Verbal Ability', badge: 'English', href: '/assessments/generic' },
+  { label: 'TCS NQT', badge: 'Pattern 2026', href: '/assessments/tcs-online-assessment' },
+  { label: 'Infosys SP/DSE', badge: 'Aptitude', href: '#blueprints' },
+  { label: 'Cognizant GenC', badge: 'Automata', href: '#blueprints' },
+  { label: 'Accenture', badge: 'Cognitive', href: '#blueprints' },
+  { label: 'Wipro Turbo', badge: 'Elite', href: '#blueprints' },
 ];
 
 const STEPS = [
@@ -183,10 +183,6 @@ export default async function LandingPage() {
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <AuthHeroCta />
-                <BlueprintsAnchor className="btn-secondary py-3 px-6 text-sm font-semibold inline-flex items-center gap-1.5">
-                  <span>Explore Blueprints</span>
-                  <IconArrowUpRight className="w-4 h-4 text-slate-400" />
-                </BlueprintsAnchor>
               </div>
             </div>
 
@@ -284,14 +280,27 @@ export default async function LandingPage() {
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              {TOPIC_SHELF.map((t) => (
-                <span key={t.label} className="topic-filter-pill">
-                  <span>{t.label}</span>
-                  <span className="text-[10px] text-slate-400 font-mono bg-stone-100 px-1.5 py-0.5 rounded">
-                    {t.badge}
-                  </span>
-                </span>
-              ))}
+              {TOPIC_SHELF.map((t) => {
+                const inner = (
+                  <>
+                    <span>{t.label}</span>
+                    <span className="text-[10px] text-slate-400 font-mono bg-stone-100 px-1.5 py-0.5 rounded">
+                      {t.badge}
+                    </span>
+                  </>
+                );
+                const cls =
+                  'topic-filter-pill cursor-pointer transition hover:border-[#174c4b]/50 hover:text-[#174c4b]';
+                return t.href.startsWith('/') ? (
+                  <Link key={t.label} href={t.href} className={cls}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <BlueprintsAnchor key={t.label} className={cls}>
+                    {inner}
+                  </BlueprintsAnchor>
+                );
+              })}
             </div>
           </div>
         </div>
