@@ -33,10 +33,6 @@ async function fetchAssessments(): Promise<PublicAssessment[]> {
 }
 
 const TOPIC_SHELF: { label: string; badge: string; href: string }[] = [
-  { label: 'Quantitative Aptitude', badge: 'Math', href: '/assessments/generic' },
-  { label: 'Logical Reasoning', badge: 'Logic', href: '/assessments/generic' },
-  { label: 'Data Interpretation', badge: 'Graphs', href: '/assessments/generic' },
-  { label: 'Verbal Ability', badge: 'English', href: '/assessments/generic' },
   { label: 'TCS NQT', badge: 'Pattern 2026', href: '/assessments/tcs-online-assessment' },
   { label: 'Infosys SP/DSE', badge: 'Aptitude', href: '#blueprints' },
   { label: 'Cognizant GenC', badge: 'Automata', href: '#blueprints' },
