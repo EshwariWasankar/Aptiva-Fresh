@@ -22,7 +22,7 @@ const BLOCK_LABEL: Record<string, string> = {
   probe: 'Evidence probe',
 };
 
-/** P-12 Why this? — renders the stored rationale JSON as a fixed list. */
+/** P-12 Why this? — renders the stored rationale JSON as a fixed list with purple pastel styling. */
 export function WhyThisPanel({ rationale }: { rationale: PlanRationale }) {
   const rows: [string, string][] = [];
   if (rationale.accuracy != null) {
@@ -55,19 +55,19 @@ export function WhyThisPanel({ rationale }: { rationale: PlanRationale }) {
     rows.push(['Extended for budget', `+${rationale.extendedForBudget} min`]);
   }
   return (
-    <div className="mt-3 rounded-xl bg-blue-50/70 border border-blue-200/50 p-3.5 text-xs text-stone-800">
-      <div className="mb-2 font-semibold text-blue-900 flex items-center gap-1.5">
-        <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+    <div className="mt-3 rounded-xl bg-purple-50/70 border border-purple-200/50 p-3.5 text-xs text-slate-800">
+      <div className="mb-2 font-semibold text-purple-950 flex items-center gap-1.5">
+        <span className="h-1.5 w-1.5 rounded-full bg-purple-600"></span>
         Why this block was scheduled
       </div>
       {rows.length === 0 ? (
-        <p className="text-stone-500">No rationale stored for this block.</p>
+        <p className="text-slate-500">No rationale stored for this block.</p>
       ) : (
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
           {rows.map(([k, v]) => (
             <div key={k} className="contents">
-              <dt className="text-stone-500 font-medium">{k}:</dt>
-              <dd className="font-semibold text-stone-800">{v}</dd>
+              <dt className="text-slate-500 font-medium">{k}:</dt>
+              <dd className="font-semibold text-slate-800">{v}</dd>
             </div>
           ))}
         </dl>

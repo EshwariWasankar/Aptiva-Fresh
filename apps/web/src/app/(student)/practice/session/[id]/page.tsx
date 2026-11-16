@@ -25,7 +25,7 @@ interface PendingAttempt {
   payload: Record<string, unknown>;
 }
 
-/** P-14 — practice runner: MCQ + numeric, display timer, instant feedback. */
+/** P-14 — practice runner in pastel & purple styling. */
 export default function PracticeRunnerPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -131,19 +131,19 @@ export default function PracticeRunnerPage() {
   const ss = Math.floor((elapsed % 60000) / 1000);
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 w-full overflow-hidden question-container">
       {/* Top Session Progress Bar */}
-      <div className="glass-header flex items-center justify-between px-5 py-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+      <div className="glass-card flex items-center justify-between px-5 py-3">
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
           {next?.lesson ? 'Concept review' : 'Active Practice Drill'}
         </span>
-        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-stone-700 bg-stone-100/90 px-3 py-1 rounded-full border border-stone-200/50 shadow-2xs">
-          <IconClock className="w-3.5 h-3.5 text-blue-600" />
+        <div className="flex items-center gap-2 tabular-nums text-xs font-semibold text-slate-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-100 shadow-2xs">
+          <IconClock className="w-3.5 h-3.5 text-purple-600" />
           <span>
             {mm}:{String(ss).padStart(2, '0')}
           </span>
           {q && (
-            <span className="text-stone-400 font-normal">
+            <span className="text-slate-400 font-normal">
               · target ~{Math.round(q.expectedTimeMs / 1000)}s
             </span>
           )}
@@ -160,20 +160,20 @@ export default function PracticeRunnerPage() {
       )}
 
       {phase === 'loading' && (
-        <div className="glass-card p-10 text-center text-xs text-stone-400">
+        <div className="glass-card p-10 text-center text-xs text-slate-400">
           Loading next question…
         </div>
       )}
 
       {/* Lesson View */}
       {phase === 'lesson' && next?.lesson && (
-        <section className="glass-card p-6 sm:p-8 flex flex-col gap-4">
-          <div className="flex items-center gap-2 text-xs font-bold text-blue-700 uppercase tracking-wider">
+        <section className="glass-card p-6 sm:p-8 flex flex-col gap-4 overflow-hidden max-w-full">
+          <div className="flex items-center gap-2 text-xs font-bold text-purple-700 uppercase tracking-wider">
             <IconSparkles className="w-4 h-4" />
             <span>Key Concept</span>
           </div>
-          <h2 className="text-xl font-bold text-stone-900">{next.lesson.title}</h2>
-          <div className="whitespace-pre-wrap text-sm leading-relaxed text-stone-700 bg-stone-50/70 p-4 rounded-xl border border-stone-200/40">
+          <h2 className="text-xl font-bold text-slate-900 break-words">{next.lesson.title}</h2>
+          <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700 bg-purple-50/50 p-4 rounded-xl border border-purple-100/60 break-words [overflow-wrap:anywhere] overflow-x-auto">
             {next.lesson.content}
           </div>
           <button
@@ -188,25 +188,25 @@ export default function PracticeRunnerPage() {
 
       {/* Question View */}
       {phase === 'question' && q && (
-        <section className="glass-card p-6 sm:p-8 flex flex-col gap-6">
-          <div className="text-sm sm:text-base font-medium text-stone-900 leading-relaxed">
+        <section className="glass-card p-6 sm:p-8 flex flex-col gap-6 overflow-hidden max-w-full">
+          <div className="text-sm sm:text-base font-medium text-slate-900 leading-relaxed max-w-full break-words [overflow-wrap:anywhere] overflow-x-auto">
             <Katex text={q.stem} />
           </div>
 
           {q.format === 'mcq' ? (
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2.5 max-w-full">
               {q.options.map((o) => (
                 <button
                   key={o.id}
                   type="button"
                   onClick={() => setSelected(o.id)}
-                  className={`rounded-xl border p-3.5 px-4 text-left text-xs sm:text-sm font-medium transition-all ${
+                  className={`rounded-xl border p-3.5 px-4 text-left text-xs sm:text-sm font-medium transition-all max-w-full break-words [overflow-wrap:anywhere] flex items-start ${
                     selected === o.id
-                      ? 'border-blue-600 bg-blue-50/90 text-blue-900 shadow-xs ring-1 ring-blue-500'
-                      : 'border-stone-200/70 bg-stone-50/60 hover:bg-white text-stone-800'
+                      ? 'border-purple-600 bg-purple-50/90 text-purple-950 shadow-xs ring-1 ring-purple-500'
+                      : 'border-purple-100/70 bg-white/70 hover:bg-white text-slate-800'
                   }`}
                 >
-                  {o.text}
+                  <Katex text={o.text} className="max-w-full break-words" />
                 </button>
               ))}
             </div>
@@ -222,12 +222,12 @@ export default function PracticeRunnerPage() {
                     ? 'Whole number answer'
                     : `Decimal answer${q.decimalPlaces ? ` (up to ${q.decimalPlaces} places)` : ''}`
                 }
-                className="glass-input w-64 px-4 py-2.5 text-sm"
+                className="glass-input w-64 max-w-full px-4 py-2.5 text-sm"
               />
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-stone-100">
+          <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-purple-50 max-w-full">
             <button
               type="button"
               disabled={q.format === 'mcq' ? !selected : !numeric.trim()}
@@ -247,7 +247,7 @@ export default function PracticeRunnerPage() {
               type="button"
               onClick={() => void finish()}
               disabled={finishing}
-              className="ml-auto btn-secondary py-2 px-4 text-xs font-medium text-stone-600 hover:text-stone-900"
+              className="ml-auto btn-secondary py-2 px-4 text-xs font-medium text-slate-600 hover:text-slate-900"
             >
               {finishing ? 'Finishing…' : 'Finish session'}
             </button>
@@ -259,9 +259,9 @@ export default function PracticeRunnerPage() {
       {phase === 'feedback' && feedback && (
         <div className="flex flex-col gap-4">
           {reveal && (
-            <div className="rounded-2xl border border-blue-200/80 bg-blue-50/80 p-4 text-xs text-blue-950 flex items-center justify-between">
+            <div className="rounded-2xl border border-purple-200/80 bg-purple-50/90 p-4 text-xs text-purple-950 flex items-center justify-between">
               <span>Correct answer:</span>
-              <strong className="text-sm font-bold text-blue-900">
+              <strong className="text-sm font-bold text-purple-900">
                 {reveal.correctOption ? reveal.correctOption.text : (reveal.numericAnswer ?? '—')}
               </strong>
             </div>
@@ -291,7 +291,7 @@ export default function PracticeRunnerPage() {
                       : 'Skipped'}
                 </h3>
                 {feedback.paceRatio != null && feedback.paceRatio > 1.5 && (
-                  <p className="text-xs text-stone-500 mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     Took longer than the target pace for this difficulty band.
                   </p>
                 )}
@@ -299,20 +299,20 @@ export default function PracticeRunnerPage() {
             </div>
 
             {!feedback.isCorrect && feedback.promptErrorCause && feedback.attemptId && (
-              <div className="rounded-xl bg-stone-50/80 p-4 border border-stone-200/50">
+              <div className="rounded-xl bg-purple-50/40 p-4 border border-purple-100/60">
                 <ErrorCausePicker attemptId={feedback.attemptId} onSaved={() => undefined} />
               </div>
             )}
 
             {reveal?.solution && (
-              <details className="rounded-xl bg-stone-50/80 border border-stone-200/50 p-4 group">
-                <summary className="cursor-pointer text-xs font-bold text-blue-700 flex items-center justify-between">
+              <details className="rounded-xl bg-purple-50/40 border border-purple-100/60 p-4 group">
+                <summary className="cursor-pointer text-xs font-bold text-purple-700 flex items-center justify-between">
                   <span>Worked Step-by-Step Solution</span>
-                  <span className="text-stone-400 group-open:rotate-180 transition-transform">
+                  <span className="text-slate-400 group-open:rotate-180 transition-transform">
                     ▼
                   </span>
                 </summary>
-                <div className="mt-3 whitespace-pre-wrap text-xs text-stone-700 leading-relaxed border-t border-stone-200/40 pt-3">
+                <div className="mt-3 whitespace-pre-wrap text-xs text-slate-700 leading-relaxed border-t border-purple-100/60 pt-3">
                   {reveal.solution}
                 </div>
               </details>
@@ -345,8 +345,8 @@ export default function PracticeRunnerPage() {
           <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 font-bold text-xl shadow-xs">
             ✓
           </span>
-          <h2 className="text-xl font-bold text-stone-900">Drill Completed</h2>
-          <p className="text-xs text-stone-500 max-w-sm">
+          <h2 className="text-xl font-bold text-slate-900">Drill Completed</h2>
+          <p className="text-xs text-slate-500 max-w-sm">
             {next?.reason === 'pool_exhausted'
               ? 'You have answered all available questions in this block pool.'
               : 'All scheduled questions for this drill session are complete.'}

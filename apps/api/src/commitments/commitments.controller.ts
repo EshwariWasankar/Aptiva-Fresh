@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, type AuthUser } from '../common/guards/auth.guard';
 import { CommitmentsService, type SetCommitmentDto } from './commitments.service';
@@ -13,6 +13,12 @@ export class CommitmentsController {
   @Get()
   async getCommitment(@CurrentUser() user: AuthUser) {
     return this.commitments.getCommitment(user.id);
+  }
+
+  @Get('activity')
+  async getActivity(@CurrentUser() user: AuthUser, @Query('days') days?: string) {
+    const daysBack = days ? Number.parseInt(days, 10) : 365;
+    return this.commitments.getActivityHistory(user.id, Number.isFinite(daysBack) ? daysBack : 365);
   }
 
   @Put()

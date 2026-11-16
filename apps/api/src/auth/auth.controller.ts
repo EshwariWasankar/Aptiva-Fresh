@@ -22,7 +22,10 @@ import {
   PasswordResetConfirmDtoSchema,
   PasswordResetRequestDtoSchema,
   RegisterDtoSchema,
+  RequestOtpDtoSchema,
+  ResetWithOtpDtoSchema,
   VerifyEmailDtoSchema,
+  VerifyOtpDtoSchema,
 } from './dto';
 import { parseBody } from '../common/http/zod';
 
@@ -150,6 +153,31 @@ export class AuthController {
   async passwordResetConfirm(@Body() body: unknown) {
     const dto = parseBody(PasswordResetConfirmDtoSchema, body);
     await this.auth.confirmPasswordReset(dto.token, dto.password);
+  }
+
+  @Public()
+  @RateLimit(AUTH_RATE_LIMIT)
+  @Post('password-reset/otp/request')
+  async requestOtp(@Body() body: unknown) {
+    const dto = parseBody(RequestOtpDtoSchema, body);
+    return this.auth.requestPasswordResetOtp(dto.email);
+  }
+
+  @Public()
+  @RateLimit(AUTH_RATE_LIMIT)
+  @Post('password-reset/otp/verify')
+  async verifyOtp(@Body() body: unknown) {
+    const dto = parseBody(VerifyOtpDtoSchema, body);
+    return this.auth.verifyPasswordResetOtp(dto.email, dto.otp);
+  }
+
+  @Public()
+  @RateLimit(AUTH_RATE_LIMIT)
+  @Post('password-reset/otp/reset')
+  async resetWithOtp(@Body() body: unknown) {
+    const dto = parseBody(ResetWithOtpDtoSchema, body);
+    await this.auth.confirmPasswordResetWithOtp(dto.resetToken, dto.password);
+    return { success: true, message: 'Password has been updated successfully.' };
   }
 
   // ------------------------------------------------------------- helpers

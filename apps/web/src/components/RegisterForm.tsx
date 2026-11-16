@@ -32,7 +32,7 @@ function strengthHint(pw: string): string {
   return 'Weak — mix letters, numbers and symbols';
 }
 
-/** P-03 registration form (FR-001). */
+/** P-03 registration form (FR-001) with pastel & purple aesthetics. */
 export function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -93,7 +93,7 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         Email
         <input
           type="email"
@@ -108,16 +108,16 @@ export function RegisterForm() {
           <span className="text-[11px] font-medium text-rose-600">{errors.email}</span>
         ) : null}
       </label>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         Password
         <PasswordInput value={password} onChange={setPassword} autoComplete="new-password" />
-        {hint ? <span className="text-[11px] text-stone-500">{hint}</span> : null}
+        {hint ? <span className="text-[11px] text-slate-500">{hint}</span> : null}
         {errors.password ? (
           <span className="text-[11px] font-medium text-rose-600">{errors.password}</span>
         ) : null}
       </label>
       <div className="grid grid-cols-2 gap-3">
-        <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+        <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
           Graduation year
           <input
             type="number"
@@ -132,7 +132,7 @@ export function RegisterForm() {
             <span className="text-[11px] font-medium text-rose-600">{errors.gradYear}</span>
           ) : null}
         </label>
-        <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+        <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
           Branch
           <input
             type="text"
@@ -143,7 +143,7 @@ export function RegisterForm() {
           />
         </label>
       </div>
-      <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+      <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
         College (optional)
         <input
           type="text"
@@ -153,16 +153,16 @@ export function RegisterForm() {
           placeholder="University / Institute name"
         />
       </label>
-      <label className="flex items-start gap-2.5 text-xs text-stone-600 pt-1">
+      <label className="flex items-start gap-2.5 text-xs text-slate-600 pt-1">
         <input
           type="checkbox"
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
-          className="mt-0.5 rounded border-stone-300 text-blue-600 focus:ring-blue-500"
+          className="mt-0.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
         />
         <span>
           I agree to the{' '}
-          <Link href="/privacy" className="text-blue-600 underline">
+          <Link href="/privacy" className="text-purple-600 underline">
             privacy notice
           </Link>{' '}
           (version {CONSENT_NOTICE_VERSION}).
@@ -186,17 +186,20 @@ export function RegisterForm() {
       >
         {pending ? 'Creating account…' : 'Create account'}
       </button>
-      <div className="flex justify-between text-xs text-stone-600 mt-1">
+      <div className="flex justify-between text-xs text-slate-600 mt-1">
         <span>Already have an account?</span>
-        <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition">
+        <Link
+          href="/login"
+          className="font-semibold text-purple-600 hover:text-purple-700 transition"
+        >
           Sign in
         </Link>
       </div>
       <div className="relative my-2 flex items-center justify-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-stone-200"></div>
+          <div className="w-full border-t border-purple-100"></div>
         </div>
-        <span className="relative bg-white/70 px-3 text-[11px] text-stone-400">or</span>
+        <span className="relative bg-white/70 px-3 text-[11px] text-slate-400">or</span>
       </div>
       <a
         href="/api/v1/auth/google"

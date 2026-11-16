@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, type AuthUser } from '../common/guards/auth.guard';
 import { NotificationsService, type NotificationPreferencesDto } from './notifications.service';
@@ -9,6 +9,21 @@ import { NotificationsService, type NotificationPreferencesDto } from './notific
 @Controller('me/notifications')
 export class NotificationsController {
   constructor(private readonly notifications: NotificationsService) {}
+
+  @Get()
+  async getNotifications(@CurrentUser() user: AuthUser) {
+    return this.notifications.getNotifications(user.id);
+  }
+
+  @Post(':id/read')
+  async markRead(@CurrentUser() _user: AuthUser, @Param('id') id: string) {
+    return { id, read: true, success: true };
+  }
+
+  @Post('read-all')
+  async markAllRead(@CurrentUser() _user: AuthUser) {
+    return { success: true };
+  }
 
   @Get('preferences')
   async getPreferences(@CurrentUser() user: AuthUser) {

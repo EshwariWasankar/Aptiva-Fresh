@@ -11,12 +11,12 @@ export default function LoginPage() {
           <div className="flex flex-col items-center text-center gap-2">
             <Link
               href="/"
-              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white font-bold text-base shadow-sm mb-1"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-white font-bold text-base shadow-md shadow-indigo-950/40 border border-indigo-400/30 mb-1"
             >
               A
             </Link>
-            <h1 className="text-2xl font-bold tracking-tight text-stone-900">Welcome back</h1>
-            <p className="text-xs text-stone-500">Sign in to your Aptiva placement workspace.</p>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Welcome back</h1>
+            <p className="text-xs text-slate-500">Sign in to your Aptiva placement workspace.</p>
           </div>
           <LoginForm />
         </div>

@@ -30,7 +30,7 @@ const LEVELS = [
   { value: 'maintaining', label: 'Maintaining sharpness' },
 ] as const;
 
-/** P-11 — preparation requirements form (E-021). */
+/** P-11 — preparation requirements form with pastel & purple aesthetics. */
 export function RequirementsForm() {
   const router = useRouter();
   const [assessments, setAssessments] = useState<PublicAssessment[]>([]);
@@ -129,7 +129,7 @@ export function RequirementsForm() {
     }
   }
 
-  if (loading) return <p className="text-xs text-stone-400">Loading requirements…</p>;
+  if (loading) return <p className="text-xs text-slate-400">Loading requirements…</p>;
 
   return (
     <form onSubmit={onSubmit} className="flex max-w-2xl flex-col gap-6" noValidate>
@@ -144,25 +144,25 @@ export function RequirementsForm() {
 
       {/* Target Assessment Mode */}
       <fieldset className="glass-card p-5 flex flex-col gap-3">
-        <legend className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+        <legend className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
           Target Assessment Blueprint
         </legend>
         <div className="flex flex-col gap-2 pt-1">
-          <label className="flex items-center gap-2.5 text-xs font-medium text-stone-800">
+          <label className="flex items-center gap-2.5 text-xs font-medium text-slate-800">
             <input
               type="radio"
               checked={mode === 'general'}
               onChange={() => setMode('general')}
-              className="accent-blue-600"
+              className="accent-purple-600"
             />
             <span>General campus placement aptitude (balanced syllabus)</span>
           </label>
-          <label className="flex items-center gap-2.5 text-xs font-medium text-stone-800">
+          <label className="flex items-center gap-2.5 text-xs font-medium text-slate-800">
             <input
               type="radio"
               checked={mode === 'assessment_specific'}
               onChange={() => setMode('assessment_specific')}
-              className="accent-blue-600"
+              className="accent-purple-600"
             />
             <span>Specific company assessment</span>
           </label>
@@ -185,7 +185,7 @@ export function RequirementsForm() {
 
       {/* Dates Grid */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+        <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
           Target assessment date
           <input
             type="date"
@@ -197,7 +197,7 @@ export function RequirementsForm() {
             <span className="text-[11px] text-rose-600 font-medium">{errors.testDate}</span>
           )}
         </label>
-        <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+        <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
           Preparation deadline
           <input
             type="date"
@@ -213,14 +213,14 @@ export function RequirementsForm() {
 
       {/* Daily Time Budget */}
       <fieldset className="glass-card p-5 flex flex-col gap-3">
-        <legend className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+        <legend className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
           Available study minutes per day (0 or ≥10)
         </legend>
         <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-7 pt-1">
           {DAYS.map((d) => (
             <label
               key={d.key}
-              className="flex flex-col gap-1 text-[11px] font-bold text-stone-600 text-center"
+              className="flex flex-col gap-1 text-[11px] font-bold text-slate-600 text-center"
             >
               <span>{d.label}</span>
               <input
@@ -243,7 +243,7 @@ export function RequirementsForm() {
 
       {/* Block Length and Level */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+        <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
           Target session block length
           <select
             value={blockLength}
@@ -257,7 +257,7 @@ export function RequirementsForm() {
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1.5 text-xs font-semibold text-stone-700">
+        <label className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700">
           Preparation intensity level
           <select
             value={level}
@@ -276,7 +276,7 @@ export function RequirementsForm() {
       {/* Wanted Topics */}
       {topicOptions.length > 0 && (
         <fieldset className="glass-card p-5 flex flex-col gap-3">
-          <legend className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+          <legend className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
             Priority Topics (optional override)
           </legend>
           <div className="flex max-h-44 flex-wrap gap-2 overflow-y-auto pt-1">
@@ -287,8 +287,8 @@ export function RequirementsForm() {
                   key={t.topic.id}
                   className={`cursor-pointer rounded-full border px-3 py-1 text-xs transition-all ${
                     isSelected
-                      ? 'border-blue-500 bg-blue-50/90 text-blue-900 font-semibold shadow-2xs'
-                      : 'border-stone-200/70 bg-stone-50/60 text-stone-600 hover:bg-white'
+                      ? 'border-purple-500 bg-purple-50 text-purple-950 font-semibold shadow-2xs'
+                      : 'border-purple-100 bg-white/70 text-slate-600 hover:bg-white'
                   }`}
                 >
                   <input

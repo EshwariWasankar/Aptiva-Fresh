@@ -256,7 +256,7 @@ export default function BlueprintsPage() {
       )}
 
       {detail && currentVersion && (
-        <div className="glass-card p-6 flex flex-col gap-4 border-2 border-blue-200/60">
+        <div className="glass-card p-6 flex flex-col gap-4 border-2 border-purple-200/60">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-100 pb-3 gap-2">
             <div>
               <h2 className="text-lg font-bold text-stone-900">{detail.name}</h2>
@@ -267,7 +267,7 @@ export default function BlueprintsPage() {
                   : '· unverified'}
               </span>
             </div>
-            <span className="rounded-full bg-blue-50 border border-blue-200/50 px-3 py-1 text-xs font-semibold text-blue-800">
+            <span className="rounded-full bg-purple-50 border border-purple-200/50 px-3 py-1 text-xs font-semibold text-purple-900">
               {currentVersion.sections.length} test sections
             </span>
           </div>

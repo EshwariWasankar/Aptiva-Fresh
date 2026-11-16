@@ -5,8 +5,8 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { PrismaService } from '../common/prisma/prisma.service';
 import { Prisma } from '../../generated/prisma/client';
+import { PrismaService } from '../common/prisma/prisma.service';
 
 export type PassTier = 'free' | 'sprint_7d' | 'sprint_14d' | 'season_1m' | 'season_3m';
 
@@ -116,7 +116,7 @@ export class BillingService {
           idempotencyKey: String(idempotencyKey),
           gateway,
           eventType,
-          payload: body as Prisma.InputJsonValue,
+          payload: body as unknown as Prisma.InputJsonValue,
           processedAt: new Date(),
         },
       });

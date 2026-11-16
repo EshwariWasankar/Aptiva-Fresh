@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const apiInternalUrl = process.env.API_INTERNAL_URL ?? 'http://localhost:4000';
+const isDev = process.env.NODE_ENV !== 'production';
 
 // PH10-T02 — baseline security headers for the web app.
 const securityHeaders = [
@@ -12,7 +13,7 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https:",
       "font-src 'self' data:",

@@ -243,7 +243,7 @@ export function QuestionEditor({ question, topics }: Props) {
           onChange={(e) => set('stem', e.target.value)}
         />
         {form.stem && (
-          <div className="mt-2 rounded border bg-neutral-50 p-3 text-sm">
+          <div className="mt-2 rounded border bg-neutral-50 p-3 text-sm break-words [overflow-wrap:anywhere] overflow-x-auto max-w-full">
             <div className="mb-1 text-xs text-neutral-400">Preview</div>
             <Katex text={form.stem} />
           </div>

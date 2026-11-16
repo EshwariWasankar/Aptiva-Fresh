@@ -2,9 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { RequireAuth } from '../../components/RequireAuth';
 import { useSession } from '../../lib/session';
+import {
+  getNotifications,
+  markAllNotificationsRead,
+  markNotificationRead,
+  type NotificationItem,
+} from '../../lib/notifications';
 import {
   IconHome,
   IconCompass,
@@ -14,72 +20,330 @@ import {
   IconBook,
   IconUser,
   IconSettings,
-  IconSliders,
   IconBell,
   IconChevronDown,
+  IconCreditCard,
+  IconMenu,
+  IconX,
 } from '../../components/Icons';
 
 const NAV = [
-  { href: '/dashboard', label: 'Overview', fullLabel: 'Dashboard', icon: IconHome },
-  { href: '/plan', label: 'Plan', fullLabel: 'Study Plan', icon: IconCalendar },
-  { href: '/practice', label: 'Practice', fullLabel: 'Practice Drills', icon: IconTarget },
-  {
-    href: '/onboarding/diagnostic',
-    label: 'Diagnostic',
-    fullLabel: 'Diagnostic',
-    icon: IconCompass,
-  },
-  { href: '/reassessment', label: 'Readiness', fullLabel: 'Reassessment', icon: IconActivity },
-  { href: '/notebook', label: 'Notebook', fullLabel: 'Mistake Notebook', icon: IconBook },
-  { href: '/profile', label: 'Profile', fullLabel: 'Mastery Profile', icon: IconUser },
-  { href: '/settings', label: 'Settings', fullLabel: 'Settings', icon: IconSettings },
-];
-
-const LEFT_DOCK = [
   { href: '/dashboard', label: 'Overview', icon: IconHome },
   { href: '/plan', label: 'Study Plan', icon: IconCalendar },
-  { href: '/practice', label: 'Practice Drills', icon: IconTarget },
+  { href: '/practice', label: 'Practice', icon: IconTarget },
+  { href: '/onboarding/diagnostic', label: 'Diagnostic', icon: IconCompass },
   { href: '/reassessment', label: 'Readiness', icon: IconActivity },
+  { href: '/notebook', label: 'Notebook', icon: IconBook },
+  { href: '/billing', label: 'Billing', icon: IconCreditCard },
+  { href: '/profile', label: 'Profile', icon: IconUser },
+  { href: '/settings', label: 'Settings', icon: IconSettings },
 ];
 
 function StudentNav() {
   const pathname = usePathname();
   const { user, signOut } = useSession();
-  const [glassMenuOpen, setGlassMenuOpen] = useState(false);
-  const [glassMode, setGlassMode] = useState<'warm' | 'frost' | 'crisp'>('warm');
+  const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : 'A';
 
-  const applyGlassPreset = (preset: 'warm' | 'frost' | 'crisp') => {
-    setGlassMode(preset);
-    setGlassMenuOpen(false);
-    if (typeof document !== 'undefined') {
-      const root = document.documentElement;
-      if (preset === 'frost') {
-        root.style.setProperty('--glass-blur', '36px');
-        root.style.setProperty('--surface-glass', 'rgba(255, 255, 255, 0.65)');
-      } else if (preset === 'crisp') {
-        root.style.setProperty('--glass-blur', '14px');
-        root.style.setProperty('--surface-glass', 'rgba(255, 255, 255, 0.42)');
-      } else {
-        root.style.setProperty('--glass-blur', '28px');
-        root.style.setProperty('--surface-glass', 'rgba(255, 255, 255, 0.55)');
-      }
+  const loadNotifications = () => {
+    getNotifications()
+      .then((res) => {
+        setNotifications(res.notifications);
+        setUnreadCount(res.unreadCount);
+      })
+      .catch(() => undefined);
+  };
+
+  useEffect(() => {
+    loadNotifications();
+    const interval = setInterval(loadNotifications, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Close mobile menu when navigating
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  const handleMarkRead = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await markNotificationRead(id);
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+      setUnreadCount((c) => Math.max(0, c - 1));
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllNotificationsRead();
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch {
+      // ignore
     }
   };
 
   return (
-    <>
-      {/* Top Floating Glass Header Bar (Matching Reference Screenshot) */}
-      <header className="sticky top-4 z-40 mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="glass-header flex items-center justify-between px-5 py-3">
-          {/* Brand Logo, Workspace Context & Assessment Selector */}
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="flex items-center gap-2.5 group">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-sm transition-transform group-hover:scale-105">
+    <header className="sticky top-3 z-40 mx-auto max-w-[1440px] px-3 sm:px-6">
+      {/* Single Unified Academic Masthead in Deep Oxford Ink */}
+      <div className="navy-glass-header flex items-center justify-between gap-4 lg:gap-8 px-4 sm:px-6 py-2.5 sm:py-3 shadow-xl">
+        {/* Left: Brand Logo & Assessment Target Selector */}
+        <div className="flex items-center gap-3 sm:gap-3.5 shrink-0">
+          <Link href="/dashboard" className="flex items-center gap-2.5 group shrink-0">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-slate-900 text-sm font-semibold text-white shadow-md shadow-indigo-950/40 border border-indigo-400/30 transition-transform group-hover:scale-105">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+              </svg>
+            </span>
+            <div className="flex flex-col">
+              <span className="text-base font-bold tracking-tight text-white leading-tight">
+                Aptiva
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-indigo-300/80 font-mono -mt-0.5">
+                Adaptive Prep
+              </span>
+            </div>
+          </Link>
+
+          <span className="hidden text-xs text-slate-700 sm:inline">|</span>
+
+          {/* Assessment Target Selector */}
+          <Link
+            href="/setup/requirements"
+            className="hidden sm:flex items-center gap-2 rounded-full bg-slate-900/90 px-3 py-1 text-[11px] font-medium text-slate-200 border border-slate-700/80 hover:border-indigo-400/60 hover:text-white transition-all shadow-xs shrink-0"
+            title="Assessment Target & Requirements"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 ring-2 ring-amber-400/30 animate-pulse"></span>
+            <span className="truncate max-w-[150px] font-medium">Target: GMAT Focus</span>
+            <IconChevronDown className="w-3 h-3 text-slate-400" />
+          </Link>
+
+          {/* Distinct structural divider separating Target Selector from Navigation */}
+          <span
+            className="hidden lg:inline-block h-4 w-px bg-slate-800 shrink-0 ml-1"
+            aria-hidden="true"
+          />
+        </div>
+
+        {/* Center: Desktop Navigation Bar with guaranteed horizontal safety */}
+        <nav className="hidden lg:flex items-center gap-1 text-xs font-medium shrink min-w-0 overflow-x-auto no-scrollbar">
+          {NAV.map((item) => {
+            const active =
+              pathname === item.href ||
+              (item.href !== '/dashboard' && pathname.startsWith(`${item.href}/`));
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`rounded-full px-2.5 xl:px-3 py-1.5 transition-all text-xs whitespace-nowrap shrink-0 ${
+                  active
+                    ? 'bg-indigo-100 text-indigo-950 font-bold shadow-xs'
+                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right Controls: Notifications, Profile, Sign Out & Mobile Menu Toggle */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Notification Bell with Live Unread Dropdown */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setNotificationMenuOpen(!notificationMenuOpen)}
+              aria-label="Notifications"
+              className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800/80 border border-slate-700/60 text-slate-300 hover:text-white hover:bg-slate-700/80 transition-colors"
+            >
+              <IconBell className="w-4 h-4" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-purple-500 px-1 text-[10px] font-bold text-white ring-2 ring-slate-900">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            {/* Notification Dropdown */}
+            {notificationMenuOpen && (
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl glass-card p-4 shadow-2xl border border-white z-50 flex flex-col gap-3 text-xs animate-in fade-in zoom-in-95">
+                <div className="flex items-center justify-between border-b border-purple-50 pb-2">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-900">
+                    <span>Notifications</span>
+                    {unreadCount > 0 && (
+                      <span className="rounded-full bg-purple-100 text-purple-900 px-2 py-0.5 text-[10px]">
+                        {unreadCount} new
+                      </span>
+                    )}
+                  </div>
+                  {unreadCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => void handleMarkAllRead()}
+                      className="text-[11px] font-medium text-purple-700 hover:text-purple-900"
+                    >
+                      Mark all as read
+                    </button>
+                  )}
+                </div>
+
+                {notifications.length === 0 ? (
+                  <div className="py-6 text-center text-xs text-slate-400">
+                    No notifications right now.
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+                    {notifications.slice(0, 5).map((n) => (
+                      <div
+                        key={n.id}
+                        className={`p-2.5 rounded-xl border transition ${
+                          n.read
+                            ? 'bg-white/40 border-slate-100 text-slate-600'
+                            : 'bg-purple-50/70 border-purple-100 text-slate-900 font-medium'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="text-xs font-semibold leading-tight">{n.title}</h4>
+                          {!n.read && (
+                            <button
+                              type="button"
+                              onClick={(e) => void handleMarkRead(n.id, e)}
+                              className="text-[10px] text-purple-700 hover:text-purple-900 shrink-0"
+                            >
+                              Mark read
+                            </button>
+                          )}
+                        </div>
+                        <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">
+                          {n.message}
+                        </p>
+                        {n.link && (
+                          <Link
+                            href={n.link}
+                            onClick={() => setNotificationMenuOpen(false)}
+                            className="mt-1.5 inline-block text-[11px] font-semibold text-purple-700 hover:underline"
+                          >
+                            Go to page →
+                          </Link>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="border-t border-purple-50 pt-2 flex items-center justify-between">
+                  <Link
+                    href="/notifications"
+                    onClick={() => setNotificationMenuOpen(false)}
+                    className="text-xs font-semibold text-purple-700 hover:text-purple-900"
+                  >
+                    View all alerts &amp; settings →
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setNotificationMenuOpen(false)}
+                    className="text-xs text-slate-400 hover:text-slate-600"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Admin Switcher for Admins & Reviewers */}
+          {(user?.role === 'admin' || user?.role === 'reviewer') && (
+            <Link
+              href="/admin/questions"
+              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-950/40 border border-purple-400/40 transition hover:scale-105 hover:shadow-purple-500/30 shrink-0"
+              title="Open Admin Portal & Question Bank"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <span>Admin Portal</span>
+            </Link>
+          )}
+
+          {/* Profile Avatar & Email */}
+          <Link
+            href="/profile"
+            className="flex items-center gap-2 group"
+            title="View Mastery Profile"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-xs font-semibold text-white shadow-sm ring-1 ring-white/20 transition-transform group-hover:scale-105">
+              {userInitial}
+            </div>
+            <span className="hidden text-xs text-slate-300 xl:inline font-medium group-hover:text-white transition-colors truncate max-w-[120px]">
+              {user?.email}
+            </span>
+          </Link>
+
+          {/* Sign Out Action */}
+          <button
+            type="button"
+            onClick={() => void signOut().then(() => (window.location.href = '/login'))}
+            className="hidden sm:inline-block rounded-lg px-2.5 py-1 text-xs font-medium text-slate-400 transition hover:bg-slate-800/80 hover:text-slate-200"
+          >
+            Sign out
+          </button>
+
+          {/* Mobile/Tablet Menu Hamburger Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            className="lg:hidden flex h-8 w-8 items-center justify-center rounded-xl bg-slate-800/80 border border-slate-700/60 text-slate-300 hover:text-white hover:bg-slate-700/80 transition-colors"
+          >
+            {mobileMenuOpen ? <IconX className="w-4 h-4" /> : <IconMenu className="w-4 h-4" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile / Tablet Dropdown Menu */}
+      {mobileMenuOpen && (
+        <nav
+          aria-label="Mobile Navigation"
+          className="lg:hidden mt-2 rounded-2xl navy-glass-header p-3 shadow-2xl border border-slate-700/60 animate-in fade-in slide-in-from-top-2 flex flex-col gap-1 text-xs"
+        >
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 pb-2 border-b border-slate-800">
+            {(user?.role === 'admin' || user?.role === 'reviewer') && (
+              <Link
+                href="/admin/questions"
+                onClick={() => setMobileMenuOpen(false)}
+                className="col-span-2 sm:col-span-3 flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md border border-purple-400/40"
+              >
                 <svg
-                  width="18"
-                  height="18"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -87,216 +351,57 @@ function StudentNav() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
-                  <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
-                  <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
-              </span>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                <span className="text-base font-semibold tracking-tight text-stone-900">
-                  Aptiva
-                </span>
-                <span className="hidden text-xs text-stone-400 sm:inline">|</span>
-                <span className="hidden text-xs font-medium text-stone-500 sm:inline">
-                  Placement workspace
-                </span>
-              </div>
-            </Link>
-
-            <span className="hidden text-xs text-stone-300 md:inline">|</span>
-
-            {/* Assessment Selector Pill */}
-            <Link
-              href="/setup/requirements"
-              className="hidden md:flex items-center gap-1.5 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-stone-700 border border-stone-200/60 hover:bg-white hover:text-stone-900 transition-colors shadow-2xs"
-              title="Change Assessment Target"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
-              <span>GMAT Focus Edition</span>
-              <IconChevronDown className="w-3.5 h-3.5 text-stone-400" />
-            </Link>
-          </div>
-
-          {/* Desktop Top Links */}
-          <nav className="hidden lg:flex items-center gap-1 text-xs font-medium">
-            {NAV.slice(0, 5).map((item) => {
+                <span>Open Admin Portal</span>
+              </Link>
+            )}
+            {NAV.map((item) => {
               const active =
                 pathname === item.href ||
                 (item.href !== '/dashboard' && pathname.startsWith(`${item.href}/`));
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`rounded-full px-3 py-1.5 transition-all ${
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium transition-all ${
                     active
-                      ? 'bg-stone-900 text-white shadow-sm'
-                      : 'text-stone-600 hover:bg-stone-200/60 hover:text-stone-900'
+                      ? 'bg-purple-200 text-purple-950 font-bold'
+                      : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                   }`}
                 >
-                  {item.fullLabel}
+                  <Icon className={`w-4 h-4 ${active ? 'text-purple-950' : 'text-slate-400'}`} />
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
-          </nav>
+          </div>
 
-          {/* Right Controls: Adjust Glass, Notification Bell, User Avatar, Sign Out */}
-          <div className="flex items-center gap-2.5">
-            {/* Interactive "Adjust glass" feature matching reference screenshot */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setGlassMenuOpen(!glassMenuOpen)}
-                className="flex items-center gap-1.5 rounded-full bg-white/70 hover:bg-white px-3 py-1 text-xs font-medium text-stone-700 border border-stone-200/60 transition-colors shadow-2xs"
-                title="Adjust glass refraction and blur"
-              >
-                <IconSliders className="w-3.5 h-3.5 text-stone-500" />
-                <span className="hidden sm:inline">Adjust glass</span>
-              </button>
-
-              {glassMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-2xl glass-card p-3 shadow-xl border border-white/90 z-50 flex flex-col gap-1.5 text-xs animate-in fade-in zoom-in-95">
-                  <div className="px-2 py-1 font-semibold text-stone-800 border-b border-stone-100 text-[11px] uppercase tracking-wider">
-                    Glass Presets
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => applyGlassPreset('warm')}
-                    className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition ${
-                      glassMode === 'warm'
-                        ? 'bg-stone-900 text-white font-medium'
-                        : 'text-stone-600 hover:bg-stone-100'
-                    }`}
-                  >
-                    <span>Warm Glow</span>
-                    {glassMode === 'warm' && <span className="text-[10px]">Active</span>}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => applyGlassPreset('frost')}
-                    className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition ${
-                      glassMode === 'frost'
-                        ? 'bg-stone-900 text-white font-medium'
-                        : 'text-stone-600 hover:bg-stone-100'
-                    }`}
-                  >
-                    <span>Deep Acrylic</span>
-                    {glassMode === 'frost' && <span className="text-[10px]">Active</span>}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => applyGlassPreset('crisp')}
-                    className={`flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition ${
-                      glassMode === 'crisp'
-                        ? 'bg-stone-900 text-white font-medium'
-                        : 'text-stone-600 hover:bg-stone-100'
-                    }`}
-                  >
-                    <span>Crisp Minimal</span>
-                    {glassMode === 'crisp' && <span className="text-[10px]">Active</span>}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Notification Bell */}
-            <button
-              type="button"
-              aria-label="Notifications"
-              className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-white/70 border border-stone-200/60 text-stone-600 hover:text-stone-900 hover:bg-white transition-colors shadow-2xs"
-            >
-              <IconBell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-blue-600 ring-2 ring-white" />
-            </button>
-
-            {/* Profile Avatar */}
-            <Link
-              href="/profile"
-              className="flex items-center gap-2 group"
-              title={user?.email || 'Profile'}
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-stone-100 to-stone-200 border border-stone-300/70 text-xs font-semibold text-stone-800 shadow-2xs group-hover:border-stone-400 transition-colors">
-                {userInitial}
-              </div>
-            </Link>
-
-            {/* Sign Out Button */}
+          <div className="pt-2 flex items-center justify-between text-xs text-slate-400 px-2">
+            <span className="truncate max-w-[200px]">{user?.email}</span>
             <button
               type="button"
               onClick={() => void signOut().then(() => (window.location.href = '/login'))}
-              className="rounded-lg px-2.5 py-1 text-xs font-medium text-stone-500 transition hover:bg-stone-200/60 hover:text-stone-800"
+              className="text-rose-400 hover:text-rose-300 font-medium"
             >
               Sign out
             </button>
           </div>
-        </div>
-      </header>
-
-      {/* Floating Left Vertical Dock (Directly from the Reference Screenshot) */}
-      <aside
-        aria-label="Sidebar Dock Navigation"
-        className="fixed left-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-2 p-2 rounded-2xl glass-pill shadow-xl border border-white/80"
-      >
-        {LEFT_DOCK.map((item) => {
-          const active =
-            pathname === item.href ||
-            (item.href !== '/dashboard' && pathname.startsWith(`${item.href}/`));
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={item.label}
-              className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${
-                active
-                  ? 'bg-white shadow-sm text-stone-900 border border-stone-200/50'
-                  : 'text-stone-500 hover:bg-white/60 hover:text-stone-900'
-              }`}
-            >
-              <Icon className={`w-5 h-5 ${active ? 'text-blue-600' : 'text-stone-500'}`} />
-            </Link>
-          );
-        })}
-      </aside>
-
-      {/* Floating Bottom Navigation Dock (Inspired by Reference Screenshot) */}
-      <aside
-        aria-label="Bottom Dock Navigation"
-        className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 max-w-[94vw]"
-      >
-        <div className="glass-pill flex items-center gap-1.5 p-1.5 shadow-xl border border-white/80 overflow-x-auto no-scrollbar">
-          {NAV.map((item) => {
-            const active =
-              pathname === item.href ||
-              (item.href !== '/dashboard' && pathname.startsWith(`${item.href}/`));
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap ${
-                  active
-                    ? 'glass-pill-active font-semibold text-stone-900'
-                    : 'text-stone-600 hover:bg-white/60 hover:text-stone-900'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${active ? 'text-blue-600' : 'text-stone-500'}`} />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </aside>
-    </>
+        </nav>
+      )}
+    </header>
   );
 }
 
 export default function StudentLayout({ children }: { children: ReactNode }) {
   return (
     <RequireAuth>
-      <div className="min-h-screen pb-24 pt-2">
+      <div className="min-h-screen pb-12 pt-1">
         <StudentNav />
-        <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-          <div className="glass-sheet p-6 sm:p-8 md:p-10">{children}</div>
+        <main className="mx-auto max-w-[1440px] px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="glass-sheet p-5 sm:p-8 lg:p-10">{children}</div>
         </main>
       </div>
     </RequireAuth>

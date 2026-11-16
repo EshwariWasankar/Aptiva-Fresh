@@ -62,7 +62,7 @@ export default function SessionSummaryPage() {
   }
   if (!summary) {
     return (
-      <div className="glass-card p-10 text-center text-xs text-stone-400">
+      <div className="glass-card p-10 text-center text-xs text-slate-400">
         Compiling session performance summary…
       </div>
     );
@@ -77,11 +77,11 @@ export default function SessionSummaryPage() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
-      <div className="border-b border-stone-200/50 pb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+      <div className="border-b border-purple-100/60 pb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
           Session Performance Summary
         </h1>
-        <p className="mt-1 text-xs text-stone-500">
+        <p className="mt-1 text-xs text-slate-500">
           Immediate feedback breakdown and Bayesian profile calibration metrics.
         </p>
       </div>
@@ -98,8 +98,8 @@ export default function SessionSummaryPage() {
             key={k}
             className="glass-card p-5 text-center flex flex-col justify-center items-center gap-1"
           >
-            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">{v}</div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+            <div className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">{v}</div>
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               {k}
             </div>
           </div>
@@ -109,17 +109,17 @@ export default function SessionSummaryPage() {
       {/* Topics Breakdown */}
       {summary.topics.length > 0 && (
         <section className="glass-card p-6 flex flex-col gap-3">
-          <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
             Performance by Topic
           </h2>
           <ul className="flex flex-col gap-2">
             {summary.topics.map((t) => (
               <li
                 key={t.topicId}
-                className="flex items-center justify-between rounded-xl bg-stone-50/70 p-3 px-3.5 border border-stone-200/40 text-xs"
+                className="flex items-center justify-between rounded-xl bg-purple-50/50 p-3 px-3.5 border border-purple-100/60 text-xs"
               >
-                <span className="font-semibold text-stone-800">{t.name}</span>
-                <span className="font-bold text-stone-700 bg-white/90 px-2.5 py-0.5 rounded-md border border-stone-200/40">
+                <span className="font-semibold text-slate-800">{t.name}</span>
+                <span className="font-bold text-purple-900 bg-white/90 px-2.5 py-0.5 rounded-md border border-purple-200/50">
                   {t.correct} / {t.attempted} correct
                 </span>
               </li>
@@ -135,7 +135,7 @@ export default function SessionSummaryPage() {
             ? 'border-emerald-200/80 bg-emerald-50/80 text-emerald-900'
             : summary.recalcStatus === 'failed'
               ? 'border-amber-200/80 bg-amber-50/80 text-amber-900'
-              : 'border-blue-200/80 bg-blue-50/80 text-blue-900'
+              : 'border-purple-200/80 bg-purple-50/80 text-purple-950'
         }`}
       >
         <div className="flex items-center gap-2">

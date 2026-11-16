@@ -15,9 +15,8 @@ function ratio(v: number | null): string {
 }
 
 /**
- * P-08 — result analysis (E-015): topic + difficulty accuracy, time vs
- * expected, skip pattern, consistency, thin-evidence list. Express
- * diagnostics carry a coarse badge.
+ * P-08 — result analysis with pastel & purple aesthetics:
+ * topic + difficulty accuracy, time vs expected, skip pattern, consistency, thin-evidence list.
  */
 export default function DiagnosticResultPage() {
   const { id } = useParams<{ id: string }>();
@@ -48,7 +47,7 @@ export default function DiagnosticResultPage() {
 
   if (pending) {
     return (
-      <div className="glass-card p-12 text-center text-xs text-stone-400">
+      <div className="glass-card p-12 text-center text-xs text-slate-400">
         Analysing diagnostic performance and calibrating Bayesian priors…
       </div>
     );
@@ -65,12 +64,12 @@ export default function DiagnosticResultPage() {
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-200/50 pb-5 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-purple-100/60 pb-5 gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
             Diagnostic Analysis &amp; Baseline
           </h1>
-          <p className="mt-1 text-xs text-stone-500">
+          <p className="mt-1 text-xs text-slate-500">
             {result.totals.answered}/{result.totals.questions} answered · {result.totals.correct}{' '}
             correct · {pct(result.totals.accuracy)} overall accuracy
           </p>
@@ -85,13 +84,13 @@ export default function DiagnosticResultPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* By Topic Table */}
         <section className="glass-card p-6 flex flex-col gap-3">
-          <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
             Accuracy by Topic
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-stone-100 text-left text-stone-400 font-semibold uppercase tracking-wider">
+                <tr className="border-b border-purple-50 text-left text-slate-400 font-semibold uppercase tracking-wider">
                   <th className="pb-2.5 pr-2">Topic</th>
                   <th className="pb-2.5 pr-2">Section</th>
                   <th className="pb-2.5 pr-2">Accuracy</th>
@@ -99,21 +98,21 @@ export default function DiagnosticResultPage() {
                   <th className="pb-2.5">Evidence</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100/70">
+              <tbody className="divide-y divide-purple-50/70">
                 {result.byTopic.map((t) => (
-                  <tr key={t.topicId} className="hover:bg-white/50 transition-colors">
-                    <td className="py-2.5 pr-2 font-medium text-stone-800">
+                  <tr key={t.topicId} className="hover:bg-purple-50/40 transition-colors">
+                    <td className="py-2.5 pr-2 font-medium text-slate-800">
                       {t.topicName ?? t.topicId.slice(0, 8)}
                     </td>
-                    <td className="py-2.5 pr-2 text-stone-500">{t.sectionName ?? '—'}</td>
-                    <td className="py-2.5 pr-2 font-bold text-stone-900">{pct(t.accuracy)}</td>
-                    <td className="py-2.5 pr-2 text-stone-600">{ratio(t.avgTimeRatio)}</td>
+                    <td className="py-2.5 pr-2 text-slate-500">{t.sectionName ?? '—'}</td>
+                    <td className="py-2.5 pr-2 font-bold text-slate-900">{pct(t.accuracy)}</td>
+                    <td className="py-2.5 pr-2 text-slate-600">{ratio(t.avgTimeRatio)}</td>
                     <td className="py-2.5">
                       <span
                         className={`px-2 py-0.5 rounded-md text-[11px] font-medium ${
                           t.thinEvidence
                             ? 'bg-amber-50 text-amber-700 border border-amber-200/50'
-                            : 'bg-stone-100 text-stone-600'
+                            : 'bg-purple-50 text-purple-700 border border-purple-100'
                         }`}
                       >
                         {t.thinEvidence ? 'thin' : `${t.answered} items`}
@@ -129,19 +128,19 @@ export default function DiagnosticResultPage() {
         {/* Breakdown Metrics */}
         <div className="flex flex-col gap-4">
           <section className="glass-card p-6 flex flex-col gap-2">
-            <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+            <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
               Performance by Difficulty Band
             </h2>
             <div className="mt-1 flex flex-col gap-2 text-xs">
               {result.byDifficulty.map((b) => (
                 <div
                   key={b.band}
-                  className="flex justify-between items-center rounded-xl bg-stone-50/70 p-2.5 px-3 border border-stone-200/40"
+                  className="flex justify-between items-center rounded-xl bg-purple-50/40 p-2.5 px-3 border border-purple-100/50"
                 >
-                  <span className="capitalize font-semibold text-stone-700">{b.label}</span>
+                  <span className="capitalize font-semibold text-slate-700">{b.label}</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-stone-900">{pct(b.accuracy)}</span>
-                    <span className="text-stone-400 text-[11px]">
+                    <span className="font-bold text-slate-900">{pct(b.accuracy)}</span>
+                    <span className="text-slate-400 text-[11px]">
                       ({b.correct}/{b.attempts})
                     </span>
                   </div>
@@ -151,25 +150,25 @@ export default function DiagnosticResultPage() {
           </section>
 
           <section className="glass-card p-6 flex flex-col gap-2 text-xs">
-            <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+            <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
               Pacing Analysis
             </h2>
             <div className="mt-1 flex flex-col gap-2">
-              <div className="flex justify-between items-center py-1 border-b border-stone-100">
-                <span className="text-stone-600 font-medium">Avg time vs expected</span>
-                <span className="font-bold text-stone-900">
+              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+                <span className="text-slate-600 font-medium">Avg time vs expected</span>
+                <span className="font-bold text-slate-900">
                   {ratio(result.timeVsExpected.avgRatio)}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-1 border-b border-stone-100">
-                <span className="text-stone-600 font-medium">Over expected (&gt;1.2×)</span>
-                <span className="font-semibold text-stone-800">
+              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+                <span className="text-slate-600 font-medium">Over expected (&gt;1.2×)</span>
+                <span className="font-semibold text-slate-800">
                   {pct(result.timeVsExpected.overExpectedShare)}
                 </span>
               </div>
               <div className="flex justify-between items-center py-1">
-                <span className="text-stone-600 font-medium">Under expected (&lt;0.8×)</span>
-                <span className="font-semibold text-stone-800">
+                <span className="text-slate-600 font-medium">Under expected (&lt;0.8×)</span>
+                <span className="font-semibold text-slate-800">
                   {pct(result.timeVsExpected.underExpectedShare)}
                 </span>
               </div>
@@ -177,29 +176,29 @@ export default function DiagnosticResultPage() {
           </section>
 
           <section className="glass-card p-6 flex flex-col gap-2 text-xs">
-            <h2 className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
+            <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
               Fatigue &amp; Consistency
             </h2>
             <div className="mt-1 flex flex-col gap-2">
-              <div className="flex justify-between items-center py-1 border-b border-stone-100">
-                <span className="text-stone-600 font-medium">First half accuracy</span>
-                <span className="font-bold text-stone-900">
+              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+                <span className="text-slate-600 font-medium">First half accuracy</span>
+                <span className="font-bold text-slate-900">
                   {pct(result.consistency.firstHalfAccuracy)}
                 </span>
               </div>
-              <div className="flex justify-between items-center py-1 border-b border-stone-100">
-                <span className="text-stone-600 font-medium">Second half accuracy</span>
-                <span className="font-bold text-stone-900">
+              <div className="flex justify-between items-center py-1 border-b border-purple-50">
+                <span className="text-slate-600 font-medium">Second half accuracy</span>
+                <span className="font-bold text-slate-900">
                   {pct(result.consistency.secondHalfAccuracy)}
                 </span>
               </div>
               <div className="flex justify-between items-center py-1">
-                <span className="text-stone-600 font-medium">Accuracy drift</span>
+                <span className="text-slate-600 font-medium">Accuracy drift</span>
                 <span
                   className={
                     result.consistency.unstable
                       ? 'font-bold text-amber-700'
-                      : 'font-semibold text-stone-800'
+                      : 'font-semibold text-slate-800'
                   }
                 >
                   {result.consistency.drift == null
