@@ -76,6 +76,7 @@ async function main() {
     console.error('Password must be at least 12 characters.');
     process.exit(1);
   }
+  const passwordHash = await argon2.hash(password, { type: argon2.argon2id });
   const user = await prisma.user.create({
     data: {
       email,
