@@ -83,7 +83,13 @@ const TRUST_COMPANIES = [
 
 export default async function LandingPage() {
   const assessments = await fetchAssessments();
-  const featured = assessments.filter((a) => a.slug !== 'generic').slice(0, 6);
+  // Curated blueprints always lead; remaining slots fill with other assessments.
+  const CURATED_SLUGS = ['generic', 'sample-it-company', 'tcs-online-assessment'];
+  const rank = (slug: string) => {
+    const i = CURATED_SLUGS.indexOf(slug);
+    return i === -1 ? CURATED_SLUGS.length : i;
+  };
+  const featured = [...assessments].sort((a, b) => rank(a.slug) - rank(b.slug)).slice(0, 6);
 
   return (
     <div className="min-h-screen flex flex-col">
