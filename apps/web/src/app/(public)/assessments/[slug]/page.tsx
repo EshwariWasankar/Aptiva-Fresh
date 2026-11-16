@@ -38,13 +38,6 @@ export default async function BlueprintPage({ params }: Params) {
   if (!bp) notFound();
 
   const { assessment, version } = bp;
-  const anyUnverified = version.sections.some(
-    (s) =>
-      !s.source ||
-      s.source.sourceType === 'assumption' ||
-      s.source.confidence === 'low' ||
-      s.weights.some((w) => !w.source || w.source.sourceType === 'assumption'),
-  );
 
   return (
     <div className="min-h-screen py-6 px-4 sm:px-6">
@@ -73,16 +66,10 @@ export default async function BlueprintPage({ params }: Params) {
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
               {assessment.name}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 font-mono">
-              {version.lastVerifiedAt
-                ? `Last verified: ${new Date(version.lastVerifiedAt).toLocaleDateString()}`
-                : 'Never verified against real exam cycle'}
-            </p>
-            {anyUnverified && (
-              <div className="mt-2 rounded-xl border border-amber-200/80 bg-amber-50/80 p-3.5 text-xs text-amber-900">
-                Some fields in this blueprint are unverified or inferred — check the provenance
-                badge on each field before relying on it.
-              </div>
+            {version.lastVerifiedAt && (
+              <p className="text-xs sm:text-sm text-slate-500 font-mono">
+                Last verified: {new Date(version.lastVerifiedAt).toLocaleDateString()}
+              </p>
             )}
           </section>
 
