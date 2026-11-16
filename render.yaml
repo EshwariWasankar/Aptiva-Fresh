@@ -1,0 +1,68 @@
+# Aptiva — Render blueprint (free-tier deploy)
+# Docs: docs/DEPLOY-FREE.md
+#
+# Two services built from the same Docker image:
+#   - aptiva-api    : NestJS REST API (HTTP; attempt consumer disabled)
+#   - aptiva-worker : same image; attempt-stream consumer + BullMQ enabled
+#
+# Render injects PORT automatically — do not set it here.
+# Secrets use sync: false — fill them in the Render dashboard after deploy.
+# JWT_* on the worker must match the API values (copy them over).
+
+services:
+  - type: web
+    name: aptiva-api
+    runtime: docker
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: 'true'
+      - key: ATTEMPT_CONSUMER_ENABLED
+        value: 'false'
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: WEB_BASE_URL
+        sync: false
+      - key: COOKIE_DOMAIN
+        sync: false
+      - key: EMAIL_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: ALLOW_CONSOLE_MAIL
+        value: 'false'
+
+  - type: web
+    name: aptiva-worker
+    runtime: docker
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: 'true'
+      - key: ATTEMPT_CONSUMER_ENABLED
+        value: 'true'
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
