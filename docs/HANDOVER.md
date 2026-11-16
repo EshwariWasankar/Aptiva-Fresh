@@ -305,10 +305,26 @@ Entries auto-resolve when you answer that topic correctly later.
   (reported vs inferred), thin-evidence "Early estimate" badges.
 - **Estimate history**: all `profile_snapshots` (baseline badge, trigger,
   timestamp, engine version).
+- **External test scores** (PH13-T05): log scores from AMCAT/eLitmus/CoCubes/
+  TCS NQT/mocks — manual form (source, assessment, date, score/max, optional
+  percentile/notes) or **CSV upload** (`source, assessmentName, takenAt,
+totalScore` + optional `maxScore, percentile, notes` columns); per-row delete.
+  Backed by `GET/POST/POST csv/DELETE /me/external-scores`.
+- **Assessment pattern reports** (PH13-T06): submit structural observations
+  (company, field — `numQuestions`/`timeLimit`/`sectionWeights`/
+  `negativeMarking`/`calculatorAllowed`/`subsections`, claim JSON) with status
+  badges (pending/approved/rejected). `POST/GET /pattern-reports`; admin review
+  via `PATCH /pattern-reports/:id/review`.
+- **Study activity heatmap** + commitment streak card via
+  `GET /me/commitment/activity`.
 - Empty state → link to take the diagnostic.
 
 ### 4.19 Settings — `/settings` (P-19)
 
+- **Study commitment**: type (days/minutes), target, allowed rest days →
+  `PUT /me/commitment`; shows live evaluation text (streak progress, rest-day
+  usage); **End commitment** (`DELETE /me/commitment`, confirm dialog) removes
+  an active goal while keeping history.
 - **Plan**: _Keep my plan_ checkbox → `PUT /me/plan-settings`. When ON, session
   recalcs still update profiles/readiness but do **not** auto-regenerate the plan.
 - **Consents**: toggles for `analytics`, `marketing`, `support` →
@@ -325,7 +341,8 @@ Entries auto-resolve when you answer that topic correctly later.
 
 ### 4.20 Admin console — `/admin` 👑
 
-Nav (admin role only): Overview · Questions · Import · Blueprints · Review.
+Nav: Overview · Questions · Import · Blueprints · Review · Lessons · Drift
+(Lessons + Drift are `admin` role only; the rest allow `reviewer` too).
 
 - **Overview** `/admin`: counts + coverage stats.
 - **Questions** `/admin/questions`: paginated/filterable list → editor at
@@ -348,6 +365,13 @@ Nav (admin role only): Overview · Questions · Import · Blueprints · Review.
   topic-weight blueprints with provenance (`verified`/`candidate_reported`),
   difficulty bands, pace seconds; one `is_current` per assessment; generic
   fallback blueprint always exists.
+- **Lessons** `/admin/lessons`: CRUD for concept-repair lessons — topic picker
+  (taxonomy tree), title, content (LaTeX), draft/published status, inline
+  publish/unpublish. Published lessons surface in practice sessions.
+- **Drift** `/admin/drift`: blueprint-drift alerts — create (company, section,
+  old→new weight, severity, notes), resolve/dismiss; plus a **pending pattern
+  reports** review queue (approve/reject student-submitted structural claims).
+  Backed by `/admin/drift-alerts` and `/pattern-reports/:id/review`.
 
 Every `/admin/*` call is audit-logged (`admin.access`: actor, method, route —
 never bodies) via `AdminAuditInterceptor`.
@@ -566,7 +590,9 @@ only), `RECALC_QUEUE_NAME`/`PROFILE_QUEUE_NAME` (queue isolation in tests),
 3. **Diagnostic pool = curated slice**, approvals recorded by script — see §8 caveat.
 4. **Email delivery unverified** — reset/verify flows exist; `EMAIL_API_KEY` must
    be configured and tested before pilot.
-5. **No MFA**, no payment/billing (PH-13 backlog), no reminders, no Hindi UI.
+5. **No MFA**; payments run on the **mock gateway only** (real Razorpay/Stripe
+   keys not configured); reminders and Hindi UI exist as dictionaries but are
+   not wired into pages.
 6. **Single-instance assumptions**: in-memory rate limiter; BullMQ workers run
    inside the API process — fine for pilot scale, revisit for PH-12 multi-instance.
 7. **Recalc throughput** ~6–7 sessions/s observed; backlog drains but consider
@@ -575,9 +601,11 @@ only), `RECALC_QUEUE_NAME`/`PROFILE_QUEUE_NAME` (queue isolation in tests),
    run** — both are PH-10/12 pilot gates.
 9. **Upload pipeline deferred** (E-022 optional) — if document upload is added,
    the Section-23 quarantine/scan chain applies.
-10. **Deferred backlog** (PH-13): pilot evaluation, billing tiers, multi-target
-    plans, streaks, external score log, pattern reports, reminders, Hindi,
-    adaptive (information-based) diagnostic, IRT/BKT, ILP planner, LLM hints.
+10. **PH-13 implemented** (billing tiers w/ mock checkout, commitments/streaks,
+    external scores, pattern reports, notifications, i18n dictionaries, pilot
+    eval runner). **Still deferred**: real payment gateway, reminders,
+    wired-in i18n, adaptive (information-based) diagnostic, IRT/BKT, ILP
+    planner, LLM hints.
 
 ---
 
