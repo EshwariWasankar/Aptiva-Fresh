@@ -52,7 +52,15 @@ export default async function BlueprintPage({ params }: Params) {
               Aptiva
             </span>
           </Link>
-          <AuthNavCta />
+          <div className="flex items-center gap-4">
+            <Link
+              href="/#blueprints"
+              className="text-xs font-semibold text-slate-300 hover:text-white transition"
+            >
+              ← All blueprints
+            </Link>
+            <AuthNavCta />
+          </div>
         </header>
 
         {/* Blueprint Container */}

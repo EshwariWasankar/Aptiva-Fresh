@@ -71,7 +71,18 @@ export function AuthHeroCta({ assessmentsHref = '#blueprints' }: { assessmentsHr
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </Link>
-        <a href={assessmentsHref} className="btn-secondary px-5 py-2.5 text-sm font-medium">
+        <a
+          href={assessmentsHref}
+          className="btn-secondary px-5 py-2.5 text-sm font-medium"
+          onClick={(e) => {
+            if (assessmentsHref.startsWith('#')) {
+              e.preventDefault();
+              document
+                .getElementById(assessmentsHref.slice(1))
+                ?.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        >
           See supported assessments
         </a>
       </div>

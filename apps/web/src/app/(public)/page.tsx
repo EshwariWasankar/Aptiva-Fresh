@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { AuthHeroCta, AuthNavCta } from '../../components/AuthCta';
+import { BlueprintsAnchor } from '../../components/BlueprintsAnchor';
 import type { PublicAssessment } from '../../lib/content';
 import {
   IconArrowUpRight,
@@ -101,9 +102,9 @@ export default async function LandingPage() {
             <strong>2026 Campus Placement Cycle:</strong> TCS NQT, Cognizant GenC, Infosys, and
             Accenture assessment blueprints updated.
           </span>
-          <a href="#blueprints" className="underline font-bold hover:text-amber-950 ml-1">
+          <BlueprintsAnchor className="underline font-bold hover:text-amber-950 ml-1">
             Explore blueprints →
-          </a>
+          </BlueprintsAnchor>
         </div>
       </div>
 
@@ -153,12 +154,9 @@ export default async function LandingPage() {
             >
               How it works
             </a>
-            <a
-              href="#blueprints"
-              className="hidden md:inline text-xs font-semibold text-slate-200 hover:text-white transition"
-            >
+            <BlueprintsAnchor className="hidden md:inline text-xs font-semibold text-slate-200 hover:text-white transition">
               Company Blueprints
-            </a>
+            </BlueprintsAnchor>
             <AuthNavCta />
           </nav>
         </header>
@@ -185,13 +183,10 @@ export default async function LandingPage() {
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <AuthHeroCta />
-                <a
-                  href="#blueprints"
-                  className="btn-secondary py-3 px-6 text-sm font-semibold inline-flex items-center gap-1.5"
-                >
+                <BlueprintsAnchor className="btn-secondary py-3 px-6 text-sm font-semibold inline-flex items-center gap-1.5">
                   <span>Explore Blueprints</span>
                   <IconArrowUpRight className="w-4 h-4 text-slate-400" />
-                </a>
+                </BlueprintsAnchor>
               </div>
             </div>
 
