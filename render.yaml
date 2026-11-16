@@ -43,7 +43,7 @@ services:
       - key: EMAIL_FROM
         sync: false
       - key: ALLOW_CONSOLE_MAIL
-        value: 'false'
+        value: 'true' # demo: auth emails go to Render logs until SMTP/Resend is configured
 
   - type: web
     name: aptiva-worker
